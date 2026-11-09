@@ -1,0 +1,33 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import WaveDivider from '@/components/WaveDivider.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import QuickOrder from '@/components/QuickOrder.astro';
+import PricingTable from '@/components/PricingTable.astro';
+import FAQ from '@/components/FAQ.astro';
+import LeadForm from '@/components/LeadForm.astro';
+import { faqPrices } from '@/data/faq';
+---
+<BaseLayout title="Ціни | Diplomna 4 U" description="Калькулятор вартості дипломної, курсової, статті.">
+  <Section theme="bg">
+    <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Ціни'}]} />
+    <h1>Ціни</h1>
+    <QuickOrder variant="page" />
+  </Section>
+  <WaveDivider />
+  <Section theme="surface">
+    <h2>Таблиця цін</h2>
+    <PricingTable />
+  </Section>
+  <WaveDivider />
+  <Section theme="bg">
+    <h2>FAQ по цінах</h2>
+    <FAQ items={faqPrices} />
+  </Section>
+  <WaveDivider />
+  <Section theme="invert">
+    <h2 style="text-align:center">Залишити заявку</h2>
+    <div style="max-width:600px;margin:0 auto"><LeadForm variant="page" source="prices" /></div>
+  </Section>
+</BaseLayout>

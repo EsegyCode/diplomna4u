@@ -1,0 +1,14 @@
+---
+interface Props { moreHref?: string }
+const { moreHref = '/vidhuky/' } = Astro.props;
+---
+<section class="reviews-teaser">
+  <div class="container">
+    <div class="reviews-grid"><slot /></div>
+    <div style="text-align:center;margin-top:1.5rem">
+      <a href={moreHref} class="btn btn--ghost">Усі відгуки →</a>
+    </div>
+  </div>
+</section>
+<style>
+</style>

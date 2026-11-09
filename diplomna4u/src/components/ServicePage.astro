@@ -1,0 +1,48 @@
+---
+import { services } from '@/data/services';
+import Breadcrumbs from './Breadcrumbs.astro';
+import QuickOrder from './QuickOrder.astro';
+import FAQ from './FAQ.astro';
+import ServicesGrid from './ServicesGrid.astro';
+
+interface Props { service: typeof services[number] }
+const { service } = Astro.props;
+---
+<Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Послуги', href:'/poslugy/'}, {label: service.label}]} />
+<section class="section">
+  <div class="container">
+    <h1>{service.h1}</h1>
+    <p class="text-muted">{service.shortDesc}</p>
+    <QuickOrder variant="compact" defaultWork={service.slug} />
+  </div>
+</section>
+<section class="section section--surface">
+  <div class="container">
+    <h2>Що входить</h2>
+    <ul class="includes">{service.includes.map(i => <li>{i}</li>)}</ul>
+    <h2 style="margin-top:1.5rem">Як це працює</h2>
+    <div class="steps">
+      <div class="step">Залишаєш заявку або рахуєш вартість</div>
+      <div class="step">Менеджер уточнює деталі і узгоджує договір</div>
+      <div class="step">Передплата 50% і початок роботи</div>
+      <div class="step">Отримуєш готову роботу, сертифікат антиплагіату</div>
+    </div>
+    <h2 style="margin-top:1.5rem">Ціна і терміни</h2>
+    <p>Від {service.minPrice.toLocaleString('uk-UA')} грн{service.minDays ? `. Мінімальний термін — від ${service.minDays} днів.` : '.'}</p>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <h2>Часті запитання</h2>
+    <FAQ items={service.faq} />
+  </div>
+</section>
+<section class="section section--surface">
+  <div class="container">
+    <h2>Інші послуги</h2>
+    <ServicesGrid />
+  </div>
+</section>
+<style>
+  .includes { list-style: disc; padding-left: 1.25rem; display:flex; flex-direction:column; gap:0.3rem; }
+</style>

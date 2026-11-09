@@ -1,0 +1,13 @@
+---
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+---
+<div class="trust-strip">
+  {items.map(t => <span class="trust-item">{t}</span>)}
+</div>
+<style>
+  .trust-strip { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; padding: 1rem 0; }
+  .trust-item { background: var(--surface); color: var(--ink); border: 1px solid var(--tint); padding: 0.4rem 0.8rem; border-radius: var(--r-btn); font-size: 0.9rem; font-weight: 500; }
+</style>

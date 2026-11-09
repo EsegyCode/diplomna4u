@@ -1,0 +1,150 @@
+---
+interface Props {
+  variant?: 'full' | 'compact' | 'sticky' | 'page';
+  source?: string;
+  city?: string;
+  calcPayload?: string;
+  workTypeDefault?: string;
+}
+const { variant = 'full', source = 'site', city = '', calcPayload = '', workTypeDefault = '' } = Astro.props;
+import { nav } from '@/data/site';
+---
+<form class={`lead-form lead-form--${variant}`} data-lead-form novalidate>
+  <input type="hidden" name="source" value={source} />
+  <input type="hidden" name="page_url" value="" />
+  <input type="hidden" name="city" value={city} />
+  <input type="hidden" name="calc_payload" value={calcPayload} />
+
+  <div class="hp-field" aria-hidden="true">
+    <label>Залиште порожнім <input type="text" name="hp" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <div class="field">
+    <label>Ім'я *</label>
+    <input type="text" name="name" required minlength="2" />
+    <span class="field-error" data-err="name"></span>
+  </div>
+
+  <div class="field">
+    <label>Telegram @username або телефон *</label>
+    <input type="text" name="contact" required />
+    <span class="field-error" data-err="contact"></span>
+  </div>
+
+  {variant !== 'compact' && variant !== 'sticky' && (
+    <>
+      <div class="field">
+        <label>Зручний спосіб зв'язку</label>
+        <select name="contact_method">
+          <option value="telegram">Telegram</option>
+          <option value="call">Дзвінок</option>
+          <option value="email">Email</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Email (необов'язково)</label>
+        <input type="email" name="email" />
+        <span class="field-error" data-err="email"></span>
+      </div>
+    </>
+  )}
+
+  <div class="field">
+    <label>Який тип роботи цікавить</label>
+    <select name="work_type">
+      <option value="">Оберіть…</option>
+      {nav.services.map(s => <option value={s.label} selected={workTypeDefault === s.label}>{s.label}</option>)}
+    </select>
+  </div>
+
+  {variant !== 'compact' && (
+    <div class="field">
+      <label>Коментар</label>
+      <textarea name="comment" rows="3" placeholder="Методичку надішліть у Telegram"></textarea>
+    </div>
+  )}
+
+  <label class="consent">
+    <input type="checkbox" name="consent" required />
+    Погоджуюсь з обробкою персональних даних і <a href="/polityka-konfidentsiinosti/" target="_blank">політикою конфіденційності</a>.
+  </label>
+  <span class="field-error" data-err="consent"></span>
+
+  <div class="form-actions">
+    <button type="submit" class="btn submit-btn">Відправити заявку</button>
+  </div>
+  <p class="form-status" aria-live="polite"></p>
+</form>
+
+<script>
+  const MOCK_MODE = true;
+  document.querySelectorAll('[data-lead-form]').forEach((form) => {
+    const f = form as HTMLFormElement;
+    // set page_url
+    const pu = f.querySelector('input[name="page_url"]') as HTMLInputElement;
+    if (pu) pu.value = window.location.href;
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let ok = true;
+      const errs: Record<string, string> = {};
+      const name = (f.querySelector('input[name="name"]') as HTMLInputElement).value.trim();
+      const contact = (f.querySelector('input[name="contact"]') as HTMLInputElement).value.trim();
+      const consent = f.querySelector('input[name="consent"]') as HTMLInputElement;
+      if (name.length < 2) { errs.name = 'Введіть ім\'я (мін. 2 символи)'; ok = false; }
+      if (contact.length < 3) { errs.contact = 'Вкажіть контакт'; ok = false; }
+      if (!consent?.checked) { errs.consent = 'Потрібна згода'; ok = false; }
+      // clear
+      f.querySelectorAll('.field-error').forEach(el => el.textContent = '');
+      f.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+      if (!ok) {
+        Object.keys(errs).forEach(k => {
+          const span = f.querySelector('[data-err="' + k + '"]');
+          if (span) span.textContent = errs[k] ?? null;
+        });
+        return;
+      }
+      const btn = f.querySelector('.submit-btn') as HTMLButtonElement;
+      const status = f.querySelector('.form-status') as HTMLElement;
+      if (btn) { btn.disabled = true; btn.textContent = 'Відправляємо…'; }
+      if (MOCK_MODE) {
+        setTimeout(() => {
+          if (status) status.textContent = 'Дякуємо! Ми зв\'яжемося з вами найближчим часом.';
+          f.reset();
+          if (btn) { btn.disabled = false; btn.textContent = 'Відправити заявку'; }
+        }, 800);
+      } else {
+        const data = new FormData(f);
+        fetch('/api/lead', { method: 'POST', body: data })
+          .then(r => r.json())
+          .then(j => {
+            if (j.ok) {
+              if (status) status.textContent = 'Дякуємо! Заявку прийнято.';
+              f.reset();
+            } else {
+              if (status) status.textContent = j.error || 'Помилка відправки. Спробуйте Telegram.';
+            }
+          })
+          .catch(() => { if (status) status.textContent = 'Помилка мережі. Спробуйте Telegram.'; })
+          .finally(() => { if (btn) { btn.disabled = false; btn.textContent = 'Відправити заявку'; } });
+      }
+    });
+  });
+</script>
+<style>
+  .lead-form { display: flex; flex-direction: column; gap: 0.9rem; }
+  .lead-form .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .lead-form .field { display: flex; flex-direction: column; gap: 0.3rem; }
+  .lead-form label { font-weight: 500; font-size: 0.9rem; color: var(--ink); }
+  .lead-form input, .lead-form select, .lead-form textarea {
+    background: var(--field-bg); border: 1px solid var(--sage); border-radius: var(--r-input);
+    padding: 0.7rem 0.9rem; font-size: 1rem; color: var(--ink); width: 100%;
+  }
+  .lead-form input:focus, .lead-form select:focus, .lead-form textarea:focus { border-color: var(--deep); outline: none; }
+  .lead-form .error { border-color: var(--error); }
+  .lead-form .field-error { color: var(--error); font-size: 0.8rem; min-height: 1em; }
+  .consent { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.85rem; }
+  .form-actions { display: flex; }
+  .lead-form .form-status { min-height: 1.2em; color: var(--deep); font-size: 0.9rem; }
+  .lead-form--sticky { }
+  .lead-form--compact { }
+</style>

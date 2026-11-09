@@ -1,0 +1,25 @@
+---
+interface Props {
+  name: string;
+  workType: string;
+  rating?: number | undefined;
+  text: string;
+  city?: string | undefined;
+  date?: string | undefined;
+}
+const { name, workType, rating, text, city, date } = Astro.props;
+---
+<article class="review-card card">
+  <div class="review-head">
+    <strong>{name}</strong>
+    {city && <span class="text-muted"> · {city}</span>}
+  </div>
+  <div class="review-meta">{workType}{rating ? ` · ${'★'.repeat(rating)}` : ''}</div>
+  <p>{text}</p>
+  {date && <div class="review-date text-muted">{date}</div>}
+</article>
+<style>
+  .review-card { display: flex; flex-direction: column; gap: 0.5rem; }
+  .review-meta { font-size: 0.85rem; color: var(--muted); }
+  .review-date { font-size: 0.75rem; margin-top: auto; }
+</style>

@@ -1,0 +1,15 @@
+---
+import { cities } from '@/data/cities';
+const others = cities.filter(c => c.localContentReady);
+interface Props { current?: string }
+const { current } = Astro.props;
+const list = others.filter(c => c.slug !== current);
+---
+{list.length > 0 && (
+  <nav class="other-cities">
+    <h4>Інші міста</h4>
+    <div class="chips">
+      {list.map(c => <a href={`/${c.slug}/`} class="chip">{c.name}</a>)}
+    </div>
+  </nav>
+)}

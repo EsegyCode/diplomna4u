@@ -1,0 +1,19 @@
+---
+interface Props {
+  items: { title: string; desc: string }[];
+  columns?: number;
+}
+const { items, columns = 3 } = Astro.props;
+---
+<div class="chess-grid benefits-grid" style={`grid-template-columns: repeat(${columns}, 1fr)`}>
+  {items.map(b => (
+    <div class="card">
+      <h3>{b.title}</h3>
+      <p class="text-muted">{b.desc}</p>
+    </div>
+  ))}
+</div>
+<style>
+  @media (max-width: 600px) { .benefits-grid { grid-template-columns: 1fr !important; } }
+  @media (min-width: 600px) and (max-width: 900px) { .benefits-grid { grid-template-columns: 1fr 1fr !important; } }
+</style>

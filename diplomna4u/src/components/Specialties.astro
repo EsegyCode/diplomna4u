@@ -1,0 +1,9 @@
+---
+interface Props {
+  items: { label: string; coef?: number }[];
+}
+const { items } = Astro.props;
+---
+<div class="chips">
+  {items.map(it => <span class="chip">{it.label}{it.coef && it.coef !== 1 ? ` ×${it.coef}` : ''}</span>)}
+</div>

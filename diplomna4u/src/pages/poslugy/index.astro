@@ -1,0 +1,15 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ServicesGrid from '@/components/ServicesGrid.astro';
+const title = 'Наші послуги';
+---
+<BaseLayout title={`${title} | Diplomna 4 U`} description="Дипломна, курсова, стаття, реферат, звіт з практики, теза — на замовлення.">
+  <Section theme="bg">
+    <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:title}]} />
+    <h1>{title}</h1>
+    <p class="text-muted">Оберіть потрібну послугу, щоб дізнатись деталі.</p>
+    <div style="margin-top:1.5rem"><ServicesGrid /></div>
+  </Section>
+</BaseLayout>

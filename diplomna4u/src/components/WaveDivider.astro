@@ -1,0 +1,24 @@
+---
+interface Props {
+  variant?: 'wave' | 'drop';
+  flip?: boolean;
+  fill?: string;
+}
+const { variant = 'wave', flip = false, fill: fillVar } = Astro.props;
+const fillStyle = fillVar ? fillVar : 'var(--next-bg, var(--bg))';
+---
+<div class="wave-divider" aria-hidden="true" style={flip ? 'transform: scaleY(-1);' : ''}>
+  {variant === 'wave' ? (
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" width="100%" height="60">
+      <path d="M0,40 C200,80 400,0 720,40 C1040,80 1240,0 1440,40 L1440,80 L0,80 Z" fill={fillStyle} />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 1440 96" preserveAspectRatio="none" width="100%" height="72">
+      <path d="M0,48 Q360,96 720,48 T1440,48 L1440,96 L0,96 Z" fill={fillStyle} />
+    </svg>
+  )}
+</div>
+<style>
+  .wave-divider { width: 100%; line-height: 0; overflow: hidden; }
+  .wave-divider svg { display: block; }
+</style>

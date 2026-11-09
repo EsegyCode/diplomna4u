@@ -1,0 +1,25 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { cities } from '@/data/cities';
+const ready = cities.filter(c => c.localContentReady);
+---
+<BaseLayout title="Міста | Diplomna 4 U" description="Локальні сторінки міст.">
+  <Section theme="bg">
+    <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Міста'}]} />
+    <h1>Міста</h1>
+    {ready.length === 0 ? (
+      <p class="text-muted">TODO: сторінки міст з'являться після наповнення.</p>
+    ) : (
+      <ul class="city-list">
+        {ready.map(c => <li><a href={`/${c.slug}/`}>{c.name}</a> — {c.region}</li>)}
+      </ul>
+    )}
+    <p style="margin-top:1rem"><a href="/universytety/">Університети →</a></p>
+  </Section>
+</BaseLayout>
+<style>
+  .city-list { list-style: disc; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+</style>
+

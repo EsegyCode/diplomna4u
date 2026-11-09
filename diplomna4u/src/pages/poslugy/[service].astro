@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ServicePage from '@/components/ServicePage.astro';
+import { services } from '@/data/services';
+
+export function getStaticPaths() {
+  return services.map(s => ({ params: { service: s.slug }, props: { service: s } }));
+}
+const { service } = Astro.props;
+const jsonLd = [
+  { '@context':'https://schema.org', '@type':'Service', name: service.label, description: service.shortDesc },
+];
+---
+<BaseLayout title={`${service.label} | Diplomna 4 U`} description={service.shortDesc} jsonLd={jsonLd}>
+  <ServicePage service={service} />
+</BaseLayout>

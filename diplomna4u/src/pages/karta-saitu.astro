@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import { cities } from '@/data/cities';
+const servicesLinks = ['poslugy','tsiny','vidhuky','blog','pro-nas','mista','universytety','faq','kontakty'];
+const ready = cities.filter(c => c.localContentReady);
+---
+<BaseLayout title="Карта сайту | Diplomna 4 U" description="HTML карта сайту.">
+  <Section theme="bg">
+    <h1>Карта сайту</h1>
+    <ul class="sitemap-list">
+      <li><a href="/">Головна</a></li>
+      {servicesLinks.map(s => <li><a href={`/${s}/`}>{s}</a></li>)}
+      {ready.map(c => <li><a href={`/${c.slug}/`}>{c.name}</a></li>)}
+    </ul>
+    <p><a href="/sitemap-index.xml">sitemap.xml →</a></p>
+  </Section>
+</BaseLayout>
+<style>
+  .sitemap-list { list-style: disc; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; }
+</style>

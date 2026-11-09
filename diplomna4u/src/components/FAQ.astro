@@ -1,0 +1,23 @@
+---
+interface Props {
+  items: { q: string; a: string }[];
+  limit?: number;
+}
+const { items, limit } = Astro.props;
+const list = limit ? items.slice(0, limit) : items;
+---
+<div class="faq-list">
+  {list.map(it => (
+    <details class="faq-item">
+      <summary>{it.q}</summary>
+      <div class="faq-answer">{it.a}</div>
+    </details>
+  ))}
+</div>
+<style>
+  .faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .faq-item { background: var(--surface); border: 1px solid var(--tint); border-radius: var(--r-card); padding: 1rem 1.25rem; }
+  .faq-item summary { cursor: pointer; font-weight: 600; list-style: none; }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-answer { margin-top: 0.75rem; color: var(--ink); }
+</style>

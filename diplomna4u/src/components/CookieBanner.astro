@@ -1,0 +1,53 @@
+---
+---
+<div id="cookieBanner" class="cookie-banner" hidden>
+  <p>Ми використовуємо cookie-файли для коректної роботи сайту і ( за вашої згоди) для аналітики. Докладніше: <a href="/polityka-cookie/">політика cookie</a>.</p>
+  <div class="cookie-actions">
+    <button id="cookieAcceptAll" class="btn btn--sm">Прийняти все</button>
+    <button id="cookieReject" class="btn btn--ghost btn--sm">Лише необхідні</button>
+    <button id="cookieSettings" class="btn btn--ghost btn--sm">Налаштувати</button>
+  </div>
+</div>
+<script>
+  const KEY = 'cookie-consent';
+  const banner = document.getElementById('cookieBanner');
+  function show() { if (banner) banner.hidden = false; }
+  function hide() { if (banner) banner.hidden = true; }
+  function loadConsent() {
+    try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; }
+  }
+  function saveConsent(val: any) {
+    localStorage.setItem(KEY, JSON.stringify({ ...val, date: new Date().toISOString() }));
+  }
+  // @ts-ignore
+  window.__openCookieBanner = () => show();
+  // Delay to avoid showing immediately
+  setTimeout(() => {
+    if (!loadConsent()) show();
+  }, 500);
+  document.getElementById('cookieAcceptAll')?.addEventListener('click', () => {
+    saveConsent({ necessary: true, analytics: true, marketing: true });
+    hide();
+  });
+  document.getElementById('cookieReject')?.addEventListener('click', () => {
+    saveConsent({ necessary: true, analytics: false, marketing: false });
+    hide();
+  });
+  document.getElementById('cookieSettings')?.addEventListener('click', () => {
+    saveConsent({ necessary: true, analytics: false, marketing: false });
+    hide();
+  });
+</script>
+<style>
+  .cookie-banner {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    z-index: 1000;
+    background: var(--bg); border-top: 1px solid var(--tint);
+    padding: 1rem; box-shadow: var(--shadow-card);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; justify-content: space-between;
+  }
+  .cookie-banner[hidden] { display: none; }
+  .cookie-banner p { max-width: 70ch; font-size: 0.9rem; }
+  .cookie-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  @media (max-width: 600px) { .cookie-banner { padding-bottom: 70px; } }
+</style>

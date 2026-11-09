@@ -1,0 +1,10 @@
+---
+---
+<div class="reviews-grid">
+  <slot />
+</div>
+<style>
+  .reviews-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 600px) { .reviews-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 900px) { .reviews-grid { grid-template-columns: repeat(3, 1fr); } }
+</style>

@@ -1,0 +1,76 @@
+---
+import { site, nav } from '@/data/site';
+import { cities } from '@/data/cities';
+const readyCities = cities.filter(c => c.localContentReady);
+const year = new Date().getFullYear();
+---
+<footer class="site-footer section--deep">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="logo">{site.brandUk}</a>
+      <p class="footer-tagline">{site.tagline} · {site.legal}</p>
+      <p class="footer-sched">Графік: {site.schedule}</p>
+      <p class="footer-zone">{site.zone}</p>
+      {site.email && <p><a href={'mailto:' + site.email}>{site.email}</a></p>}
+      {site.telegram && <p><a href={site.telegram.url} target="_blank" rel="noopener noreferrer">{site.telegram.label}</a></p>}
+    </div>
+    <div>
+      <h4>Послуги</h4>
+      <ul>
+        {nav.services.map(s => <li><a href={s.href}>{s.label}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h4>Компанія</h4>
+      <ul>
+        <li><a href="/tsiny/">Ціни</a></li>
+        <li><a href="/vidhuky/">Відгуки</a></li>
+        <li><a href="/blog/">Блог</a></li>
+        <li><a href="/pro-nas/">Про нас</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/kontakty/">Контакти</a></li>
+        <li><a href="/karta-saitu/">Карта сайту</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Міста</h4>
+      <ul>
+        {readyCities.length === 0 ? <li>Скоро</li> : readyCities.map(c => <li><a href={`/${c.slug}/`}>{c.name}</a></li>)}
+        <li><a href="/mista/">Усі міста</a></li>
+        <li><a href="/universytety/">Університети</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Юридичне</h4>
+      <ul>
+        <li><a href="/polityka-konfidentsiinosti/">Політика конфіденційності</a></li>
+        <li><a href="/publichna-oferta/">Публічна оферта</a></li>
+        <li><a href="/polityka-cookie/">Політика cookie</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>© {year} {site.brandUk}. Усі права захищено.</p>
+    <button type="button" class="footer-cookie-btn" id="cookieSettings">Змінити згоду</button>
+  </div>
+</footer>
+<style>
+  .site-footer { padding-block: 3rem 1.5rem; }
+  .footer-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+  @media (min-width: 600px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 900px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr 1fr; } }
+  .site-footer h4 { margin-bottom: 0.75rem; font-size: 1rem; }
+  .site-footer ul { list-style: none; }
+  .site-footer li { margin-bottom: 0.4rem; }
+  .site-footer a { color: var(--bg); text-decoration: none; opacity: 0.9; }
+  .site-footer a:hover { opacity: 1; text-decoration: underline; }
+  .logo { font-weight: 700; font-size: 1.1rem; color: var(--bg); text-decoration: none; }
+  .footer-tagline, .footer-sched, .footer-zone { font-size: 0.9rem; opacity: 0.85; margin-top: 0.5rem; }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255, 253, 248, 0.2); flex-wrap: wrap; }
+  .footer-cookie-btn { background: none; border: 1px solid rgba(255,253,248,0.4); color: var(--bg); padding: 0.4rem 0.8rem; border-radius: var(--r-btn); cursor: pointer; font-size: 0.85rem; }
+</style>
+<script>
+  document.getElementById('cookieSettings')?.addEventListener('click', () => {
+    (window as any).__openCookieBanner?.();
+  });
+</script>

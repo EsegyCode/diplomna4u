@@ -1,0 +1,19 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LeadForm from '@/components/LeadForm.astro';
+import Section from '@/components/Section.astro';
+---
+<BaseLayout title="Сторінку не знайдено | Diplomna 4 U" description="404" noindex>
+  <Section theme="bg">
+    <h1>404</h1>
+    <p>Сторінку не знайдено.</p>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem">
+      <a href="/" class="btn">На головну</a>
+      <a href="/poslugy/" class="btn btn--ghost">Послуги</a>
+      <a href="/tsiny/" class="btn btn--ghost">Ціни</a>
+      <a href="/kontakty/" class="btn btn--ghost">Контакти</a>
+    </div>
+    <div style="margin-top:2rem;max-width:600px"><LeadForm variant="compact" source="404" /></div>
+  </Section>
+</BaseLayout>
+

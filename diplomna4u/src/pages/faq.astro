@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import WaveDivider from '@/components/WaveDivider.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import FAQ from '@/components/FAQ.astro';
+import { faqGeneral, faqPrices } from '@/data/faq';
+---
+<BaseLayout title="FAQ | Diplomna 4 U" description="Відповіді на часті запитання.">
+  <Section theme="bg">
+    <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'FAQ'}]} />
+    <h1>Часті запитання</h1>
+    <h2>Загальні</h2>
+    <FAQ items={faqGeneral} />
+  </Section>
+  <WaveDivider />
+  <Section theme="surface">
+    <h2>Ціни</h2>
+    <FAQ items={faqPrices} />
+  </Section>
+</BaseLayout>

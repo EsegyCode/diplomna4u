@@ -1,0 +1,270 @@
+---
+import { pricing } from '@/data/pricing';
+
+interface Props {
+  variant?: 'hero' | 'compact' | 'page';
+  defaultWork?: string;
+}
+const { defaultWork = '' } = Astro.props;
+
+const pricingJson = JSON.stringify(pricing);
+---
+<div class="quick-order card card--light" id="quick-order">
+  <div class="qo-badge">Ціна від {pricing.workTypes.find(w=>w.slug==='dyplomna-robota')?.minPrice.toLocaleString('uk-UA')} грн</div>
+  <h3 class="qo-title">Давайте уточнимо й безкоштовно проконсультуємо</h3>
+
+  <form class="qo-form" data-qo>
+    <input type="hidden" name="calc_payload" value="" />
+
+    <!-- Step 1 -->
+    <div class="qo-step qo-step-1">
+      <div class="field">
+        <label>Тип роботи *</label>
+        <select name="workType" data-work required>
+          {pricing.workTypes.map(w => (
+            <option value={w.slug} selected={defaultWork === w.slug || (defaultWork==='' && w.slug==='dyplomna-robota')}>{w.label}</option>
+          ))}
+        </select>
+      </div>
+      <div class="field">
+        <label>Напрям *</label>
+        <select name="subject" data-subject required>
+          {pricing.subjects.map(s => <option value={s.id}>{s.label}</option>)}
+        </select>
+      </div>
+      <div class="field">
+        <label>Тема роботи (необов'язково)</label>
+        <input type="text" name="topic" />
+      </div>
+      <div class="field qo-pages" data-pages>
+        <label>Кількість сторінок *</label>
+        <div style="display:flex;gap:0.5rem">
+          <input type="number" name="pagesFrom" data-pages-from min="1" />
+          <span>–</span>
+          <input type="number" name="pagesTo" data-pages-to min="1" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Унікальність</label>
+        <div class="pills" data-uniqueness>
+          {pricing.uniqueness.map(u => (
+            <label class="pill">
+              <input type="radio" name="uniqueness" value={u.id} checked={u.default} data-u />
+              {u.label}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Скільки часу до здачі</label>
+        <input type="range" name="deadline" data-deadline min="0" max="2" step="1" value="0" />
+        <div class="deadline-labels">
+          {pricing.deadline.map(d => <span>{d.label}</span>)}
+        </div>
+        <p class="deadline-note">Чим раніше замовиш — тим вигідніше. Мінімальний термін дипломної — від 3 днів.</p>
+      </div>
+
+      <div class="field qo-addon" data-addon style="display:none">
+        <label><input type="checkbox" name="addon" value="presentation-defense" data-addon-cb /> Презентація та підготовка до захисту (+2 000 грн)</label>
+      </div>
+
+      <div class="qo-price">
+        <div class="price-display" data-price>—</div>
+        <div class="qo-price-note">орієнтовна вартість, точну назве менеджер</div>
+      </div>
+
+      <button type="button" class="btn" data-next>Далі →</button>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="qo-step qo-step-2" hidden>
+      <div class="field">
+        <label>Ім'я *</label>
+        <input type="text" name="qo_name" data-qo-name required />
+      </div>
+      <div class="field">
+        <label>Telegram @username або телефон *</label>
+        <input type="text" name="qo_contact" data-qo-contact required />
+      </div>
+      <div class="field">
+        <label>Зручний спосіб зв'язку</label>
+        <select name="qo_method">
+          <option value="telegram">Telegram</option>
+          <option value="call">Дзвінок</option>
+          <option value="email">Email</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Email (необов'язково)</label>
+        <input type="email" name="qo_email" />
+      </div>
+      <div class="field">
+        <label>Коментар</label>
+        <textarea name="qo_comment" rows="3" placeholder="Методичку надішли в Telegram"></textarea>
+      </div>
+      <label class="consent">
+        <input type="checkbox" data-qo-consent required />
+        Погоджуюсь з <a href="/polityka-konfidentsiinosti/" target="_blank">політикою конфіденційності</a>
+      </label>
+      <div style="display:flex;gap:0.5rem">
+        <button type="button" class="btn btn--ghost" data-back>← Назад</button>
+        <button type="submit" class="btn">Відправити заявку</button>
+      </div>
+      <p class="form-status" data-qo-status aria-live="polite"></p>
+    </div>
+  </form>
+</div>
+
+<script define:vars={{ pricingJson }}>
+  const pricing = JSON.parse(pricingJson);
+  function calc(workSlug, subjectId, pages, uniquenessId, deadlineIdx, addons) {
+    const workType = pricing.workTypes.find(w => w.slug === workSlug);
+    if (!workType) return null;
+    const sc = pricing.subjectCoef[subjectId];
+    if (sc === undefined) return null;
+    const u = pricing.uniqueness.find(x => x.id === uniquenessId);
+    const d = pricing.deadline[deadlineIdx];
+    if (!u || !d) return null;
+    let base;
+    if (workType.ratePerPage !== null && workType.hasPages) {
+      base = Math.max(workType.minPrice, pages * workType.ratePerPage);
+    } else {
+      base = workType.minPrice;
+    }
+    let price = Math.round(base * sc * u.k * d.k);
+    addons.forEach(id => {
+      const a = pricing.addons.find(x => x.id === id);
+      if (a && (!a.onlyFor || a.onlyFor.includes(workSlug))) price += a.price;
+    });
+    return price;
+  }
+  function fmt(n){ return n.toLocaleString('uk-UA') + '\u00a0грн'; }
+
+  document.querySelectorAll('[data-qo]').forEach((form) => {
+    const f = form;
+    const root = f.closest('.quick-order');
+    const workSel = f.querySelector('[data-work]');
+    const subjectSel = f.querySelector('[data-subject]');
+    const pagesBox = f.querySelector('[data-pages]');
+    const pf = f.querySelector('[data-pages-from]');
+    const pt = f.querySelector('[data-pages-to]');
+    const addonBox = f.querySelector('[data-addon]');
+    const addonCb = f.querySelector('[data-addon-cb]');
+    const uniqueness = f.querySelector('[data-uniqueness]');
+    const deadline = f.querySelector('[data-deadline]');
+    const priceEl = f.querySelector('[data-price]');
+    const hiddenCalc = f.querySelector('input[name="calc_payload"]');
+    const nextBtn = f.querySelector('[data-next]');
+    const backBtn = f.querySelector('[data-back]');
+    const step1 = f.querySelector('.qo-step-1');
+    const step2 = f.querySelector('.qo-step-2');
+    const status = f.querySelector('[data-qo-status]');
+
+    function workType() { const wt = pricing.workTypes.find(w => w.slug === workSel.value); return wt || pricing.workTypes[0]; }
+
+    function applyWorkType() {
+      const w = workType();
+      if (w.hasPages) {
+        pagesBox.style.display = '';
+        if (w.pagesDefault) { pf.value = String(w.pagesDefault[0]); pt.value = String(w.pagesDefault[1]); }
+        else { pf.value = w.pagesMin ? String(w.pagesMin) : '10'; pt.value = w.pagesMax ? String(w.pagesMax) : (w.pagesMin ? String(w.pagesMin+20) : '30'); }
+        if (w.pagesMin) pf.min = String(w.pagesMin); else pf.min='1';
+        if (w.pagesMax) { pf.max = String(w.pagesMax); pt.max = String(w.pagesMax); } 
+      } else {
+        pagesBox.style.display = 'none';
+        pf.value = '0'; pt.value = '0';
+      }
+      addonBox.style.display = w.slug === 'dyplomna-robota' ? '' : 'none';
+    }
+
+    function getUniqueness() {
+      const r = f.querySelector('input[name="uniqueness"]:checked');
+      return r ? r.value : pricing.uniqueness[0].id;
+    }
+
+    function updatePrice() {
+      const w = workSel.value;
+      const subject = subjectSel.value;
+      const pages = parseInt(pf.value || '0', 10) || 0;
+      const u = getUniqueness();
+      const di = parseInt(deadline.value, 10);
+      const addons = addonCb && addonCb.checked ? ['presentation-defense'] : [];
+      const p = calc(w, subject, pages, u, di, addons);
+      if (p === null) { priceEl.textContent = 'Уточніть вартість у менеджера'; }
+      else { priceEl.textContent = 'від ' + fmt(p); }
+      // payload
+      const payload = { workType: w, subject, pagesFrom: pf.value, pagesTo: pt.value, topic: (f.querySelector('input[name="topic"]')).value, uniqueness: u, deadline: pricing.deadline[di].id, addons, price: p };
+      hiddenCalc.value = JSON.stringify(payload);
+    }
+
+    applyWorkType();
+    updatePrice();
+    workSel.addEventListener('change', () => { applyWorkType(); updatePrice(); });
+    subjectSel.addEventListener('change', updatePrice);
+    pf.addEventListener('input', updatePrice);
+    pt.addEventListener('input', updatePrice);
+    uniqueness.addEventListener('change', updatePrice);
+    deadline.addEventListener('input', updatePrice);
+    addonCb?.addEventListener('change', updatePrice);
+
+    nextBtn?.addEventListener('click', () => {
+      // validate
+      if (!workSel.value || !subjectSel.value) return;
+      if (pagesBox.style.display !== 'none' && (!pf.value)) return;
+      step1.hidden = true;
+      step2.hidden = false;
+    });
+    backBtn?.addEventListener('click', () => {
+      step2.hidden = true;
+      step1.hidden = false;
+    });
+
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // mock success
+      const qName = (f.querySelector('[data-qo-name]')).value.trim();
+      const qContact = (f.querySelector('[data-qo-contact]')).value.trim();
+      const consent = f.querySelector('[data-qo-consent]');
+      if (qName.length < 2 || qContact.length < 3 || !consent?.checked) {
+        if (status) status.textContent = 'Перевірте обов\'язкові поля.';
+        return;
+      }
+      const btn = f.querySelector('button[type="submit"]');
+      if (btn) { btn.disabled = true; btn.textContent = 'Відправляємо…'; }
+      setTimeout(() => {
+        if (status) status.textContent = 'Дякуємо! Ми зв\'яжемося з вами найближчим часом.';
+        f.reset();
+        applyWorkType();
+        updatePrice();
+        if (btn) { btn.disabled = false; btn.textContent = 'Відправити заявку'; }
+        step2.hidden = true; step1.hidden = false;
+      }, 800);
+    });
+  });
+</script>
+<style>
+  .quick-order { position: relative; }
+  .qo-badge {
+    position: absolute; top: -12px; left: 1rem;
+    background: var(--tint); color: var(--deep); padding: 0.3rem 0.8rem;
+    border-radius: var(--r-btn); font-weight: 600; font-size: 0.85rem;
+  }
+  .qo-title { margin-top: 0.5rem; margin-bottom: 1rem; font-size: 1.1rem; }
+  .qo-form .field { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.75rem; }
+  .qo-form label { font-weight: 500; font-size: 0.9rem; }
+  .qo-form input, .qo-form select, .qo-form textarea {
+    background: var(--field-bg); border: 1px solid var(--sage); border-radius: var(--r-input);
+    padding: 0.65rem 0.85rem; width: 100%; font-size: 1rem;
+  }
+  .pills { display: flex; gap: 0.5rem; }
+  .pill { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.8rem; border: 1px solid var(--sage); border-radius: var(--r-btn); cursor: pointer; }
+  .pill:has(input:checked) { background: var(--deep); color: var(--bg); }
+  .deadline-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; flex-wrap: wrap; gap: 0.25rem; }
+  .deadline-note { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+  .qo-price { text-align: center; margin: 1rem 0; }
+  .qo-price-note { font-size: 0.8rem; color: var(--muted); }
+  input[type="range"] { width: 100%; accent-color: var(--deep); }
+</style>
+

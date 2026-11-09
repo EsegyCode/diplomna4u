@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import WaveDivider from '@/components/WaveDivider.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import LeadForm from '@/components/LeadForm.astro';
+import { site } from '@/data/site';
+---
+<BaseLayout title="Контакти | Diplomna 4 U" description="Контакти Diplomna 4 U.">
+  <Section theme="bg">
+    <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Контакти'}]} />
+    <h1>Контакти</h1>
+    <p>Email: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+    {site.telegram && <p>Telegram: <a href={site.telegram.url} target="_blank" rel="noopener noreferrer">{site.telegram.username}</a></p>}
+    <p>Графік: {site.schedule}</p>
+    <p>Зона: {site.zone}</p>
+    <p>{site.legal}</p>
+  </Section>
+  <WaveDivider />
+  <Section theme="surface">
+    <h2>Залишити заявку</h2>
+    <div style="max-width:600px"><LeadForm variant="page" source="contacts" /></div>
+  </Section>
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+---
+<BaseLayout title="Про нас | Diplomna 4 U" description="Консультаційний сервіс з підготовки студентських робіт.">
+  <Section theme="bg">
+    <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Про нас'}]} />
+    <h1>Про нас</h1>
+    <p>TODO: власник перепише. Допомагаємо студентам з дипломними, курсовими та статтями з 2019 року. Консультації спеціалістів-викладачів, реальні дані з дослідних полів.</p>
+    <p class="text-muted">Працюємо офіційно за договором. 100% конфіденційно.</p>
+  </Section>
+</BaseLayout>
+
+
+

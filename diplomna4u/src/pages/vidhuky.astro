@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ReviewCard from '@/components/ReviewCard.astro';
+import ReviewsGrid from '@/components/ReviewsGrid.astro';
+import { getCollection } from 'astro:content';
+
+const reviews = await getCollection('reviews');
+const sorted = reviews.sort((a,b) => +new Date(b.data.date) - +new Date(a.data.date));
+---
+<BaseLayout title="Відгуки | Diplomna 4 U" description="Відгуки клієнтів.">
+  <Section theme="bg">
+    <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Відгуки'}]} />
+    <h1>Відгуки</h1>
+    {sorted.length === 0 ? (
+      <p class="text-muted">TODO: відгуки з'являться після наповнення.</p>
+    ) : (
+      <ReviewsGrid>
+        {sorted.map(r => (
+          <ReviewCard name={r.data.name} workType={r.data.workType} rating={r.data.rating} text={r.data.text} city={r.data.city} date={r.data.date.toLocaleDateString('uk-UA')} />
+        ))}
+      </ReviewsGrid>
+    )}
+  </Section>
+</BaseLayout>

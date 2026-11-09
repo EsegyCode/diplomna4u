@@ -1,0 +1,15 @@
+---
+interface Props {
+  theme?: 'bg' | 'surface' | 'sage' | 'invert' | 'deep';
+  nextBg?: string;
+  id?: string;
+  class?: string;
+}
+const { theme = 'bg', nextBg, id, class: cls } = Astro.props;
+const themeClass = theme === 'bg' ? '' : `section--${theme}`;
+---
+<section id={id} class={`section ${themeClass} ${cls ?? ''}`.trim()} style={nextBg ? `--next-bg: ${nextBg}` : ''}>
+  <div class="container">
+    <slot />
+  </div>
+</section>

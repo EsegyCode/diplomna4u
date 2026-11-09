@@ -1,0 +1,13 @@
+---
+interface Props {
+  dark?: boolean;
+  light?: boolean;
+  href?: string;
+  class?: string;
+}
+const { dark, light, href, class: cls } = Astro.props;
+const Tag = href ? 'a' : 'div';
+---
+<Tag href={href} class={`card ${dark ? 'card--dark' : ''} ${light ? 'card--light' : ''} ${cls ?? ''}`.trim()}>
+  <slot />
+</Tag>

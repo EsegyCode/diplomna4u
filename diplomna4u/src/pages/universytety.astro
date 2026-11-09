@@ -1,0 +1,14 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import UniversitiesList from '@/components/UniversitiesList.astro';
+---
+<BaseLayout title="Університети | Diplomna 4 U" description="Список ВНЗ, з якими ми працюємо.">
+  <Section theme="bg">
+    <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Університети'}]} />
+    <h1>Університети</h1>
+    <UniversitiesList />
+  </Section>
+</BaseLayout>
+

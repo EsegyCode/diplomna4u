@@ -1,0 +1,21 @@
+---
+interface Props {
+  title: string;
+  description?: string | undefined;
+  href: string;
+  date?: Date | undefined;
+  cover?: string | undefined;
+  coverAlt?: string | undefined;
+}
+const { title, description, href, date, cover, coverAlt } = Astro.props;
+---
+<article class="blog-card card">
+  {cover && <img src={cover} alt={coverAlt || title} loading="lazy" style="border-radius:12px;margin-bottom:0.75rem;width:100%;aspect-ratio:16/9;object-fit:cover" />}
+  <h3><a href={href}>{title}</a></h3>
+  {description && <p class="text-muted">{description}</p>}
+  {date && <div class="blog-date text-muted">{date.toLocaleDateString('uk-UA')}</div>}
+</article>
+<style>
+  .blog-card { display: flex; flex-direction: column; }
+  .blog-card h3 a { text-decoration: none; color: inherit; }
+</style>

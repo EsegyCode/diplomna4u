@@ -1,0 +1,70 @@
+---
+import '../styles/global.css';
+import { site } from '@/data/site';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import StickyContact from '@/components/StickyContact.astro';
+import CookieBanner from '@/components/CookieBanner.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  noindex?: boolean;
+  ogImage?: string;
+  jsonLd?: any[];
+  locale?: string;
+}
+const {
+  title,
+  description = '',
+  noindex = false,
+  ogImage = '/og-image.png',
+  jsonLd = [],
+  locale = 'uk_UA',
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, site.domain).href;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(ogImage, site.domain).href;
+---
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={locale} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {jsonLd.map((ld) => (
+      <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    ))}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Перейти до основного вмісту</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <StickyContact />
+    <CookieBanner />
+  </body>
+</html>
+---
+<!-- script -->
+---

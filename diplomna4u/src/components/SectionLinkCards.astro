@@ -1,0 +1,19 @@
+---
+interface Props {
+  items: { title: string; desc: string; href: string }[];
+}
+const { items } = Astro.props;
+---
+<div class="chess-grid">
+  {items.map(it => (
+    <a href={it.href} class="card section-link-card">
+      <h3>{it.title}</h3>
+      <p class="text-muted">{it.desc}</p>
+      <span class="card-cta">Детальніше →</span>
+    </a>
+  ))}
+</div>
+<style>
+  .section-link-card { display: flex; flex-direction: column; gap: 0.5rem; text-decoration: none; }
+  .card-cta { margin-top: auto; font-weight: 600; color: var(--s-accent); }
+</style>

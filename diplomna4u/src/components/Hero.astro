@@ -1,0 +1,31 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  ctaHref?: string;
+  badgePrice?: string;
+}
+const { title, subtitle, ctaHref = '#how', badgePrice } = Astro.props;
+---
+<section class="section hero-section">
+  <div class="container hero-grid">
+    <div class="hero-text">
+      {badgePrice && <span class="badge">Ціна від {badgePrice} грн</span>}
+      <h1>{title}</h1>
+      {subtitle && <p class="hero-subtitle">{subtitle}</p>}
+      <div class="hero-actions">
+        <a href={ctaHref} class="btn">Як це працює →</a>
+        <a href="#faq" class="btn btn--ghost">Часті запитання ↓</a>
+      </div>
+    </div>
+    <div class="hero-form">
+      <slot />
+    </div>
+  </div>
+</section>
+<style>
+  .hero-grid { display: grid; gap: 2rem; align-items: start; }
+  @media (min-width: 900px) { .hero-grid { grid-template-columns: 1fr 1fr; } }
+  .hero-subtitle { font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+  .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+</style>

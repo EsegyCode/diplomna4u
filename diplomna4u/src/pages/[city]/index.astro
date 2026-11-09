@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import WaveDivider from '@/components/WaveDivider.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import LocalUniversities from '@/components/LocalUniversities.astro';
+import OtherCities from '@/components/OtherCities.astro';
+import FAQ from '@/components/FAQ.astro';
+import LeadForm from '@/components/LeadForm.astro';
+import QuickOrder from '@/components/QuickOrder.astro';
+import { cities } from '@/data/cities';
+import { faqGeneral } from '@/data/faq';
+import { fill } from '@/utils/template';
+
+export function getStaticPaths() {
+  return cities.map(c => ({ params: { city: c.slug }, props: { city: c } }));
+}
+const { city } = Astro.props as { city: (typeof cities)[number] };
+const noindex = !city.localContentReady;
+const title = fill('Замовити дипломну роботу {inCity} — від {price} грн | {brand}', city);
+const description = `Допомога з дипломною, курсовою та статтею ${city.inCity}. Калькулятор ціни онлайн, безкоштовна консультація.`;
+const jsonLd = [
+  { '@context':'https://schema.org', '@type':'Service', name:'Дипломна робота', areaServed: { '@type':'City', name: city.name } },
+  { '@context':'https://schema.org', '@type':'BreadcrumbList', itemListElement: [
+    { '@type':'ListItem', position:1, name:'Головна', item:'https://diplomna4u.cx.ua/' },
+    { '@type':'ListItem', position:2, name: city.name, item:`https://diplomna4u.cx.ua/${city.slug}/` },
+  ] },
+];
+---
+<BaseLayout title={title} description={description} noindex={noindex} jsonLd={jsonLd}>
+  <Section theme="bg">
+    <Breadcrumbs items={[{label:'Головна', href:'/'}, {label: city.name}]} />
+    <h1>Дипломна робота {city.inCity}</h1>
+    <p class="text-muted">{city.region}. Допомога з дипломними, курсовими та статтями.</p>
+    {city.intro && <p>{city.intro}</p>}
+    <LocalUniversities universities={city.universities} />
+    <div style="margin-top:1.5rem"><QuickOrder variant="compact" /></div>
+  </Section>
+  <WaveDivider />
+  <Section theme="surface">
+    <h2>Часті запитання</h2>
+    <FAQ items={city.localFaq.length ? city.localFaq : faqGeneral} limit={4} />
+  </Section>
+  <WaveDivider />
+  <Section theme="invert">
+    <h2 style="text-align:center">Залишити заявку {city.inCity}</h2>
+    <div style="max-width:600px;margin:0 auto">
+      <LeadForm variant="page" source="city" city={city.slug} />
+    </div>
+  </Section>
+  <WaveDivider />
+  <Section theme="bg">
+    <OtherCities current={city.slug} />
+  </Section>
+</BaseLayout>

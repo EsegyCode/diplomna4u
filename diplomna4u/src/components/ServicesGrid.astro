@@ -1,0 +1,22 @@
+---
+import { services } from '@/data/services';
+interface Props { services?: typeof services }
+const { services: items = services } = Astro.props;
+---
+<div class="chess-grid services-grid">
+  {items.map(s => (
+    <a href={`/poslugy/${s.slug}/`} class="card service-card">
+      <h3>{s.label}</h3>
+      <p class="text-muted">{s.shortDesc}</p>
+      <div class="service-meta">
+        <span class="badge">від {s.minPrice.toLocaleString('uk-UA')} грн</span>
+        {s.minDays && <span class="service-days">від {s.minDays} дн.</span>}
+      </div>
+    </a>
+  ))}
+</div>
+<style>
+  .service-card { display: flex; flex-direction: column; gap: 0.75rem; text-decoration: none; }
+  .service-meta { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-top: auto; }
+  .service-days { font-size: 0.85rem; opacity: 0.85; }
+</style>

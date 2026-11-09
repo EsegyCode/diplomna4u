@@ -1,0 +1,118 @@
+---
+import { site, nav } from '@/data/site';
+const viber = (site as any).viber as { url: string; label?: string } | null;
+const telegram = site.telegram;
+---
+<div class="sticky-contact" id="stickyContact">
+  <button class="sticky-btn" id="stickyToggle" aria-label="Зв'язатися з нами" aria-expanded="false">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </button>
+  <div class="sticky-panel" id="stickyPanel" hidden>
+    <div class="sticky-panel-head">
+      <strong>Зв'язок з нами</strong>
+      <button id="stickyClose" aria-label="Закрити">×</button>
+    </div>
+    {telegram && (
+      <a class="btn" href={telegram.url} target="_blank" rel="noopener noreferrer" style="margin-bottom:0.5rem">{telegram.label}</a>
+    )}
+    {viber && (
+      <a class="btn btn--ghost" href={viber.url} target="_blank" rel="noopener noreferrer" style="margin-bottom:0.5rem">Viber</a>
+    )}
+    <form class="mini-form" id="stickyForm">
+      <input type="text" name="name" placeholder="Ім'я" required />
+      <input type="tel" name="phone" placeholder="Телефон або @username" />
+      <select name="workType" required>
+        <option value="">Тип роботи</option>
+        {nav.services.map(s => <option value={s.label}>{s.label}</option>)}
+      </select>
+      <input type="text" name="hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <label class="consent">
+        <input type="checkbox" required />
+        Погоджуюсь з <a href="/polityka-konfidentsiinosti/" target="_blank">політикою конфіденційності</a>
+      </label>
+      <button type="submit" class="btn">Залишити заявку</button>
+      <p class="form-status" aria-live="polite"></p>
+    </form>
+  </div>
+  <div class="sticky-mobile-bar">
+    {telegram && <a href={telegram.url} target="_blank" rel="noopener noreferrer">Telegram</a>}
+    {viber && <a href={viber.url} target="_blank" rel="noopener noreferrer">Viber</a>}
+    <button id="stickyMobileOpen">Заявка</button>
+  </div>
+</div>
+
+<script>
+  const toggle = document.getElementById('stickyToggle');
+  const panel = document.getElementById('stickyPanel');
+  const close = document.getElementById('stickyClose');
+  const mobileOpen = document.getElementById('stickyMobileOpen');
+  function openPanel() { if (panel) { panel.hidden = false; toggle?.setAttribute('aria-expanded', 'true'); } }
+  function closePanel() { if (panel) { panel.hidden = true; toggle?.setAttribute('aria-expanded', 'false'); } }
+  toggle?.addEventListener('click', () => panel?.hidden ? openPanel() : closePanel());
+  close?.addEventListener('click', closePanel);
+  mobileOpen?.addEventListener('click', openPanel);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePanel(); });
+  document.addEventListener('click', (e) => {
+    const t = e.target as Node;
+    const root = document.getElementById('stickyContact');
+    if (root && !root.contains(t)) closePanel();
+  });
+  // Mock submit
+  const form = document.getElementById('stickyForm') as HTMLFormElement | null;
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const status = form.querySelector('.form-status');
+    if (status) { status.textContent = 'Відправляємо…'; }
+    setTimeout(() => {
+      if (status) { status.textContent = 'Дякуємо! Ми зв\'яжемося з вами найближчим часом.'; }
+      form.reset();
+    }, 800);
+  });
+</script>
+
+<style>
+  .sticky-btn {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--deep); color: var(--bg);
+    border: 3px solid var(--bg);
+    box-shadow: 0 4px 16px rgba(43,26,29,0.25);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .hp { display: none !important; }
+  .sticky-contact { position: fixed; right: 16px; bottom: 16px; z-index: 999; }
+  .sticky-panel {
+    position: absolute; right: 0; bottom: 72px;
+    width: 320px; max-width: calc(100vw - 32px);
+    background: var(--bg); border: 1px solid var(--tint);
+    border-radius: var(--r-card); padding: 1rem;
+    box-shadow: var(--shadow-card);
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .sticky-panel[hidden] { display: none; }
+  .sticky-panel-head { display: flex; justify-content: space-between; align-items: center; }
+  .mini-form { display: flex; flex-direction: column; gap: 0.5rem; }
+  .mini-form input, .mini-form select { padding: 0.6rem 0.8rem; border: 1px solid var(--sage); border-radius: var(--r-input); background: var(--field-bg); }
+  .consent { font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem; }
+  .form-status { font-size: 0.85rem; color: var(--deep); min-height: 1.2em; }
+  .sticky-mobile-bar { display: none; }
+  @media (max-width: 600px) {
+    .sticky-contact { left: 0; right: 0; bottom: 0; }
+    .sticky-btn { display: none; }
+    .sticky-mobile-bar {
+      display: flex; gap: 0.5rem;
+      background: var(--deep); padding: 0.5rem;
+      justify-content: space-around;
+    }
+    .sticky-mobile-bar a, .sticky-mobile-bar button {
+      color: var(--bg); background: transparent; border: 1px solid var(--bg);
+      border-radius: var(--r-btn); padding: 0.5rem 1rem; flex: 1; text-align: center; text-decoration: none;
+    }
+    .sticky-panel { bottom: 60px; right: 8px; left: 8px; width: auto; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .sticky-btn { animation: pulse 2s infinite; }
+  }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+</style>

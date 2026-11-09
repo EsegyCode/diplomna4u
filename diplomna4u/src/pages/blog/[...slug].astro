@@ -1,0 +1,42 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import QuickOrder from '@/components/QuickOrder.astro';
+import WaveDivider from '@/components/WaveDivider.astro';
+import BlogCard from '@/components/BlogCard.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.filter(p => !p.data.draft).map(p => ({ params: { slug: p.id }, props: { post: p } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const related = (await getCollection('blog')).filter(p => !p.data.draft && p.id !== post.id).slice(0,3);
+---
+<BaseLayout title={`${post.data.title} | Diplomna 4 U`} description={post.data.description}>
+  <Section theme="bg">
+    <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Блог', href:'/blog/'}, {label: post.data.title}]} />
+    <article>
+      <h1>{post.data.title}</h1>
+      <p class="text-muted">{post.data.date.toLocaleDateString('uk-UA')}</p>
+      {post.data.cover && <img src={post.data.cover} alt={post.data.coverAlt || post.data.title} loading="eager" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin:1rem 0" />}
+      <div class="prose"><Content /></div>
+    </article>
+  </Section>
+  <WaveDivider />
+  <Section theme="surface">
+    <h2>Читайте також</h2>
+    <div class="grid3">
+      {related.map(p => <BlogCard title={p.data.title} description={p.data.description} href={`/blog/${p.id}/`} date={p.data.date} cover={p.data.cover} coverAlt={p.data.coverAlt} />)}
+    </div>
+    <div style="margin-top:1.5rem;max-width:600px"><QuickOrder variant="compact" /></div>
+  </Section>
+</BaseLayout>
+<style>
+  .prose :global(p) { margin: 1rem 0; }
+  .prose :global(h2) { margin-top: 1.5rem; }
+  .grid3 { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .grid3 { grid-template-columns: 1fr 1fr 1fr; } }
+</style>

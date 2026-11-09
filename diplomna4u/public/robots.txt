@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://diplomna4u.cx.ua/sitemap-index.xml

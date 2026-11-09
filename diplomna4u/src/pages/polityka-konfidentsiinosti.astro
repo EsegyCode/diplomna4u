@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/Section.astro';
+import LegalPage from '@/components/LegalPage.astro';
+---
+<BaseLayout title="Політика конфіденційності | Diplomna 4 U" description="Політика конфіденційності.">
+  <Section theme="bg">
+    <LegalPage title="Політика конфіденційності">
+      <!-- TODO: перевірити юристом -->
+      <p>TODO: юридичний текст буде додано власником. <!-- TODO: перевірити юристом --></p>
+      <h2>Які дані ми збираємо</h2>
+      <p>Ім'я, контакт (телефон або Telegram), email, коментар, параметри розрахунку з калькулятора, cookie.</p>
+      <h2>Мета обробки</h2>
+      <p>Обробка заявок, консультації, покращення сервісу.</p>
+      <h2>Передача третім особам</h2>
+      <p>Заявки передаються через Telegram. Аналітика — після згоди.</p>
+      <h2>Права суб'єкта</h2>
+      <p>Запит на доступ, виправлення, видалення — через email {`diplomna4u@gmail.com`}.</p>
+    </LegalPage>
+  </Section>
+</BaseLayout>
