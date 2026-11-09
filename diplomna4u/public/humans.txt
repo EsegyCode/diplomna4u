@@ -1,0 +1,9 @@
+# humanstxt.org
+/* TEAM */
+Brand: Diplomna 4 U
+Contact: diplomna4u@gmail.com
+Site: https://diplomna4u.cx.ua
+/* SITE */
+Language: Ukrainian
+Standards: HTML5, CSS3, Schema.org
+Software: Astro

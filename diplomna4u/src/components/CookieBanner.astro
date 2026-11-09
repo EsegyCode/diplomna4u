@@ -1,7 +1,7 @@
 ---
 ---
 <div id="cookieBanner" class="cookie-banner" hidden>
-  <p>Ми використовуємо cookie-файли для коректної роботи сайту і ( за вашої згоди) для аналітики. Докладніше: <a href="/polityka-cookie/">політика cookie</a>.</p>
+  <p>Ми використовуємо cookie-файли для коректної роботи сайту і (за вашої згоди) для аналітики. Докладніше: <a href="/polityka-cookie/">політика cookie</a>.</p>
   <div class="cookie-actions">
     <button id="cookieAcceptAll" class="btn btn--sm">Прийняти все</button>
     <button id="cookieReject" class="btn btn--ghost btn--sm">Лише необхідні</button>
@@ -40,11 +40,12 @@
 </script>
 <style>
   .cookie-banner {
-    position: fixed; left: 0; right: 0; bottom: 0;
+    position: fixed; left: 1rem; bottom: 1rem;
+    max-width: 420px; right: auto;
     z-index: 1000;
-    background: var(--bg); border-top: 1px solid var(--tint);
-    padding: 1rem; box-shadow: var(--shadow-card);
-    display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; justify-content: space-between;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--r-card);
+    padding: 0.9rem 1rem; box-shadow: var(--shadow-card);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; justify-content: space-between;
   }
   .cookie-banner[hidden] { display: none; }
   .cookie-banner p { max-width: 70ch; font-size: 0.9rem; }

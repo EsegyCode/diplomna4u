@@ -5,6 +5,7 @@ export const site = {
   brand: 'Diplomna 4 U',
   brandUk: 'Дипломна 4 U',
   tagline: 'Дипломна робота для тебе',
+  description: 'Допомога з дипломною, курсовою та статтею по всій Україні. Калькулятор ціни онлайн, безкоштовна консультація.',
   domain: 'https://diplomna4u.cx.ua',
   email: 'diplomna4u@gmail.com',
   telegram: {

@@ -4,7 +4,7 @@ const ready = cities.filter(c => c.localContentReady);
 ---
 <div class="universities-list">
   {ready.length === 0 ? (
-    <p class="text-muted">TODO: список університетів з'явиться після наповнення міст.</p>
+    <p class="text-muted">Список університетів з'явиться після наповнення міст.</p>
   ) : ready.map(c => (
     <section class="uni-city">
       <h3>{c.name}</h3>

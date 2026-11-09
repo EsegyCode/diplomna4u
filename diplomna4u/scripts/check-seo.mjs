@@ -95,6 +95,16 @@ for (const file of htmlFiles) {
   if (!canonicalMatch) {
     error(`Відсутній canonical у ${file}`);
   }
+
+  // Check OG image file exists
+  const ogMatch = content.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i);
+  if (ogMatch) {
+    const ogUrl = ogMatch[1];
+    const ogPath = ogUrl.replace(/^https?:\/\/[^/]+/, '').replace(/^\//, '');
+    if (ogPath && !existsSync(join(DIST, ogPath))) {
+      error(`OG image not found: ${ogPath} (referenced in ${file})`);
+    }
+  }
 }
 
 // Check sitemap

@@ -6,7 +6,6 @@ import Hero from '@/components/Hero.astro';
 import QuickOrder from '@/components/QuickOrder.astro';
 import TrustStrip from '@/components/TrustStrip.astro';
 import ServicesGrid from '@/components/ServicesGrid.astro';
-import SectionLinkCards from '@/components/SectionLinkCards.astro';
 import HowItWorks from '@/components/HowItWorks.astro';
 import PricingTeaser from '@/components/PricingTeaser.astro';
 import FAQ from '@/components/FAQ.astro';
@@ -38,14 +37,12 @@ const sectionCards = [
 ];
 
 const jsonLd = [
-  { '@context': 'https://schema.org', '@type': 'Organization', name: 'Diplomna 4 U', url: 'https://diplomna4u.cx.ua', email: 'diplomna4u@gmail.com' },
-  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Diplomna 4 U', url: 'https://diplomna4u.cx.ua' },
   { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqGeneral.slice(0,6).map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
 ];
 ---
 <BaseLayout title={`Diplomna 4 U — дипломна робота для тебе | від ${minPrice} грн`} description="Допомога з дипломною, курсовою та статтею по всій Україні. Калькулятор ціни онлайн, безкоштовна консультація." jsonLd={jsonLd}>
   <Section theme="bg">
-    <Hero title="Дипломна робота для тебе" subtitle="Швидко, офіційно, з консультаціями викладачів-спеціалістів. Дізнайся вартість за 2 хвилини." badgePrice={String(minPrice)}>
+    <Hero title="Дипломна робота для тебе" subtitle="Швидко, офіційно, з консультаціями викладачів і спеціалістів. Дізнайся вартість за 2 хвилини.">
       <QuickOrder variant="hero" />
     </Hero>
   </Section>
@@ -57,19 +54,13 @@ const jsonLd = [
   </Section>
   <WaveDivider variant="drop" />
 
-  <Section theme="invert">
-    <h2 style="text-align:center">Розділи сайту</h2>
-    <SectionLinkCards items={sectionCards} />
-  </Section>
-  <WaveDivider variant="wave" />
-
   <Section theme="bg">
     <h2 id="how" style="margin-bottom:1.5rem">Як ми працюємо</h2>
     <HowItWorks steps={stepTexts} />
   </Section>
   <WaveDivider variant="drop" />
 
-  <Section theme="sage">
+  <Section theme="surface">
     <div style="display:grid;gap:2rem">
       <div>
         <h2 style="margin-bottom:1rem">Ціни</h2>
@@ -81,9 +72,9 @@ const jsonLd = [
   </Section>
   <WaveDivider variant="wave" />
 
-  <Section theme="invert">
+  <Section theme="bg">
     <h2 style="text-align:center;margin-bottom:1.5rem">Відгуки</h2>
-    <p class="text-muted" style="text-align:center">TODO: відгуки додасть власник.</p>
+    <p class="text-muted" style="text-align:center"><a href="/vidhuky/" class="btn btn--ghost">Читати відгуки →</a></p>
   </Section>
   <WaveDivider variant="wave" />
 
@@ -96,14 +87,11 @@ const jsonLd = [
   </Section>
   <WaveDivider variant="wave" />
 
-  <Section theme="invert">
+  <Section theme="surface">
     <h2 style="text-align:center;margin-bottom:0.5rem">Готовий почати?</h2>
     <p style="text-align:center;margin-bottom:1.5rem">Залиш заявку — ми проконсультуємо безкоштовно</p>
     <div style="max-width:600px;margin:0 auto">
       <LeadForm variant="compact" source="home" />
     </div>
-    <p style="text-align:center;margin-top:1rem">
-      {site.telegram && <a href={site.telegram.url} target="_blank" rel="noopener noreferrer" class="btn">Написати в Telegram</a>}
-    </p>
   </Section>
 </BaseLayout>

@@ -8,6 +8,7 @@ interface Props {
 }
 const { variant = 'full', source = 'site', city = '', calcPayload = '', workTypeDefault = '' } = Astro.props;
 import { nav } from '@/data/site';
+import { site } from '@/data/site';
 ---
 <form class={`lead-form lead-form--${variant}`} data-lead-form novalidate>
   <input type="hidden" name="source" value={source} />
@@ -72,6 +73,7 @@ import { nav } from '@/data/site';
 
   <div class="form-actions">
     <button type="submit" class="btn submit-btn">Відправити заявку</button>
+    {variant === 'compact' && site.telegram && <a href={site.telegram.url} target="_blank" rel="noopener noreferrer" class="btn btn--ghost">Написати в Telegram</a>}
   </div>
   <p class="form-status" aria-live="polite"></p>
 </form>
@@ -136,14 +138,15 @@ import { nav } from '@/data/site';
   .lead-form .field { display: flex; flex-direction: column; gap: 0.3rem; }
   .lead-form label { font-weight: 500; font-size: 0.9rem; color: var(--ink); }
   .lead-form input, .lead-form select, .lead-form textarea {
-    background: var(--field-bg); border: 1px solid var(--sage); border-radius: var(--r-input);
+    background: var(--field-bg); border: 1px solid var(--field-border); border-radius: var(--r-input);
     padding: 0.7rem 0.9rem; font-size: 1rem; color: var(--ink); width: 100%;
   }
-  .lead-form input:focus, .lead-form select:focus, .lead-form textarea:focus { border-color: var(--deep); outline: none; }
+  .lead-form input:focus, .lead-form select:focus, .lead-form textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); outline: none; }
   .lead-form .error { border-color: var(--error); }
   .lead-form .field-error { color: var(--error); font-size: 0.8rem; min-height: 1em; }
   .consent { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.85rem; }
-  .form-actions { display: flex; }
+  .consent a { color: var(--accent); text-decoration: underline; }
+  .form-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
   .lead-form .form-status { min-height: 1.2em; color: var(--deep); font-size: 0.9rem; }
   .lead-form--sticky { }
   .lead-form--compact { }

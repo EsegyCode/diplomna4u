@@ -14,7 +14,7 @@ const sorted = reviews.sort((a,b) => +new Date(b.data.date) - +new Date(a.data.d
     <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Відгуки'}]} />
     <h1>Відгуки</h1>
     {sorted.length === 0 ? (
-      <p class="text-muted">TODO: відгуки з'являться після наповнення.</p>
+      <p class="text-muted">Відгуки з'являться після наповнення.</p>
     ) : (
       <ReviewsGrid>
         {sorted.map(r => (

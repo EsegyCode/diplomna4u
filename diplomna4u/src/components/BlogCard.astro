@@ -10,7 +10,7 @@ interface Props {
 const { title, description, href, date, cover, coverAlt } = Astro.props;
 ---
 <article class="blog-card card">
-  {cover && <img src={cover} alt={coverAlt || title} loading="lazy" style="border-radius:12px;margin-bottom:0.75rem;width:100%;aspect-ratio:16/9;object-fit:cover" />}
+  {cover && <img src={cover} alt={coverAlt || title} loading="lazy" width="1200" height="675" style="border-radius:12px;margin-bottom:0.75rem;width:100%;aspect-ratio:16/9;object-fit:cover" />}
   <h3><a href={href}>{title}</a></h3>
   {description && <p class="text-muted">{description}</p>}
   {date && <div class="blog-date text-muted">{date.toLocaleDateString('uk-UA')}</div>}

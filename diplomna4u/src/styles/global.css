@@ -9,22 +9,28 @@
 /* --- Tokens --- */
 :root {
   --bg: #FFFDF8;
-  --surface: #FFF9EB;
+  --surface: #FBF5EA;
   --sage: #9FB2AC;
-  --tint: #E6EDEA;
-  --deep: #5D0D18;
-  --deep-hover: #7A1626;
-  --ink: #2B1A1D;
+  --tint: #EADFD0;
+  --deep: #6B0F1F;
+  --deep-hover: #4F0A17;
+  --ink: #2B1418;
   --muted: #6B5A5D;
   --error: #D92D20;
   --field-bg: #fff;
+  --card: #FFFFFF;
+  --border: #EADFD0;
+  --accent: #6B0F1F;
+  --accent-hover: #4F0A17;
+  --accent-tint: #F6E7E9;
+  --field-border: #D9CBB8;
 
   --r-btn: 999px;
-  --r-card: 24px;
-  --r-input: 14px;
-  --container: 1200px;
+  --r-card: 16px;
+  --r-input: 12px;
+  --container: 1120px;
   --tap-min: 48px;
-  --shadow-card: 0 8px 28px rgba(43, 26, 29, 0.10);
+  --shadow-card: 0 4px 20px rgba(43,20,24,.06);
 
   /* Section defaults */
   --s-bg: var(--bg);
@@ -82,29 +88,14 @@ input, select, textarea { font-family: inherit; }
   --s-on: var(--bg);
   background: var(--s-bg);
   color: var(--s-fg);
-  padding-block: 4rem;
+  padding-block: 3rem;
 }
+@media (min-width: 600px) { .section { padding-block: 4rem; } }
+@media (min-width: 900px) { .section { padding-block: 5rem; } }
 .section--surface { --s-bg: var(--surface); }
-.section--sage {
-  --s-bg: var(--sage);
-  --s-fg: var(--deep);
-  --s-accent: var(--deep);
-  --s-on: var(--bg);
-}
-.section--invert {
-  --s-bg: var(--deep);
-  --s-fg: var(--bg);
-  --s-accent: var(--bg);
-  --s-on: var(--deep);
-}
-.section--deep {
-  --s-bg: var(--deep);
-  --s-fg: var(--bg);
-  --s-accent: var(--bg);
-  --s-on: var(--deep);
-  background: var(--s-bg);
-  color: var(--s-fg);
-}
+.section--sage { --s-bg: var(--surface); }
+.section--invert { --s-bg: var(--surface); --s-fg: var(--ink); --s-accent: var(--accent); --s-on: var(--card); }
+.section--deep { --s-bg: var(--surface); --s-fg: var(--ink); --s-accent: var(--accent); --s-on: var(--card); }
 
 /* --- Buttons --- */
 .btn {
@@ -153,13 +144,15 @@ input, select, textarea { font-family: inherit; }
   --s-fg: var(--ink);
   --s-accent: var(--deep);
   --s-on: var(--bg);
-  background: var(--s-bg);
+  background: var(--bg);
   color: var(--s-fg);
   border: 1px solid var(--tint);
   border-radius: var(--r-card);
   padding: 1.5rem;
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
+  transition: box-shadow 0.2s, border-color 0.2s;
 }
+.card:hover { box-shadow: var(--shadow-card); }
 .card--dark {
   --s-bg: var(--deep);
   --s-fg: var(--bg);
@@ -246,7 +239,7 @@ input, select, textarea { font-family: inherit; }
 .field select,
 .field textarea {
   background: var(--field-bg);
-  border: 1px solid var(--sage);
+  border: 1px solid var(--field-border);
   border-radius: var(--r-input);
   padding: 0.75rem 1rem;
   font-size: 1rem;
@@ -258,7 +251,9 @@ input, select, textarea { font-family: inherit; }
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
-  border-color: var(--deep);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-tint);
+  outline: none;
 }
 .field input.error,
 .field select.error,

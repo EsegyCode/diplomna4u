@@ -3,13 +3,12 @@ import { pricing } from '@/data/pricing';
 ---
 <div class="pricing-teaser">
   <table class="price-table">
-    <thead><tr><th>Тип роботи</th><th>Термін</th><th>Ціна від</th></tr></thead>
+    <thead><tr><th>Тип роботи</th><th>Ціна від</th></tr></thead>
     <tbody>
       {pricing.workTypes.filter(w => w.slug !== 'prezentatsiya').map(w => (
         <tr>
           <td>{w.label}</td>
-          <td>{w.minDays ? `від ${w.minDays} дн.` : '—'}</td>
-          <td>{w.minPrice.toLocaleString('uk-UA')} грн</td>
+          <td><strong>{w.minPrice.toLocaleString('uk-UA')} грн</strong></td>
         </tr>
       ))}
     </tbody>
@@ -17,6 +16,7 @@ import { pricing } from '@/data/pricing';
 </div>
 <style>
   .price-table { width: 100%; border-collapse: collapse; }
-  .price-table th, .price-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--tint); text-align: left; }
-  .price-table th { font-weight: 600; color: var(--s-fg); }
+  .price-table th, .price-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); text-align: left; }
+  .price-table th { font-weight: 600; color: var(--ink); }
+  .price-table td strong { color: var(--accent); font-weight: 700; }
 </style>

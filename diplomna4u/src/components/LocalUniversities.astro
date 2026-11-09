@@ -6,7 +6,7 @@ const { universities } = Astro.props;
 ---
 <div class="local-universities">
   <h3>Університети міста</h3>
-  {universities.length === 0 ? <p class="text-muted">TODO: список буде додано.</p> : (
+  {universities.length === 0 ? <p class="text-muted">Список буде додано.</p> : (
     <ul>
       {universities.map(u => <li>{u.name}{u.short ? ` (${u.short})` : ''}</li>)}
     </ul>

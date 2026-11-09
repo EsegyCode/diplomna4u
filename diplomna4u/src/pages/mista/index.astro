@@ -10,7 +10,7 @@ const ready = cities.filter(c => c.localContentReady);
     <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Міста'}]} />
     <h1>Міста</h1>
     {ready.length === 0 ? (
-      <p class="text-muted">TODO: сторінки міст з'являться після наповнення.</p>
+      <p class="text-muted">Сторінки міст з'являться після наповнення.</p>
     ) : (
       <ul class="city-list">
         {ready.map(c => <li><a href={`/${c.slug}/`}>{c.name}</a> — {c.region}</li>)}

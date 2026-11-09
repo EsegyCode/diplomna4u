@@ -6,64 +6,70 @@ const readyCities = cities.filter(c => c.localContentReady);
 ---
 <header class="site-header">
   <div class="container header-inner">
-    <a href="/" class="logo" aria-label={site.brandUk}>{site.brandUk}</a>
-    <button class="burger" aria-label="Меню" aria-expanded="false" id="burgerBtn">☰</button>
-    <nav class="nav" id="mainNav" aria-label="Головне меню">
-      <details class="nav-dropdown">
-        <summary class="nav-link nav-summary">
-          <a href="/poslugy/" class="nav-parent-link">Наші послуги</a>
-          <span aria-hidden="true">▾</span>
-        </summary>
-        <ul class="dropdown-list">
-          {nav.services.map(s => (
-            <li><a href={s.href}>{s.label}</a></li>
-          ))}
-        </ul>
-      </details>
-      {nav.main.map(item => (
-        <a href={item.href} class="nav-link">{item.label}</a>
-      ))}
-      <details class="nav-dropdown">
-        <summary class="nav-link nav-summary">
-          <a href="/mista/" class="nav-parent-link">Міста</a>
-          <span aria-hidden="true">▾</span>
-        </summary>
-        <ul class="dropdown-list">
-          {readyCities.length === 0 ? (
-            <li class="dropdown-empty">Скоро</li>
-          ) : readyCities.map(c => (
-            <li><a href={`/${c.slug}/`}>{c.name}</a></li>
-          ))}
-          <li><a href="/mista/">Усі міста →</a></li>
-        </ul>
-      </details>
-      <a href="/universytety/" class="nav-link">Університети</a>
-      <a href={nav.cta.href} class="btn btn--sm">{nav.cta.label}</a>
-    </nav>
+    <a href="/" class="logo" aria-label={site.brandUk}>
+      <img src="/logo.webp" alt={site.brandUk} width="168" height="34" loading="eager" />
+    </a>
+    <div class="header-actions">
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="megaMenu" aria-label="Меню">
+        <span aria-hidden="true">☰</span> Меню
+      </button>
+      <a href="/#quick-order" class="btn btn--sm">Дізнатись ціну</a>
+    </div>
+  </div>
+  <div class="mega-menu" id="megaMenu" aria-hidden="true">
+    <div class="container mega-grid">
+      <div class="mega-col">
+        <h3>Послуги</h3>
+        {nav.services.map(s => (
+          <a href={s.href}>{s.label}</a>
+        ))}
+      </div>
+      <div class="mega-col">
+        <h3>Компанія</h3>
+        {nav.main.map(item => (
+          <a href={item.href}>{item.label}</a>
+        ))}
+      </div>
+      <div class="mega-col">
+        <h3>Де ми працюємо</h3>
+        <a href="/mista/">Міста</a>
+        <a href="/universytety/">Університети</a>
+        <a href="/mista/" class="mega-all">Усі міста →</a>
+      </div>
+    </div>
+    <button class="mega-close" id="menuClose" aria-label="Закрити меню" type="button">×</button>
   </div>
 </header>
 
 <script>
-  const btn = document.getElementById('burgerBtn');
-  const nav = document.getElementById('mainNav');
-  if (btn && nav) {
-    btn.addEventListener('click', () => {
-      const open = nav.classList.toggle('open');
-      btn.setAttribute('aria-expanded', String(open));
-    });
-    document.addEventListener('click', (e) => {
-      if (!nav.contains(e.target as Node) && !btn.contains(e.target as Node)) {
-        nav.classList.remove('open');
-        btn.setAttribute('aria-expanded', 'false');
-      }
-    });
+  const btn = document.getElementById('menuBtn');
+  const menu = document.getElementById('megaMenu');
+  const closeBtn = document.getElementById('menuClose');
+  function setOpen(open: boolean) {
+    if (!menu || !btn) return;
+    menu.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+    menu.setAttribute('aria-hidden', String(!open));
+    if (open) {
+      const first = menu.querySelector('a');
+      first?.focus({ preventScroll: true });
+    } else {
+      btn.focus({ preventScroll: true });
+    }
   }
+  btn?.addEventListener('click', () => setOpen(!menu?.classList.contains('is-open')));
+  closeBtn?.addEventListener('click', () => setOpen(false));
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && nav) {
-      nav.classList.remove('open');
-      btn?.setAttribute('aria-expanded', 'false');
+    if (e.key === 'Escape' && menu?.classList.contains('is-open')) setOpen(false);
+  });
+  document.addEventListener('click', (e) => {
+    if (!menu || !btn) return;
+    const target = e.target as Node;
+    if (menu.classList.contains('is-open') && !menu.contains(target) && !btn.contains(target)) {
+      setOpen(false);
     }
   });
+  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
 </script>
 
 <style>
@@ -72,7 +78,7 @@ const readyCities = cities.filter(c => c.localContentReady);
     top: 0;
     z-index: 900;
     background: var(--bg);
-    border-bottom: 1px solid var(--tint);
+    border-bottom: 1px solid var(--border);
   }
   .header-inner {
     display: flex;
@@ -81,25 +87,90 @@ const readyCities = cities.filter(c => c.localContentReady);
     min-height: 64px;
     justify-content: space-between;
   }
-  .logo { font-weight: 700; color: var(--deep); text-decoration: none; font-size: 1.1rem; }
-  .burger { display: none; font-size: 1.5rem; }
-  .nav { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-  .nav-link { color: var(--ink); text-decoration: none; padding: 0.5rem 0.75rem; font-weight: 500; }
-  .nav-link:hover { color: var(--deep); }
-  .nav-dropdown { position: relative; }
-  .dropdown-list { list-style: none; position: absolute; top: 100%; left: 0; background: var(--bg); border: 1px solid var(--tint); border-radius: var(--r-card); padding: 0.5rem; min-width: 220px; display: none; z-index: 950; box-shadow: var(--shadow-card); }
-  details[open] .dropdown-list { display: block; }
-  .dropdown-list a { display: block; padding: 0.4rem 0.75rem; text-decoration: none; color: var(--ink); border-radius: 8px; }
-  .dropdown-list a:hover { background: var(--tint); color: var(--deep); }
-  .nav-summary { list-style: none; display: inline-flex; align-items: center; gap: 0.25rem; cursor: pointer; }
-  .nav-summary::-webkit-details-marker { display: none; }
-  .nav-parent-link { text-decoration: none; color: inherit; }
-  .dropdown-empty { padding: 0.4rem 0.75rem; color: var(--muted); }
-  @media (max-width: 900px) {
-    .burger { display: block; }
-    .nav { display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--bg); padding: 1rem; border-bottom: 1px solid var(--tint); }
-    .nav.open { display: flex; }
-    .dropdown-list { position: static; box-shadow: none; border: none; display: none; }
-    details[open] .dropdown-list { display: block; }
+  .logo { display: inline-flex; align-items: center; text-decoration: none; }
+  .logo img { display: block; width: auto; height: 34px; }
+  .header-actions { display: flex; align-items: center; gap: 0.75rem; }
+  .menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 40px;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--r-btn);
+    background: var(--card);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .menu-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .menu-btn:focus-visible { box-shadow: 0 0 0 3px var(--accent-tint); outline: none; }
+  .mega-menu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(-8px);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 150ms ease, transform 150ms ease, visibility 150ms;
+    z-index: 950;
+  }
+  .mega-menu.is-open {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .mega-grid {
+    display: grid;
+    gap: 2rem;
+    padding-block: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .mega-col h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .mega-col a {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 0.35rem 0;
+    font-size: 1rem;
+  }
+  .mega-col a:hover { color: var(--accent); text-decoration: underline; }
+  .mega-col a:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--accent-tint); border-radius: 4px; }
+  .mega-all { font-weight: 600; color: var(--accent); }
+  .mega-close {
+    display: none;
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    min-width: 48px;
+    min-height: 48px;
+    color: var(--ink);
+  }
+  @media (max-width: 768px) {
+    .mega-menu {
+      position: fixed;
+      inset: 0;
+      top: 0;
+      overflow: auto;
+      padding-top: 1rem;
+    }
+    .mega-close { display: inline-flex; align-items: center; justify-content: center; }
+    .mega-grid { grid-template-columns: 1fr; padding: 3.5rem 1.5rem 2rem; }
+    .mega-col a { min-height: 48px; display: flex; align-items: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mega-menu { transition: none; transform: none; }
   }
 </style>

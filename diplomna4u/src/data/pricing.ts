@@ -60,7 +60,7 @@ export const pricing = {
       ratePerPage: null,
       includedPages: null,
       minDays: null,
-      note: 'TODO: підтвердити ставку за сторінку',
+      note: 'Від 7 сторінок з перерахунком',
     },
     {
       slug: 'referat',
@@ -73,7 +73,7 @@ export const pricing = {
       ratePerPage: null,
       includedPages: null,
       minDays: null,
-      note: 'TODO: підтвердити ставку за сторінку',
+      note: 'Від 7 сторінок з перерахунком',
     },
     {
       slug: 'zvit-z-praktyky',

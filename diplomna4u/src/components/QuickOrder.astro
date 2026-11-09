@@ -70,12 +70,13 @@ const pricingJson = JSON.stringify(pricing);
         <label><input type="checkbox" name="addon" value="presentation-defense" data-addon-cb /> Презентація та підготовка до захисту (+2 000 грн)</label>
       </div>
 
-      <div class="qo-price">
-        <div class="price-display" data-price>—</div>
-        <div class="qo-price-note">орієнтовна вартість, точну назве менеджер</div>
+<div class="qo-footer">
+        <div class="qo-price">
+          <div class="price-display" data-price>—</div>
+          <div class="qo-price-note">орієнтовна вартість, точну назве менеджер</div>
+        </div>
+        <button type="button" class="btn" data-next>Далі →</button>
       </div>
-
-      <button type="button" class="btn" data-next>Далі →</button>
     </div>
 
     <!-- Step 2 -->
@@ -248,23 +249,28 @@ const pricingJson = JSON.stringify(pricing);
   .quick-order { position: relative; }
   .qo-badge {
     position: absolute; top: -12px; left: 1rem;
-    background: var(--tint); color: var(--deep); padding: 0.3rem 0.8rem;
+    background: var(--accent-tint); color: var(--accent); padding: 0.3rem 0.8rem;
     border-radius: var(--r-btn); font-weight: 600; font-size: 0.85rem;
   }
   .qo-title { margin-top: 0.5rem; margin-bottom: 1rem; font-size: 1.1rem; }
   .qo-form .field { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.75rem; }
   .qo-form label { font-weight: 500; font-size: 0.9rem; }
-  .qo-form input, .qo-form select, .qo-form textarea {
-    background: var(--field-bg); border: 1px solid var(--sage); border-radius: var(--r-input);
+.qo-form input, .qo-form select, .qo-form textarea {
+    background: var(--field-bg); border: 1px solid var(--field-border); border-radius: var(--r-input);
     padding: 0.65rem 0.85rem; width: 100%; font-size: 1rem;
   }
-  .pills { display: flex; gap: 0.5rem; }
-  .pill { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.8rem; border: 1px solid var(--sage); border-radius: var(--r-btn); cursor: pointer; }
-  .pill:has(input:checked) { background: var(--deep); color: var(--bg); }
-  .deadline-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; flex-wrap: wrap; gap: 0.25rem; }
+  .qo-form input:focus, .qo-form select:focus, .qo-form textarea:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); outline: none;
+  }
+.pills { display: inline-flex; border: 1px solid var(--border); border-radius: var(--r-btn); overflow: hidden; gap: 0; }
+  .pill { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.5rem 0.9rem; border: none; border-radius: 0; cursor: pointer; font-weight: 500; }
+  .pill input { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; }
+  .pill:has(input:checked) { background: var(--accent); color: var(--card); }
+  .deadline-labels { display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--muted); margin-top: 0.3rem; flex-wrap: wrap; gap: 0.25rem; }
   .deadline-note { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
-  .qo-price { text-align: center; margin: 1rem 0; }
+.qo-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+  .qo-price { text-align: left; margin: 0; }
   .qo-price-note { font-size: 0.8rem; color: var(--muted); }
-  input[type="range"] { width: 100%; accent-color: var(--deep); }
+  input[type="range"] { width: 100%; height: 6px; accent-color: var(--accent); }
 </style>
 

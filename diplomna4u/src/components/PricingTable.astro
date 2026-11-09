@@ -3,21 +3,22 @@ import { pricing } from '@/data/pricing';
 ---
 <div class="pricing-table">
   <table class="pt">
-    <thead><tr><th>Тип роботи</th><th>Що впливає на ціну</th><th>Мін. термін</th><th>Ціна від</th></tr></thead>
-    <tbody>
-      {pricing.workTypes.map(w => (
-        <tr>
-          <td>{w.label}</td>
-          <td class="pt-factors">обсяг, напрям, унікальність, термін{w.note ? ` — ${w.note}` : ''}</td>
-          <td>{w.minDays ? `${w.minDays} дн.` : '—'}</td>
-          <td><strong>{w.minPrice.toLocaleString('uk-UA')} грн</strong></td>
-        </tr>
-      ))}
-    </tbody>
+<thead><tr><th>Тип роботи</th><th>Що впливає на ціну</th><th>Ціна від</th></tr></thead>
+      <tbody>
+        {pricing.workTypes.map(w => (
+          <tr>
+            <td>{w.label}</td>
+            <td class="pt-factors">обсяг, напрям, унікальність, термін{w.note ? ` — ${w.note}` : ''}</td>
+            <td><strong>{w.minPrice.toLocaleString('uk-UA')} грн</strong></td>
+          </tr>
+        ))}
+      </tbody>
   </table>
 </div>
 <style>
   .pt { width: 100%; border-collapse: collapse; }
-  .pt th, .pt td { padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--tint); text-align: left; vertical-align: top; }
+  .pt th, .pt td { padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+  .pt th { color: var(--ink); }
   .pt-factors { font-size: 0.9rem; color: var(--muted); }
+  .pt td strong { color: var(--accent); }
 </style>

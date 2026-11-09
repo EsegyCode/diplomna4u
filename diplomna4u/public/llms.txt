@@ -1,0 +1,43 @@
+# Дипломна 4 U
+
+> Дипломна робота для тебе. Консультаційні послуги з підготовки студентських і наукових робіт для студентів по всій Україні. Основний сайт: https://diplomna4u.cx.ua
+
+## Основні сторінки
+- [Головна сторінка](https://diplomna4u.cx.ua/): Головна сторінка
+- [Каталог послуг](https://diplomna4u.cx.ua/poslugy/): Каталог послуг
+- [Ціни та калькулятор](https://diplomna4u.cx.ua/tsiny/): Ціни та калькулятор
+- [Відгуки клієнтів](https://diplomna4u.cx.ua/vidhuky/): Відгуки клієнтів
+- [Блог](https://diplomna4u.cx.ua/blog/): Блог
+- [Про нас](https://diplomna4u.cx.ua/pro-nas/): Про нас
+- [Сторінки по містах](https://diplomna4u.cx.ua/mista/): Сторінки по містах
+- [Університети](https://diplomna4u.cx.ua/universytety/): Університети
+- [FAQ](https://diplomna4u.cx.ua/faq/): FAQ
+- [Контакти](https://diplomna4u.cx.ua/kontakty/): Контакти
+
+## Послуги
+- [Дипломна робота](https://diplomna4u.cx.ua/poslugy/dyplomna-robota/): Дипломна робота на замовлення. Від 15000 грн.
+- [Курсова робота](https://diplomna4u.cx.ua/poslugy/kursova-robota/): Курсова робота на замовлення. Від 3250 грн.
+- [Стаття](https://diplomna4u.cx.ua/poslugy/stattia/): Наукова стаття на замовлення. Від 460 грн.
+- [Реферат](https://diplomna4u.cx.ua/poslugy/referat/): Реферат на замовлення. Від 960 грн.
+- [Звіт з практики](https://diplomna4u.cx.ua/poslugy/zvit-z-praktyky/): Звіт з практики на замовлення. Від 3200 грн.
+- [Теза](https://diplomna4u.cx.ua/poslugy/teza/): Теза на конференцію на замовлення. Від 280 грн.
+
+## Міста
+- [Київ](https://diplomna4u.cx.ua/kyiv/): Допомога студентам у Києві.
+- [Суми](https://diplomna4u.cx.ua/sumy/): Допомога студентам у Сумах.
+- [Львів](https://diplomna4u.cx.ua/lviv/): Допомога студентам у Львові.
+- [Житомир](https://diplomna4u.cx.ua/zhytomyr/): Допомога студентам у Житомирі.
+- [Біла Церква](https://diplomna4u.cx.ua/bila-tserkva/): Допомога студентам у Білій Церкві.
+- [Полтава](https://diplomna4u.cx.ua/poltava/): Допомога студентам у Полтаві.
+- [Харків](https://diplomna4u.cx.ua/kharkiv/): Допомога студентам у Харкові.
+- [Дніпро](https://diplomna4u.cx.ua/dnipro/): Допомога студентам у Дніпрі.
+- [Вінниця](https://diplomna4u.cx.ua/vinnytsia/): Допомога студентам у Вінниці.
+- [Одеса](https://diplomna4u.cx.ua/odesa/): Допомога студентам в Одесі.
+
+## Юридичне
+- [Політика конфіденційності](https://diplomna4u.cx.ua/polityka-konfidentsiinosti/): обробка персональних даних.
+- [Публічна оферта](https://diplomna4u.cx.ua/publichna-oferta/): умови надання послуг.
+- [Політика cookie](https://diplomna4u.cx.ua/polityka-cookie/): використання cookie.
+
+## Документація для LLM
+- [llms-full.txt](https://diplomna4u.cx.ua/llms-full.txt): повний текст ключових сторінок.
