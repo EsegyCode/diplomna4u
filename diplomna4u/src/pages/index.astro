@@ -6,6 +6,9 @@ import Hero from '@/components/Hero.astro';
 import QuickOrder from '@/components/QuickOrder.astro';
 import TrustStrip from '@/components/TrustStrip.astro';
 import ServicesGrid from '@/components/ServicesGrid.astro';
+import ReviewCard from '@/components/ReviewCard.astro';
+import ReviewsGrid from '@/components/ReviewsGrid.astro';
+import { getCollection } from 'astro:content';
 import HowItWorks from '@/components/HowItWorks.astro';
 import PricingTeaser from '@/components/PricingTeaser.astro';
 import FAQ from '@/components/FAQ.astro';
@@ -16,6 +19,9 @@ import { faqGeneral } from '@/data/faq';
 import { heroCopy } from '@/data/heroCopy';
 
 const minPrice = pricing.workTypes.find(w => w.slug === 'dyplomna-robota')?.minPrice ?? 0;
+// placeholder-відгуки замінюються вручну у src/content/reviews
+const reviews = await getCollection('reviews');
+const homeReviews = reviews.sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date)).slice(0, 3);
 const stepTexts = [
   'Залишаєш заявку або рахуєш вартість',
   'Менеджер уточнює деталі і узгоджує договір',
@@ -25,7 +31,7 @@ const stepTexts = [
 const introFacts = [
   'Мінімальний термін дипломної — від 3 днів',
   'Реальні дані з дослідних полів + консультації викладачів',
-  'Унікальність 85%+ (за бажанням 90%+), сертифікат антиплагіату',
+  'Унікальність 85–90%, сертифікат антиплагіату',
   'Безкоштовні правки протягом місяця',
   'Оплата 2 етапами: 50% + 50%',
 ];
@@ -44,12 +50,12 @@ const jsonLd = [
 
   <Section theme="surface">
     <TrustStrip items={introFacts} />
-    <div style="margin-top:1.5rem"><ServicesGrid /></div>
+    <div style="margin-top:2rem"><ServicesGrid /></div>
   </Section>
   <WaveDivider variant="drop" />
 
-  <Section theme="bg">
-    <h2 id="how" style="margin-bottom:1.5rem">Як ми працюємо</h2>
+  <Section theme="blood">
+    <h2 id="how" style="margin-bottom:1.5rem; text-align:left">Як ми працюємо</h2>
     <HowItWorks steps={stepTexts} />
   </Section>
   <WaveDivider variant="drop" />
@@ -63,9 +69,20 @@ const jsonLd = [
   </Section>
   <WaveDivider variant="wave" />
 
-  <Section theme="bg">
+  <Section theme="blood">
     <h2 style="text-align:center;margin-bottom:1.5rem">Відгуки</h2>
-    <p class="text-muted" style="text-align:center"><a href="/vidhuky/" class="btn btn--ghost">Читати відгуки →</a></p>
+    {homeReviews.length === 0 ? (
+      <p style="text-align:center;color:var(--vanilla);opacity:0.85">Відгуки з'являться після наповнення.</p>
+    ) : (
+      <ReviewsGrid>
+        {homeReviews.map(r => (
+          <ReviewCard name={r.data.name} workType={r.data.workType} rating={r.data.rating} text={r.data.text} city={r.data.city} date={r.data.date.toLocaleDateString('uk-UA')} />
+        ))}
+      </ReviewsGrid>
+    )}
+    <div style="text-align:center;margin-top:1.5rem">
+      <a href="/vidhuky/" class="btn btn--reviews">Читати відгуки →</a>
+    </div>
   </Section>
   <WaveDivider variant="wave" />
 

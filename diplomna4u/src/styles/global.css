@@ -30,6 +30,7 @@
   --qo-bg: var(--bloodstone);
   --qo-fg: #FFF9EB;
   --qo-badge-bg: #FFF9EB;
+  --vanilla: #FFF9EB;
   --qo-badge-fg: #5D0D18;
   --qo-focus: rgba(255, 249, 235, 0.25);
   
@@ -104,6 +105,7 @@ input, select, textarea { font-family: inherit; }
 .section--sage { --s-bg: var(--surface); }
 .section--invert { --s-bg: var(--surface); --s-fg: var(--ink); --s-accent: var(--accent); --s-on: var(--card); }
 .section--deep { --s-bg: var(--surface); --s-fg: var(--ink); --s-accent: var(--accent); --s-on: var(--card); }
+.section--blood { --s-bg: var(--bloodstone); --s-fg: var(--vanilla); --s-accent: var(--vanilla); --s-on: var(--bloodstone); }
 
 /* --- Buttons --- */
 .btn {
@@ -145,6 +147,18 @@ input, select, textarea { font-family: inherit; }
   padding: 0.7rem 1.25rem;
   font-size: 0.95rem;
 }
+.btn--reviews {
+  min-height: 54px;
+  padding: 0.875rem 2rem;
+  font-size: 1.0625rem;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.btn--reviews:hover {
+  background: var(--vanilla);
+  color: var(--bloodstone);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(43, 20, 24, 0.18);
+}
 
 /* --- Cards --- */
 .card {
@@ -171,6 +185,11 @@ input, select, textarea { font-family: inherit; }
 .card--light {
   --s-bg: var(--bg);
   background: var(--s-bg);
+}
+.card--vanilla {
+  background: var(--vanilla);
+  color: var(--ink);
+  border-color: transparent;
 }
 
 /* Chess pattern for 4-card grids */
@@ -346,19 +365,22 @@ p { max-width: 70ch; }
   counter-increment: steps;
   padding: 1.5rem;
   position: relative;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--s-fg);
 }
 .step::before {
   content: counter(steps);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3.75rem;
+  height: 3.75rem;
   background: var(--s-accent);
   color: var(--s-on);
   border-radius: 50%;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   margin-bottom: 1rem;
 }
 
@@ -389,7 +411,13 @@ p { max-width: 70ch; }
 .step { position: relative; }
 .step::before { position: relative; z-index: 1; }
 @media (min-width: 900px) {
-  .steps::before { content: ''; position: absolute; top: 1.25rem; left: 1.25rem; right: 1.25rem; height: 2px; background: var(--sage); z-index: 0; }
+  .steps::before { content: ''; position: absolute; top: 1.875rem; left: 1.875rem; right: 1.875rem; height: 2px; background: var(--sage); z-index: 0; }
+}
+@media (max-width: 899px) {
+  .steps { position: relative; padding-left: 0; }
+  .steps::before { content: ''; position: absolute; top: 1.875rem; bottom: 1.875rem; left: 1.875rem; width: 2px; background: var(--sage); z-index: 0; }
+  .step { padding-left: 4.75rem; }
+  .step::before { position: absolute; left: 0; top: 0; margin-bottom: 0; }
 }
 
 /* --- Anchor scroll for sticky header --- */

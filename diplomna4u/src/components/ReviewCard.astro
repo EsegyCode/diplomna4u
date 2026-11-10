@@ -9,17 +9,40 @@ interface Props {
 }
 const { name, workType, rating, text, city, date } = Astro.props;
 ---
-<article class="review-card card">
+<article class="review-card card card--vanilla">
   <div class="review-head">
-    <strong>{name}</strong>
-    {city && <span class="text-muted"> · {city}</span>}
+    <span class="review-avatar" aria-hidden="true">{name.charAt(0).toUpperCase()}</span>
+    <div>
+      <strong>{name}</strong>
+      {city && <span class="text-muted"> · {city}</span>}
+      <div class="review-meta">{workType}{rating ? ` · ${'★'.repeat(rating)}` : ''}</div>
+    </div>
   </div>
-  <div class="review-meta">{workType}{rating ? ` · ${'★'.repeat(rating)}` : ''}</div>
-  <p>{text}</p>
+  <p class="review-text">{text}</p>
   {date && <div class="review-date text-muted">{date}</div>}
 </article>
 <style>
   .review-card { display: flex; flex-direction: column; gap: 0.5rem; }
+  .review-head { display: flex; align-items: center; gap: 0.75rem; }
+  .review-avatar {
+    flex-shrink: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--sage);
+    color: var(--vanilla);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+  }
   .review-meta { font-size: 0.85rem; color: var(--muted); }
+  .review-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
   .review-date { font-size: 0.75rem; margin-top: auto; }
 </style>
