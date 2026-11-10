@@ -26,6 +26,7 @@
   --field-border: #D9CBB8;
   --bloodstone: #5D0D18;
   --bloodstone-hover: #7A1626;
+  --sage-hover: #8CA39C;
   --qo-bg: var(--bloodstone);
   --qo-fg: #FFF9EB;
   --qo-badge-bg: #FFF9EB;
@@ -390,6 +391,9 @@ p { max-width: 70ch; }
 @media (min-width: 900px) {
   .steps::before { content: ''; position: absolute; top: 1.25rem; left: 1.25rem; right: 1.25rem; height: 2px; background: var(--sage); z-index: 0; }
 }
+
+/* --- Anchor scroll for sticky header --- */
+#quick-order { scroll-margin-top: 96px; }
 
 /* --- Reduced motion --- */
 @media (prefers-reduced-motion: reduce) {
