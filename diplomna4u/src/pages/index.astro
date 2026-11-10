@@ -14,11 +14,9 @@ import PricingTeaser from '@/components/PricingTeaser.astro';
 import FAQ from '@/components/FAQ.astro';
 import CitiesTeaser from '@/components/CitiesTeaser.astro';
 import LeadForm from '@/components/LeadForm.astro';
-import { pricing } from '@/data/pricing';
 import { faqGeneral } from '@/data/faq';
 import { heroCopy } from '@/data/heroCopy';
 
-const minPrice = pricing.workTypes.find(w => w.slug === 'dyplomna-robota')?.minPrice ?? 0;
 // placeholder-відгуки замінюються вручну у src/content/reviews
 const reviews = await getCollection('reviews');
 const homeReviews = reviews.sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date)).slice(0, 3);

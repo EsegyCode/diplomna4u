@@ -55,7 +55,7 @@ export function calcPrice(input: PriceInput): PriceResult {
 
   // Add addons
   for (const addonId of input.addons) {
-    const addon = pricing.addons.find(a => a.id === addonId);
+    const addon = (pricing.addons as any[]).find(a => a.id === addonId);
     if (addon && (addon.onlyFor === undefined || addon.onlyFor.includes(input.workSlug))) {
       price += addon.price;
     }
