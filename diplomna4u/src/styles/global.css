@@ -27,7 +27,24 @@
   --bloodstone: var(--deep);
   --bloodstone-hover: var(--deep-hover);
   --vanilla: var(--surface);
+  --cream-2: #FFF6E5;
+  --sage-deep: #6F8780;
+  --deep-2: #4A0A13;
   --sage-hover: #8CA39C;
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 32px;
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px;
+  --fs-display: clamp(2.5rem, 5.5vw, 4.25rem);
+  --fs-h2: clamp(1.875rem, 3.6vw, 2.75rem);
+  --fs-h3: clamp(1.375rem, 2.2vw, 1.75rem);
+  --fs-lead: clamp(1.0625rem, 1.5vw, 1.25rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-eyebrow: 0.75rem;
+  --shadow-sm: 0 1px 2px rgba(43,26,29,.06);
+  --shadow-md: 0 8px 24px -8px rgba(43,26,29,.14);
+  --shadow-lg: 0 20px 48px -16px rgba(93,13,24,.28);
   --qo-bg: var(--bloodstone);
   --qo-fg: #FFF9EB;
   --qo-badge-bg: #FFF9EB;
@@ -113,6 +130,12 @@ input, select, textarea { font-family: inherit; }
 .section--invert { --s-bg: var(--surface); --s-fg: var(--ink); --s-accent: var(--accent); --s-on: var(--card); }
 .section--deep { --s-bg: var(--surface); --s-fg: var(--ink); --s-accent: var(--accent); --s-on: var(--card); }
 .section--blood { --s-bg: var(--bloodstone); --s-fg: var(--vanilla); --s-accent: var(--vanilla); --s-on: var(--bloodstone); }
+[data-theme="light"] { --s-bg: var(--bg); --s-fg: var(--ink); --s-muted: var(--muted); --s-accent: var(--deep); --s-line: var(--sage); --s-card: var(--card); --s-card-fg: var(--ink); --s-border: var(--border); }
+[data-theme="cream"] { --s-bg: var(--cream-2); --s-fg: var(--ink); --s-muted: var(--muted); --s-accent: var(--deep); --s-line: var(--sage); --s-card: var(--card); --s-card-fg: var(--ink); --s-border: var(--border); }
+[data-theme="sage"] { --s-bg: var(--sage); --s-fg: var(--deep); --s-muted: color-mix(in srgb, var(--deep) 80%, transparent); --s-accent: var(--deep); --s-line: var(--deep); --s-card: var(--bg); --s-card-fg: var(--ink); --s-border: color-mix(in srgb, var(--deep) 25%, transparent); }
+[data-theme="deep"] { --s-bg: var(--deep); --s-fg: var(--surface); --s-muted: color-mix(in srgb, var(--surface) 78%, transparent); --s-accent: var(--sage); --s-line: var(--sage); --s-card: color-mix(in srgb, var(--surface) 8%, transparent); --s-card-fg: var(--surface); --s-border: color-mix(in srgb, var(--surface) 22%, transparent); }
+[data-theme="tint"] { --s-bg: var(--tint); --s-fg: var(--ink); --s-muted: var(--muted); --s-accent: var(--deep); --s-line: var(--deep); --s-card: var(--card); --s-card-fg: var(--ink); --s-border: color-mix(in srgb, var(--sage) 45%, transparent); }
+section[data-theme] { background: var(--s-bg); color: var(--s-fg); }
 
 /* --- Buttons --- */
 .btn {

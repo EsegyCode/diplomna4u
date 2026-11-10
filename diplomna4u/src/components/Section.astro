@@ -7,8 +7,9 @@ interface Props {
 }
 const { theme = 'bg', nextBg, id, class: cls } = Astro.props;
 const themeClass = theme === 'bg' ? '' : `section--${theme}`;
+const dataTheme = theme === 'bg' ? 'light' : theme === 'surface' ? 'cream' : theme === 'sage' ? 'sage' : 'deep';
 ---
-<section id={id} class={`section ${themeClass} ${cls ?? ''}`.trim()} style={nextBg ? `--next-bg: ${nextBg}` : ''}>
+<section id={id} class={`section ${themeClass} ${cls ?? ''}`.trim()} data-theme={dataTheme} style={nextBg ? `--next-bg: ${nextBg}` : ''}>
   <div class="container">
     <slot />
   </div>
