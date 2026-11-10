@@ -27,7 +27,7 @@ import { site } from '@/data/site';
   </div>
 
   <div class="field">
-    <label>Telegram @username або телефон *</label>
+    <label>Telegram @username, телефон або email *</label>
     <input type="text" name="contact" required />
     <span class="field-error" data-err="contact"></span>
   </div>
@@ -144,9 +144,11 @@ import { site } from '@/data/site';
   .lead-form input:focus, .lead-form select:focus, .lead-form textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); outline: none; }
   .lead-form .error { border-color: var(--error); }
   .lead-form .field-error { color: var(--error); font-size: 0.8rem; min-height: 1em; }
-  .consent { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.85rem; }
-  .consent a { color: var(--accent); text-decoration: underline; }
-  .form-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.consent { display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; text-align: left; }
+.consent input[type="checkbox"] { flex-shrink: 0; width: 18px; height: 18px; margin: 2px 0 0; }
+.consent a { color: var(--accent); text-decoration: underline; }
+.form-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+@media (max-width: 600px) { .form-actions { flex-direction: column; } .form-actions .btn { width: 100%; } }
   .lead-form .form-status { min-height: 1.2em; color: var(--deep); font-size: 0.9rem; }
   .lead-form--sticky { }
   .lead-form--compact { }

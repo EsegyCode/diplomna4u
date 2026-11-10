@@ -268,7 +268,7 @@ const pricingJson = JSON.stringify(pricing);
   .qo-row { display: grid; grid-template-columns: 1fr; gap: 0.7rem; }
   @media (min-width: 600px) { .qo-row { grid-template-columns: 1fr 1fr; } }
   .pages-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
-  .pages-value { font-size: 2rem; font-weight: 700; color: var(--ink); line-height: 1; }
+  .pages-value { font-size: clamp(1.5rem, 2.4vw, 1.75rem); font-weight: 700; color: var(--ink); line-height: 1; }
   .range-labels { display: flex; justify-content: space-between; font-size: 1rem; color: var(--muted); margin-top: 0.35rem; font-weight: 600; }
   .deadline-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
   .seg-btn {
@@ -280,7 +280,7 @@ const pricingJson = JSON.stringify(pricing);
   @media (max-width: 600px) { .deadline-seg { grid-template-columns: 1fr; } }
   .addon-label { display: inline-flex; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 1.05rem; cursor: pointer; }
   .addon-check { width: 22px; height: 22px; accent-color: var(--accent); flex-shrink: 0; }
-  .qo-title { margin-top: 0.35rem; margin-bottom: 0.85rem; font-size: 1.35rem; font-weight: 700; line-height: 1.2; }
+  .qo-title { margin-top: 0.35rem; margin-bottom: 0.85rem; font-size: clamp(1.1rem, 1.8vw, 1.2rem); font-weight: 700; line-height: 1.2; }
   .qo-form .field { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.85rem; }
   .qo-form label { font-weight: 600; font-size: 1.05rem; line-height: 1.25; }
   .qo-form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
@@ -303,7 +303,7 @@ const pricingJson = JSON.stringify(pricing);
   .qo-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0.9rem 0 0.3rem; flex-wrap: wrap; }
   .qo-price { text-align: left; margin: 0; min-width: 0; }
   .qo-price-note { font-size: 0.85rem; color: var(--muted); }
-  .qo-price .price-display { font-size: clamp(1.6rem, 3.2vw, 2.2rem); }
+  .qo-price .price-display { font-size: clamp(1.3rem, 2.4vw, 1.7rem); }
   input[type="range"] { width: 100%; height: 8px; accent-color: var(--accent); }
   .qo-form .btn { min-height: 52px; font-size: 1rem; padding: 0.8rem 1.25rem; }
 
@@ -354,7 +354,7 @@ const pricingJson = JSON.stringify(pricing);
   .quick-order--dark .btn--ghost:hover { background: var(--qo-badge-bg); color: var(--qo-badge-fg); }
   .quick-order--dark .seg-btn { border-color: var(--qo-fg); color: var(--qo-fg); }
   .quick-order--dark .seg-btn.is-active { background: var(--qo-badge-bg); color: var(--qo-badge-fg); border-color: var(--qo-badge-bg); }
-  .quick-order--dark .pages-value { color: var(--qo-fg); font-size: 2rem; }
+  .quick-order--dark .pages-value { color: var(--qo-fg); font-size: clamp(1.5rem, 2.4vw, 1.75rem); }
   .quick-order--dark .range-labels { color: var(--qo-fg); opacity: 0.85; }
   .quick-order--dark input[type="range"] { accent-color: var(--qo-fg); }
   .quick-order--dark .addon-check { accent-color: var(--qo-fg); }
