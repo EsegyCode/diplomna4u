@@ -13,7 +13,7 @@ import CitiesTeaser from '@/components/CitiesTeaser.astro';
 import LeadForm from '@/components/LeadForm.astro';
 import { pricing } from '@/data/pricing';
 import { faqGeneral } from '@/data/faq';
-import { site } from '@/data/site';
+import { heroCopy } from '@/data/heroCopy';
 
 const minPrice = pricing.workTypes.find(w => w.slug === 'dyplomna-robota')?.minPrice ?? 0;
 const stepTexts = [
@@ -29,21 +29,15 @@ const introFacts = [
   'Безкоштовні правки протягом місяця',
   'Оплата 2 етапами: 50% + 50%',
 ];
-const sectionCards = [
-  { title: 'Ціни', desc: 'Калькулятор онлайн і повна таблиця цін', href: '/tsiny/' },
-  { title: 'Відгуки', desc: 'Що кажуть наші клієнти', href: '/vidhuky/' },
-  { title: 'Блог', desc: 'Корисні матеріали для студентів', href: '/blog/' },
-  { title: 'Про нас', desc: 'Хто ми і як працюємо', href: '/pro-nas/' },
-];
 
 const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqGeneral.slice(0,6).map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
 ];
 ---
 <BaseLayout title={`Diplomna 4 U — дипломна робота для тебе | від ${minPrice} грн`} description="Допомога з дипломною, курсовою та статтею по всій Україні. Калькулятор ціни онлайн, безкоштовна консультація." jsonLd={jsonLd}>
-  <Section theme="bg">
-    <Hero title="Дипломна робота для тебе" subtitle="Швидко, офіційно, з консультаціями викладачів і спеціалістів. Дізнайся вартість за 2 хвилини.">
-      <QuickOrder variant="hero" />
+  <Section theme="bg" class="hero-section">
+    <Hero title="Дипломна робота для тебе" subtitle="Швидко, офіційно, з консультаціями викладачів і спеціалістів. Дізнайся вартість за 2 хвилини." description={heroCopy.paragraphs} bullets={heroCopy.bullets}>
+      <QuickOrder variant="hero" dark />
     </Hero>
   </Section>
   <WaveDivider variant="wave" />
@@ -65,7 +59,7 @@ const jsonLd = [
       <div>
         <h2 style="margin-bottom:1rem">Ціни</h2>
         <PricingTeaser />
-        <p style="margin-top:0.75rem"><a href="/tsiny/" class="btn btn--ghost">Детальніше про ціни →</a></p>
+        <p style="margin-top:0.75rem"><a href="/tsiny/" class="btn">Детальніше про ціни →</a></p>
       </div>
       <QuickOrder variant="compact" />
     </div>

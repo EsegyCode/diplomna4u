@@ -4,12 +4,13 @@ import { pricing } from '@/data/pricing';
 interface Props {
   variant?: 'hero' | 'compact' | 'page';
   defaultWork?: string;
+  dark?: boolean;
 }
-const { defaultWork = '' } = Astro.props;
+const { defaultWork = '', dark = false } = Astro.props;
 
 const pricingJson = JSON.stringify(pricing);
 ---
-<div class="quick-order card card--light" id="quick-order">
+<div class={`quick-order card card--light${dark ? ' quick-order--dark' : ''}`} id="quick-order">
   <div class="qo-badge">Ціна від {pricing.workTypes.find(w=>w.slug==='dyplomna-robota')?.minPrice.toLocaleString('uk-UA')} грн</div>
   <h3 class="qo-title">Давайте уточнимо й безкоштовно проконсультуємо</h3>
 
@@ -37,37 +38,32 @@ const pricingJson = JSON.stringify(pricing);
         <input type="text" name="topic" />
       </div>
       <div class="field qo-pages" data-pages>
-        <label>Кількість сторінок *</label>
-        <div style="display:flex;gap:0.5rem">
-          <input type="number" name="pagesFrom" data-pages-from min="1" />
-          <span>–</span>
-          <input type="number" name="pagesTo" data-pages-to min="1" />
+        <label>Кількість сторінок</label>
+        <div class="pages-value" data-pages-value>60 стор.</div>
+        <input type="range" name="pages" data-pages-range min="40" max="90" step="5" value="60" />
+        <div class="range-labels">
+          <span>40</span>
+          <span>90</span>
         </div>
       </div>
 
-      <div class="field">
-        <label>Унікальність</label>
-        <div class="pills" data-uniqueness>
-          {pricing.uniqueness.map(u => (
-            <label class="pill">
-              <input type="radio" name="uniqueness" value={u.id} checked={u.default} data-u />
-              {u.label}
-            </label>
-          ))}
-        </div>
-      </div>
+
 
       <div class="field">
         <label>Скільки часу до здачі</label>
-        <input type="range" name="deadline" data-deadline min="0" max="2" step="1" value="0" />
-        <div class="deadline-labels">
-          {pricing.deadline.map(d => <span>{d.label}</span>)}
+        <div class="deadline-seg" data-deadline>
+          {pricing.deadline.map((d, i) => (
+            <button type="button" class={`seg-btn${i === 0 ? ' is-active' : ''}`} data-deadline-btn data-idx={i} aria-pressed={i === 0 ? 'true' : 'false'}>{d.label}</button>
+          ))}
         </div>
         <p class="deadline-note">Чим раніше замовиш — тим вигідніше. Мінімальний термін дипломної — від 3 днів.</p>
       </div>
 
       <div class="field qo-addon" data-addon style="display:none">
-        <label><input type="checkbox" name="addon" value="presentation-defense" data-addon-cb /> Презентація та підготовка до захисту (+2 000 грн)</label>
+        <label class="addon-label">
+          <input type="checkbox" class="addon-check" name="addon" value="presentation-defense" data-addon-cb />
+          <span>Презентація та підготовка до захисту (+2 000 грн)</span>
+        </label>
       </div>
 
 <div class="qo-footer">
@@ -120,21 +116,20 @@ const pricingJson = JSON.stringify(pricing);
 
 <script define:vars={{ pricingJson }}>
   const pricing = JSON.parse(pricingJson);
-  function calc(workSlug, subjectId, pages, uniquenessId, deadlineIdx, addons) {
+  function calc(workSlug, subjectId, pages, deadlineIdx, addons) {
     const workType = pricing.workTypes.find(w => w.slug === workSlug);
     if (!workType) return null;
     const sc = pricing.subjectCoef[subjectId];
     if (sc === undefined) return null;
-    const u = pricing.uniqueness.find(x => x.id === uniquenessId);
     const d = pricing.deadline[deadlineIdx];
-    if (!u || !d) return null;
+    if (!d) return null;
     let base;
     if (workType.ratePerPage !== null && workType.hasPages) {
       base = Math.max(workType.minPrice, pages * workType.ratePerPage);
     } else {
       base = workType.minPrice;
     }
-    let price = Math.round(base * sc * u.k * d.k);
+    let price = Math.round(base * sc * d.k);
     addons.forEach(id => {
       const a = pricing.addons.find(x => x.id === id);
       if (a && (!a.onlyFor || a.onlyFor.includes(workSlug))) price += a.price;
@@ -149,12 +144,12 @@ const pricingJson = JSON.stringify(pricing);
     const workSel = f.querySelector('[data-work]');
     const subjectSel = f.querySelector('[data-subject]');
     const pagesBox = f.querySelector('[data-pages]');
-    const pf = f.querySelector('[data-pages-from]');
-    const pt = f.querySelector('[data-pages-to]');
+    const pagesRange = f.querySelector('[data-pages-range]');
+    const pagesValue = f.querySelector('[data-pages-value]');
     const addonBox = f.querySelector('[data-addon]');
     const addonCb = f.querySelector('[data-addon-cb]');
-    const uniqueness = f.querySelector('[data-uniqueness]');
-    const deadline = f.querySelector('[data-deadline]');
+    const deadlineSeg = f.querySelector('[data-deadline]');
+    const deadlineBtns = f.querySelectorAll('[data-deadline-btn]');
     const priceEl = f.querySelector('[data-price]');
     const hiddenCalc = f.querySelector('input[name="calc_payload"]');
     const nextBtn = f.querySelector('[data-next]');
@@ -169,34 +164,40 @@ const pricingJson = JSON.stringify(pricing);
       const w = workType();
       if (w.hasPages) {
         pagesBox.style.display = '';
-        if (w.pagesDefault) { pf.value = String(w.pagesDefault[0]); pt.value = String(w.pagesDefault[1]); }
-        else { pf.value = w.pagesMin ? String(w.pagesMin) : '10'; pt.value = w.pagesMax ? String(w.pagesMax) : (w.pagesMin ? String(w.pagesMin+20) : '30'); }
-        if (w.pagesMin) pf.min = String(w.pagesMin); else pf.min='1';
-        if (w.pagesMax) { pf.max = String(w.pagesMax); pt.max = String(w.pagesMax); } 
+        if (pagesRange) pagesRange.value = '60';
+        updatePagesValue();
       } else {
         pagesBox.style.display = 'none';
-        pf.value = '0'; pt.value = '0';
+        if (pagesRange) pagesRange.value = '0';
+        if (pagesValue) pagesValue.textContent = '—';
       }
       addonBox.style.display = w.slug === 'dyplomna-robota' ? '' : 'none';
     }
 
-    function getUniqueness() {
-      const r = f.querySelector('input[name="uniqueness"]:checked');
-      return r ? r.value : pricing.uniqueness[0].id;
+    function updatePagesValue() {
+      if (!pagesRange || !pagesValue) return;
+      const v = parseInt(pagesRange.value, 10) || 60;
+      pagesValue.textContent = v === 0 ? '—' : v + ' стор.';
+    }
+
+    function getDeadlineIdx() {
+      let idx = 0;
+      deadlineBtns.forEach((btn, i) => { if (btn.classList.contains('is-active')) idx = i; });
+      return idx;
     }
 
     function updatePrice() {
       const w = workSel.value;
       const subject = subjectSel.value;
-      const pages = parseInt(pf.value || '0', 10) || 0;
-      const u = getUniqueness();
-      const di = parseInt(deadline.value, 10);
+      const pages = parseInt(pagesRange?.value || '0', 10) || 0;
+      const di = getDeadlineIdx();
       const addons = addonCb && addonCb.checked ? ['presentation-defense'] : [];
-      const p = calc(w, subject, pages, u, di, addons);
+      const p = calc(w, subject, pages, di, addons);
       if (p === null) { priceEl.textContent = 'Уточніть вартість у менеджера'; }
       else { priceEl.textContent = 'від ' + fmt(p); }
+      updatePagesValue();
       // payload
-      const payload = { workType: w, subject, pagesFrom: pf.value, pagesTo: pt.value, topic: (f.querySelector('input[name="topic"]')).value, uniqueness: u, deadline: pricing.deadline[di].id, addons, price: p };
+      const payload = { workType: w, subject, pagesFrom: pagesRange ? pagesRange.value : '0', pagesTo: pagesRange ? pagesRange.value : '0', topic: (f.querySelector('input[name="topic"]'))?.value || '', deadline: pricing.deadline[di].id, addons, price: p };
       hiddenCalc.value = JSON.stringify(payload);
     }
 
@@ -204,16 +205,20 @@ const pricingJson = JSON.stringify(pricing);
     updatePrice();
     workSel.addEventListener('change', () => { applyWorkType(); updatePrice(); });
     subjectSel.addEventListener('change', updatePrice);
-    pf.addEventListener('input', updatePrice);
-    pt.addEventListener('input', updatePrice);
-    uniqueness.addEventListener('change', updatePrice);
-    deadline.addEventListener('input', updatePrice);
+    pagesRange?.addEventListener('input', () => { updatePagesValue(); updatePrice(); });
+    deadlineBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        deadlineBtns.forEach(b => { b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false'); });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-pressed', 'true');
+        updatePrice();
+      });
+    });
     addonCb?.addEventListener('change', updatePrice);
 
     nextBtn?.addEventListener('click', () => {
       // validate
       if (!workSel.value || !subjectSel.value) return;
-      if (pagesBox.style.display !== 'none' && (!pf.value)) return;
       step1.hidden = true;
       step2.hidden = false;
     });
@@ -252,12 +257,26 @@ const pricingJson = JSON.stringify(pricing);
     background: var(--accent-tint); color: var(--accent); padding: 0.3rem 0.8rem;
     border-radius: var(--r-btn); font-weight: 600; font-size: 0.85rem;
   }
-  .qo-title { margin-top: 0.5rem; margin-bottom: 1rem; font-size: 1.1rem; }
-  .qo-form .field { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.75rem; }
-  .qo-form label { font-weight: 500; font-size: 0.9rem; }
-.qo-form input, .qo-form select, .qo-form textarea {
+  .quick-order { padding: 2rem; }
+  .qo-badge { font-size: 0.95rem; padding: 0.35rem 0.9rem; }
+  .pages-value { font-size: 1.6rem; font-weight: 700; color: var(--accent, var(--deep)); margin: 0.25rem 0 0.5rem; }
+  .range-labels { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--muted); margin-top: 0.35rem; }
+  .deadline-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+  .seg-btn {
+    min-height: 52px; padding: 0.6rem 0.5rem; border-radius: var(--r-btn);
+    border: 2px solid var(--border); background: transparent; color: var(--ink);
+    font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s;
+  }
+  .seg-btn.is-active { background: var(--accent); color: var(--card); border-color: var(--accent); }
+  @media (max-width: 600px) { .deadline-seg { grid-template-columns: 1fr; } }
+  .addon-label { display: inline-flex; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 1.05rem; cursor: pointer; }
+  .addon-check { width: 22px; height: 22px; accent-color: var(--accent); flex-shrink: 0; }
+  .qo-title { margin-top: 0.5rem; margin-bottom: 1.25rem; font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
+  .qo-form .field { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.1rem; }
+  .qo-form label { font-weight: 600; font-size: 1.05rem; }
+  .qo-form input, .qo-form select, .qo-form textarea {
     background: var(--field-bg); border: 1px solid var(--field-border); border-radius: var(--r-input);
-    padding: 0.65rem 0.85rem; width: 100%; font-size: 1rem;
+    padding: 0.9rem 1rem; width: 100%; font-size: 1.1rem; min-height: 52px;
   }
   .qo-form input:focus, .qo-form select:focus, .qo-form textarea:focus {
     border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); outline: none;
@@ -268,9 +287,53 @@ const pricingJson = JSON.stringify(pricing);
   .pill:has(input:checked) { background: var(--accent); color: var(--card); }
   .deadline-labels { display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--muted); margin-top: 0.3rem; flex-wrap: wrap; gap: 0.25rem; }
   .deadline-note { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
-.qo-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+  .qo-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 1.25rem 0; flex-wrap: wrap; }
   .qo-price { text-align: left; margin: 0; }
-  .qo-price-note { font-size: 0.8rem; color: var(--muted); }
-  input[type="range"] { width: 100%; height: 6px; accent-color: var(--accent); }
+  .qo-price-note { font-size: 0.9rem; color: var(--muted); }
+  .qo-price .price-display { font-size: clamp(1.9rem, 4vw, 2.8rem); }
+  input[type="range"] { width: 100%; height: 8px; accent-color: var(--accent); }
+  .qo-form .btn { min-height: 56px; font-size: 1.125rem; padding: 0.9rem 1.5rem; }
+
+  /* Inverted (dark) calculator variant */
+  .quick-order--dark {
+    --s-bg: var(--qo-bg);
+    --s-fg: var(--qo-fg);
+    --s-accent: var(--qo-fg);
+    --s-on: var(--qo-bg);
+    background: var(--qo-bg);
+    color: var(--qo-fg);
+    border-color: var(--qo-bg);
+  }
+  .quick-order--dark .qo-badge { background: var(--qo-badge-bg); color: var(--qo-badge-fg); }
+  .quick-order--dark .qo-title { color: var(--qo-fg); }
+  .quick-order--dark .qo-form label { color: var(--qo-fg); }
+  .quick-order--dark .qo-form input,
+  .quick-order--dark .qo-form select,
+  .quick-order--dark .qo-form textarea {
+    background: var(--field-bg); color: var(--ink); border-color: var(--field-border);
+  }
+  .quick-order--dark .qo-form input:focus,
+  .quick-order--dark .qo-form select:focus,
+  .quick-order--dark .qo-form textarea:focus {
+    border-color: var(--qo-fg); box-shadow: 0 0 0 3px var(--qo-focus); outline: none;
+  }
+  .quick-order--dark .pills { border-color: var(--qo-fg); }
+  .quick-order--dark .pill { color: var(--qo-fg); }
+  .quick-order--dark .pill:has(input:checked) { background: var(--qo-badge-bg); color: var(--qo-badge-fg); }
+  .quick-order--dark .price-display { color: var(--qo-fg); }
+  .quick-order--dark .qo-price-note,
+  .quick-order--dark .deadline-labels,
+  .quick-order--dark .deadline-note { color: var(--qo-fg); opacity: 0.85; }
+  .quick-order--dark .consent { color: var(--qo-fg); }
+  .quick-order--dark a { color: var(--qo-fg); text-decoration: underline; }
+  .quick-order--dark .btn { background: var(--qo-badge-bg); color: var(--qo-badge-fg); border-color: var(--qo-badge-bg); }
+  .quick-order--dark .btn:hover { background: transparent; color: var(--qo-badge-bg); }
+  .quick-order--dark .btn--ghost { background: transparent; color: var(--qo-badge-bg); border-color: var(--qo-badge-bg); }
+  .quick-order--dark .btn--ghost:hover { background: var(--qo-badge-bg); color: var(--qo-badge-fg); }
+  .quick-order--dark .seg-btn { border-color: var(--qo-fg); color: var(--qo-fg); }
+  .quick-order--dark .seg-btn.is-active { background: var(--qo-badge-bg); color: var(--qo-badge-fg); border-color: var(--qo-badge-bg); }
+  .quick-order--dark .pages-value { color: var(--qo-fg); }
+  .quick-order--dark input[type="range"] { accent-color: var(--qo-fg); }
+  .quick-order--dark .addon-check { accent-color: var(--qo-fg); }
 </style>
 

@@ -2,6 +2,13 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Section from '@/components/Section.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import BlogCard from '@/components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
 ---
 <BaseLayout title="Про нас | Diplomna 4 U" description="Консультаційний сервіс з підготовки студентських робіт.">
   <Section theme="bg">
@@ -10,7 +17,23 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
     <p>Допомагаємо студентам з дипломними, курсовими та статтями з 2019 року. Консультації спеціалістів-викладачів, реальні дані з дослідних полів.</p>
     <p class="text-muted">Працюємо офіційно за договором. 100% конфіденційно.</p>
   </Section>
+
+  <Section theme="surface">
+    <h2 style="margin-bottom:1rem">Блог</h2>
+    {posts.length === 0 ? (
+      <p class="text-muted">Тут з'являться статті. TODO: власник додасть матеріали.</p>
+    ) : (
+      <div class="pro-blog-grid">
+        {posts.map((p) => (
+          <BlogCard title={p.data.title} description={p.data.description} href={`/blog/${p.id}/`} date={p.data.date} cover={p.data.cover} coverAlt={p.data.coverAlt} />
+        ))}
+      </div>
+    )}
+    <p style="margin-top:1.25rem"><a href="/blog/" class="btn btn--ghost">Усі статті →</a></p>
+  </Section>
 </BaseLayout>
 
-
-
+<style>
+  .pro-blog-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .pro-blog-grid { grid-template-columns: repeat(3, 1fr); } }
+</style>

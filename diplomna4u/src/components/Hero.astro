@@ -2,16 +2,23 @@
 interface Props {
   title: string;
   subtitle?: string;
+  description?: string[];
+  bullets?: string[];
   ctaHref?: string;
-  badgePrice?: string;
 }
-const { title, subtitle, ctaHref = '#how', badgePrice } = Astro.props;
+const { title, subtitle, description, bullets, ctaHref = '#how' } = Astro.props;
 ---
 <section class="section hero-section">
   <div class="container hero-grid">
-  <div class="hero-text">
-    <h1>{title}</h1>
+    <div class="hero-text">
+      <h1>{title}</h1>
       {subtitle && <p class="hero-subtitle">{subtitle}</p>}
+      {description?.map((p) => <p class="hero-desc">{p}</p>)}
+      {bullets && (
+        <ul class="hero-bullets">
+          {bullets.map((b) => <li>{b}</li>)}
+        </ul>
+      )}
       <div class="hero-actions">
         <a href={ctaHref} class="btn">Як це працює →</a>
         <a href="#faq" class="btn btn--ghost">Часті запитання ↓</a>
@@ -23,8 +30,13 @@ const { title, subtitle, ctaHref = '#how', badgePrice } = Astro.props;
   </div>
 </section>
 <style>
-  .hero-grid { display: grid; gap: 2rem; align-items: center; }
+  .hero-section { padding-block: 1.5rem 3rem; }
+  @media (min-width: 900px) { .hero-section { padding-block: 2.5rem 4rem; } }
+  .hero-grid { display: grid; gap: 2rem; align-items: start; }
   @media (min-width: 900px) { .hero-grid { grid-template-columns: 1fr 1fr; } }
   .hero-subtitle { font-size: 1.125rem; color: var(--muted); max-width: 60ch; line-height: 1.6; }
+  .hero-desc { font-size: 1.05rem; color: var(--muted); max-width: 60ch; line-height: 1.65; margin-top: 1rem; }
+  .hero-bullets { margin: 1rem 0 0 1.25rem; color: var(--muted); line-height: 1.6; }
+  .hero-bullets li { margin-bottom: 0.35rem; }
   .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
 </style>

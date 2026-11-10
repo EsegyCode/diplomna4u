@@ -134,10 +134,6 @@ export const pricing = {
     { id: 'other', label: 'Інше', coef: 1.15 },
   ],
 
-  uniqueness: [
-    { id: '85', label: '85%+', k: 1, default: true },
-    { id: '90', label: '90%+', k: 1.2 },
-  ],
 
   deadline: [
     { id: 'long', label: '2–3 місяці і більше', k: 1, position: 0 },

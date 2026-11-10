@@ -7,9 +7,8 @@ import { pricing } from '@/data/pricing';
 export interface PriceInput {
   workSlug: string;
   subjectId: string;
-  pages: number;         // нижня межа поля «від»
-  uniquenessId: string;  // '85' або '90'
-  deadlineId: string;    // 'long' | 'month' | 'week'
+  pages: number;         // вибрана кількість сторінок (повзунок)
+  deadlineId: string;     // 'long' | 'month' | 'week'
   addons: string[];      // id додатків
 }
 
@@ -32,9 +31,6 @@ export function calcPrice(input: PriceInput): PriceResult {
   const subjectCoef = pricing.subjectCoef[input.subjectId];
   if (subjectCoef === undefined) return { ok: false, reason: 'Невідомий напрям' };
 
-  const uniqueness = pricing.uniqueness.find(u => u.id === input.uniquenessId);
-  if (!uniqueness) return { ok: false, reason: 'Невідомий рівень унікальності' };
-
   const deadline = pricing.deadline.find(d => d.id === input.deadlineId);
   if (!deadline) return { ok: false, reason: 'Невідомий термін' };
 
@@ -52,7 +48,7 @@ export function calcPrice(input: PriceInput): PriceResult {
   }
 
   // Apply coefficients
-  const multiplied = base * subjectCoef * uniqueness.k * deadline.k;
+  const multiplied = base * subjectCoef * deadline.k;
 
   // Round to nearest 1 грн (rounding: 1)
   let price = Math.round(multiplied);

@@ -15,8 +15,12 @@ import { pricing } from '@/data/pricing';
   </table>
 </div>
 <style>
-  .price-table { width: 100%; border-collapse: collapse; }
-  .price-table th, .price-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); text-align: left; }
-  .price-table th { font-weight: 600; color: var(--ink); }
-  .price-table td strong { color: var(--accent); font-weight: 700; }
+  .pricing-teaser { border: 1.5px solid var(--bloodstone); border-radius: var(--r-card); overflow: hidden; }
+  .price-table { width: 100%; border-collapse: collapse; font-size: 1.05rem; }
+  .price-table th, .price-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); text-align: left; }
+  .price-table thead { background: var(--bloodstone); color: var(--qo-fg); }
+  .price-table th { font-weight: 700; color: var(--qo-fg); font-size: 1.1rem; border-bottom: none; }
+  .price-table tbody tr:nth-child(even) { background: var(--surface); }
+  .price-table tbody tr:hover { background: rgba(159, 178, 172, 0.18); }
+  .price-table td strong { color: var(--bloodstone); font-weight: 700; font-size: 1.1rem; }
 </style>

@@ -16,9 +16,14 @@ import { pricing } from '@/data/pricing';
   </table>
 </div>
 <style>
-  .pt { width: 100%; border-collapse: collapse; }
-  .pt th, .pt td { padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
-  .pt th { color: var(--ink); }
-  .pt-factors { font-size: 0.9rem; color: var(--muted); }
-  .pt td strong { color: var(--accent); }
+  .pricing-table { border: 1.5px solid var(--bloodstone); border-radius: var(--r-card); overflow: hidden; }
+  .pt { width: 100%; border-collapse: collapse; font-size: 1.05rem; }
+  .pt th, .pt td { padding: 1rem 1.1rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; min-height: 3rem; }
+  .pt thead { background: var(--bloodstone); color: var(--qo-fg); }
+  .pt th { color: var(--qo-fg); font-weight: 700; font-size: 1.1rem; border-bottom: none; }
+  .pt tbody tr:nth-child(even) { background: var(--surface); }
+  .pt tbody tr { transition: background 0.15s; }
+  .pt tbody tr:hover { background: rgba(159, 178, 172, 0.18); }
+  .pt-factors { font-size: 1rem; color: var(--muted); }
+  .pt td strong { color: var(--bloodstone); font-weight: 700; font-size: 1.1rem; }
 </style>
