@@ -242,7 +242,7 @@ input, select, textarea { font-family: inherit; }
   font-size: 0.9rem;
   color: var(--ink);
 }
-.field input,
+.field input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 .field select,
 .field textarea {
   background: var(--field-bg);
