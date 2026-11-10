@@ -9,10 +9,11 @@ import FAQ from '@/components/FAQ.astro';
 import LeadForm from '@/components/LeadForm.astro';
 import { faqPrices } from '@/data/faq';
 ---
-<BaseLayout title="Ціни | Diplomna 4 U" description="Калькулятор вартості дипломної, курсової, статті.">
+<BaseLayout title="Ціни на дипломі, курсові, статті та реферати | Diplomna 4 U" description="Прейскурант Diplomna 4 U: дипломна від 15 000 грн, курсова від 3 250 грн, реферат від 960 грн, стаття від 460 грн. Калькулятор вартості онлайн.">
   <Section theme="bg">
     <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Ціни'}]} />
-    <h1>Ціни</h1>
+    <h1>Ціни на роботи</h1>
+    <p>Ціни вказано «від». Остаточна вартість залежить від напряму, обсягу й терміну здачі. Порахуй її в калькуляторі — це займає 2 хвилини й ні до чого не зобов’язує.</p>
     <QuickOrder variant="page" />
   </Section>
   <WaveDivider />

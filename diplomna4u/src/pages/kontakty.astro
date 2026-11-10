@@ -6,11 +6,15 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import LeadForm from '@/components/LeadForm.astro';
 import { site } from '@/data/site';
 ---
-<BaseLayout title="Контакти | Diplomna 4 U" description="Контакти Diplomna 4 U.">
+<BaseLayout title="Контакти — Diplomna 4 U | Telegram, email, графік" description="Напиши Diplomna 4 U у Telegram @diplomna4u_bot або на diplomna4u@gmail.com. Працюємо щодня 9:00–21:00. Залиш заявку на розрахунок.">
   <Section theme="bg">
     <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Контакти'}]} />
     <h1>Контакти</h1>
+    <p>Напиши нам зручним способом — відповімо щодня з 9:00 до 21:00.</p>
+    <p>Telegram: <a href={site.telegram.url} target="_blank" rel="noopener noreferrer">{site.telegram.username}</a> — найшвидший спосіб зв’язку. Тут можна одразу надіслати методичку.</p>
     <p>Email: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+    <p>Графік: щодня 9:00–21:00, без вихідних.</p>
+    <p>Формат роботи: онлайн, по всій Україні.</p>
     {site.telegram && <p>Telegram: <a href={site.telegram.url} target="_blank" rel="noopener noreferrer">{site.telegram.username}</a></p>}
     <p>Графік: {site.schedule}</p>
     <p>Зона: {site.zone}</p>

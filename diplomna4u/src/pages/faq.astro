@@ -7,10 +7,11 @@ import FAQ from '@/components/FAQ.astro';
 import { faqGeneral, faqPrices } from '@/data/faq';
 import { faqSchema } from '@/lib/seo';
 ---
-<BaseLayout title="FAQ | Diplomna 4 U" description="Відповіді на часті запитання." jsonLd={[faqSchema([...faqGeneral, ...faqPrices])]}>
+<BaseLayout title="Часті запитання про замовлення робіт | Diplomna 4 U" description="Відповіді про ціни, терміни, оплату, правки, унікальність і конфіденційність. Дипломна від 3 днів, правки місяць безкоштовно." jsonLd={[faqSchema([...faqGeneral, ...faqPrices])]}>
   <Section theme="bg">
     <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'FAQ'}]} />
     <h1>Часті запитання</h1>
+    <p>Зібрали відповіді на найпоширеніші запитання. Не знайшов свого — напиши нам у Telegram.</p>
     <h2>Загальні</h2>
     <FAQ items={faqGeneral} />
   </Section>

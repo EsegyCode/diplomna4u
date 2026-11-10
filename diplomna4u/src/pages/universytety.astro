@@ -4,11 +4,13 @@ import Section from '@/components/Section.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import UniversitiesList from '@/components/UniversitiesList.astro';
 ---
-<BaseLayout title="Університети | Diplomna 4 U" description="Список ВНЗ, з якими ми працюємо.">
+<BaseLayout title="Університети та міста — Diplomna 4 U" description="Університети, студентам яких ми допомагаємо: сторінки міст з умовами замовлення дипломних, курсових і статей. Працюємо дистанційно по всій Україні.">
   <Section theme="bg">
     <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Університети'}]} />
-    <h1>Університети</h1>
+    <h1>Університети й міста</h1>
+    <p>Студенти багатьох університетів звертаються до нас по допомогу з дипломними, курсовими й статтями. Обери місто — і побачиш умови та відповіді на місцеві запитання.</p>
     <UniversitiesList />
+    <p class="text-muted" style="margin-top:1rem">Diplomna 4 U не пов’язана з жодним університетом і не є його представником. Назви закладів наведено лише для зручності пошуку. Ми готуємо матеріали за методичкою твоєї кафедри.</p>
   </Section>
 </BaseLayout>
 

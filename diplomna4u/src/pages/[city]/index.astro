@@ -18,7 +18,7 @@ export function getStaticPaths() {
 const { city } = Astro.props as { city: (typeof cities)[number] };
 const noindex = !city.localContentReady;
 const title = fill('Замовити дипломну роботу {inCity} — від {price} грн | {brand}', city);
-const description = `Допомога з дипломною, курсовою та статтею ${city.inCity}. Калькулятор ціни онлайн, безкоштовна консультація.`;
+const description = `Допомога з дипломною, курсовою та статтею ${city.inCity}. Калькулятор ціни онлайн, дипломна від 3 днів.`;
 const jsonLd = [
   { '@context':'https://schema.org', '@type':'Service', name:'Дипломна робота', areaServed: { '@type':'City', name: city.name } },
   { '@context':'https://schema.org', '@type':'BreadcrumbList', itemListElement: [
@@ -30,7 +30,7 @@ const jsonLd = [
 <BaseLayout title={title} description={description} noindex={noindex} jsonLd={jsonLd}>
   <Section theme="bg">
     <Breadcrumbs items={[{label:'Головна', href:'/'}, {label: city.name}]} />
-    <h1>Дипломна робота {city.inCity}</h1>
+    <h1>Дипломна робота {city.inCity}: розрахуй вартість онлайн</h1>
     <p class="text-muted">{city.region}. Допомога з дипломними, курсовими та статтями.</p>
     {city.intro && <p>{city.intro}</p>}
     <LocalUniversities universities={city.universities} />

@@ -4,24 +4,48 @@ import Section from '@/components/Section.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import BlogCard from '@/components/BlogCard.astro';
 import { getCollection } from 'astro:content';
+import { stats } from '@/data/stats';
 
 const posts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
+const years = new Date().getFullYear() - stats.foundedYear;
 ---
-<BaseLayout title="Про нас | Diplomna 4 U" description="Консультаційний сервіс з підготовки студентських робіт.">
+<BaseLayout title="Про нас — Diplomna 4 U: хто ми і як працюємо" description="Diplomna 4 U працює з 2019 року: офіційно за договором, з реальними даними дослідних полів і консультаціями викладачів-спеціалістів.">
   <Section theme="bg">
     <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Про нас'}]} />
-    <h1>Про нас</h1>
-    <p>Допомагаємо студентам з дипломними, курсовими та статтями з 2019 року. Консультації спеціалістів-викладачів, реальні дані з дослідних полів.</p>
-    <p class="text-muted">Працюємо офіційно за договором. 100% конфіденційно.</p>
+    <h1>Про Diplomna 4 U</h1>
+    <p>Diplomna 4 U — це сервіс консультаційних та інформаційних послуг із підготовки студентських і наукових робіт. Ми працюємо з {stats.foundedYear} року, тобто вже {years} років, а в команді — {stats.teamSize} співробітники.</p>
+    <p>Наша ніша — природничі напрями: агрономія, лісове господарство, захист рослин, екологія та садово-паркове господарство. Для експериментальних частин ми використовуємо реальні дані з дослідних полів і консультуємося зі спеціалістами-викладачами щодо відповідної культури.</p>
   </Section>
+
+  <Section theme="surface">
+    <h2>Як ми працюємо</h2>
+    <p>Ти залишаєш заявку, ми уточнюємо тему й вимоги твоєї кафедри та укладаємо договір. Ми беремося до роботи після передплати 50%, а після отримання готової роботи ти сплачуєш решту. Мінімальний термін дипломної — від 3 днів, але чим раніше ти звернешся, тим вигідніше.</p>
+  </Section>
+
+  <Section theme="bg">
+    <h2>Наші принципи</h2>
+    <div class="principles-grid">
+      <div class="card"><h3>Прозора ціна</h3><p class="text-muted">Ти бачиш орієнтовну вартість ще до того, як залишиш контакти.</p></div>
+      <div class="card"><h3>Офіційно</h3><p class="text-muted">Працюємо за договором, а його умови відкриті на сайті.</p></div>
+      <div class="card"><h3>Конфіденційність</h3><p class="text-muted">Тема, контакти й матеріали нікому не передаються — 100%.</p></div>
+      <div class="card"><h3>Чесні обіцянки</h3><p class="text-muted">Ми не обіцяємо «100% унікальності» чи гарантованої оцінки. Обіцяємо те, що можемо виконати: терміни, унікальність 85–90% із сертифікатом антиплагіату та безкоштовні правки місяць.</p></div>
+    </div>
+  </Section>
+
+  {stats.showStats && (
+  <Section theme="surface">
+    <h2>Цифри</h2>
+    <p>{stats.completed.diploma} дипломних · {stats.completed.coursework} курсових · {stats.completed.theses} тез · {stats.completed.articles} статей · {stats.completed.practiceReports} звітів з практики.</p>
+  </Section>
+  )}
 
   <Section theme="surface">
     <h2 style="margin-bottom:1rem">Блог</h2>
     {posts.length === 0 ? (
-      <p class="text-muted">Тут з'являться статті. TODO: власник додасть матеріали.</p>
+      <p class="text-muted">Тут з'являться статті. <!-- блок не показувати, поки немає опублікованих дописів --></p>
     ) : (
       <div class="pro-blog-grid">
         {posts.map((p) => (
@@ -31,9 +55,18 @@ const posts = (await getCollection('blog'))
     )}
     <p style="margin-top:1.25rem"><a href="/blog/" class="btn btn--ghost">Усі статті →</a></p>
   </Section>
+
+  <Section theme="invert">
+    <h2 style="text-align:center">Хочеш дізнатися вартість своєї роботи?</h2>
+    <p style="text-align:center;margin-bottom:1.5rem"><a href="/#quick-order" class="btn">Дізнатись ціну</a> <a href="https://t.me/diplomna4u_bot" class="btn btn--ghost" target="_blank" rel="noopener noreferrer">Написати в Telegram</a></p>
+  </Section>
 </BaseLayout>
 
 <style>
+  .principles-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
   .pro-blog-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
-  @media (min-width: 900px) { .pro-blog-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 900px) {
+    .principles-grid { grid-template-columns: repeat(2, 1fr); }
+    .pro-blog-grid { grid-template-columns: repeat(3, 1fr); }
+  }
 </style>
