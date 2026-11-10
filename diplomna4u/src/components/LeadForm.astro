@@ -21,13 +21,13 @@ import { site } from '@/data/site';
   </div>
 
   <div class="field">
-    <label>Ім'я *</label>
+    <label>Імʼя *</label>
     <input type="text" name="name" required minlength="2" />
     <span class="field-error" data-err="name"></span>
   </div>
 
   <div class="field">
-    <label>Telegram @username, телефон або email *</label>
+    <label>Telegram, телефон або email *</label>
     <input type="text" name="contact" required />
     <span class="field-error" data-err="contact"></span>
   </div>
@@ -51,9 +51,9 @@ import { site } from '@/data/site';
   )}
 
   <div class="field">
-    <label>Який тип роботи цікавить</label>
+    <label>Який тип роботи цікавить?</label>
     <select name="work_type">
-      <option value="">Оберіть…</option>
+      <option value="" disabled selected>Оберіть…</option>
       {nav.services.map(s => <option value={s.label} selected={workTypeDefault === s.label}>{s.label}</option>)}
     </select>
   </div>
@@ -83,17 +83,22 @@ import { site } from '@/data/site';
   document.querySelectorAll('[data-lead-form]').forEach((form) => {
     const f = form as HTMLFormElement;
     // set page_url
-    const pu = f.querySelector('input[name="page_url"]') as HTMLInputElement;
-    if (pu) pu.value = window.location.href;
-    f.addEventListener('submit', (e) => {
+const pu = f.querySelector('input[name="page_url"]') as HTMLInputElement;
+if (pu) pu.value = window.location.href;
+const submitBtn = f.querySelector('.submit-btn') as HTMLButtonElement;
+const consentInput = f.querySelector('input[name="consent"]') as HTMLInputElement;
+const syncConsent = () => { if (submitBtn) submitBtn.disabled = !consentInput?.checked; };
+consentInput?.addEventListener('change', syncConsent);
+syncConsent();
+f.addEventListener('submit', (e) => {
       e.preventDefault();
       let ok = true;
       const errs: Record<string, string> = {};
-      const name = (f.querySelector('input[name="name"]') as HTMLInputElement).value.trim();
-      const contact = (f.querySelector('input[name="contact"]') as HTMLInputElement).value.trim();
-      const consent = f.querySelector('input[name="consent"]') as HTMLInputElement;
-      if (name.length < 2) { errs.name = 'Введіть ім\'я (мін. 2 символи)'; ok = false; }
-      if (contact.length < 3) { errs.contact = 'Вкажіть контакт'; ok = false; }
+const name = (f.querySelector('input[name="name"]') as HTMLInputElement).value.trim();
+const contact = (f.querySelector('input[name="contact"]') as HTMLInputElement).value.trim();
+const consent = f.querySelector('input[name="consent"]') as HTMLInputElement;
+if (name.length < 2) { errs.name = 'Введіть імʼя (мін. 2 символи)'; ok = false; }
+if (!/^(?:@[a-zA-Z0-9_]{5,32}|[^\\s@]+@[^\\s@]+\\.[^\\s@]+|\\+?\\d[\\d\\s()-]{8,}\\d)$/.test(contact)) { errs.contact = 'Вкажи Telegram, телефон або email'; ok = false; }
       if (!consent?.checked) { errs.consent = 'Потрібна згода'; ok = false; }
       // clear
       f.querySelectorAll('.field-error').forEach(el => el.textContent = '');
@@ -110,9 +115,10 @@ import { site } from '@/data/site';
       if (btn) { btn.disabled = true; btn.textContent = 'Відправляємо…'; }
       if (MOCK_MODE) {
         setTimeout(() => {
-          if (status) status.textContent = 'Дякуємо! Ми зв\'яжемося з вами найближчим часом.';
-          f.reset();
-          if (btn) { btn.disabled = false; btn.textContent = 'Відправити заявку'; }
+          if (status) status.textContent = 'Дякуємо! Ми зв’яжемося з тобою найближчим часом.';
+f.reset();
+syncConsent();
+if (btn) { btn.textContent = 'Відправити заявку'; }
         }, 800);
       } else {
         const data = new FormData(f);
@@ -133,22 +139,31 @@ import { site } from '@/data/site';
   });
 </script>
 <style>
-  .lead-form { display: flex; flex-direction: column; gap: 0.9rem; }
+.lead-form { display: flex; flex-direction: column; gap: 20px; }
   .lead-form .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-  .lead-form .field { display: flex; flex-direction: column; gap: 0.3rem; }
-  .lead-form label { font-weight: 500; font-size: 0.9rem; color: var(--ink); }
+  .lead-form .field { display: flex; flex-direction: column; gap: 6px; }
+  .lead-form label { font-weight: 500; font-size: 0.875rem; color: var(--ink); }
   .lead-form input, .lead-form select, .lead-form textarea {
-    background: var(--field-bg); border: 1px solid var(--field-border); border-radius: var(--r-input);
-    padding: 0.7rem 0.9rem; font-size: 1rem; color: var(--ink); width: 100%;
+    background: #fff; border: 1px solid rgba(0,0,0,0.15); border-radius: 12px;
+    padding: 0 14px; font-size: 1rem; color: var(--ink); width: 100%; min-height: 52px; font-family: inherit;
   }
-  .lead-form input:focus, .lead-form select:focus, .lead-form textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); outline: none; }
+  .lead-form select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235D0D18' d='M2.5 4.5 L6 8 L9.5 4.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .lead-form input:focus, .lead-form select:focus, .lead-form textarea:focus { border-color: var(--accent); box-shadow: 0 4px 12px rgba(93,13,24,0.12); outline: 2px solid var(--accent); outline-offset: 2px; }
   .lead-form .error { border-color: var(--error); }
   .lead-form .field-error { color: var(--error); font-size: 0.8rem; min-height: 1em; }
-.consent { display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; text-align: left; }
-.consent input[type="checkbox"] { flex-shrink: 0; width: 18px; height: 18px; margin: 2px 0 0; }
-.consent a { color: var(--accent); text-decoration: underline; }
-.form-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-@media (max-width: 600px) { .form-actions { flex-direction: column; } .form-actions .btn { width: 100%; } }
+  .consent { display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; text-align: left; }
+  .consent input[type="checkbox"] { flex-shrink: 0; width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--accent); }
+  .consent a { color: var(--accent); text-decoration: underline; }
+  .form-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+  .form-actions .btn { height: 52px; border-radius: var(--r-btn); font-weight: 600; font-size: 0.9375rem; }
+  .form-actions .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+  @media (max-width: 480px) { .form-actions { flex-direction: column; } .form-actions .btn { width: 100%; } }
   .lead-form .form-status { min-height: 1.2em; color: var(--deep); font-size: 0.9rem; }
   .lead-form--sticky { }
   .lead-form--compact { }

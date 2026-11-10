@@ -12,7 +12,7 @@ const pricingJson = JSON.stringify(pricing);
 ---
 <div class={`quick-order card card--light${dark ? ' quick-order--dark' : ''}`} id="quick-order">
   <div class="qo-badge">Ціна від {pricing.workTypes.find(w=>w.slug==='dyplomna-robota')?.minPrice.toLocaleString('uk-UA')} грн</div>
-  <h3 class="qo-title">Давайте уточнимо й безкоштовно проконсультуємо</h3>
+  <h3 class="qo-title">Уточнимо деталі й безкоштовно проконсультуємо</h3>
 
   <form class="qo-form" data-qo>
     <input type="hidden" name="calc_payload" value="" />
@@ -36,12 +36,12 @@ const pricingJson = JSON.stringify(pricing);
       </div>
       </div>
       <div class="field">
-        <label>Тема роботи (необов'язково)</label>
-        <input type="text" name="topic" />
+<label>Тема роботи (необов’язково)</label>
+<input type="text" name="topic" placeholder="Напр., Вплив добрив на врожайність пшениці" />
       </div>
       <div class="field qo-pages" data-pages>
         <div class="pages-head">
-          <label>Кількість сторінок</label>
+          <label>Обсяг роботи</label>
           <div class="pages-value" data-pages-value>60 стор.</div>
         </div>
         <input type="range" name="pages" data-pages-range min="40" max="90" step="5" value="60" />
@@ -54,26 +54,19 @@ const pricingJson = JSON.stringify(pricing);
 
 
       <div class="field">
-        <label>Скільки часу до здачі</label>
+        <label>Коли здача?</label>
         <div class="deadline-seg" data-deadline>
           {pricing.deadline.map((d, i) => (
             <button type="button" class={`seg-btn${i === 0 ? ' is-active' : ''}`} data-deadline-btn data-idx={i} aria-pressed={i === 0 ? 'true' : 'false'}>{d.label}</button>
           ))}
         </div>
-        <p class="deadline-note">Чим раніше замовиш — тим вигідніше. Мінімальний термін дипломної — від 3 днів.</p>
-      </div>
-
-      <div class="field qo-addon" data-addon style="display:none">
-        <label class="addon-label">
-          <input type="checkbox" class="addon-check" name="addon" value="presentation-defense" data-addon-cb />
-          <span>Презентація та підготовка до захисту (+2 000 грн)</span>
-        </label>
+        <p class="deadline-note">Чим раніше замовиш, тим вигідніше. Мінімальний термін дипломної роботи — від 3 днів.</p>
       </div>
 
 <div class="qo-footer">
         <div class="qo-price">
           <div class="price-display" data-price>—</div>
-          <div class="qo-price-note">орієнтовна вартість, точну назве менеджер</div>
+          <div class="qo-price-note">Орієнтовна вартість. Точну суму уточнить менеджер.</div>
         </div>
         <button type="button" class="btn" data-next>Далі →</button>
       </div>
@@ -109,7 +102,7 @@ const pricingJson = JSON.stringify(pricing);
 
 <script define:vars={{ pricingJson }}>
   const pricing = JSON.parse(pricingJson);
-  function calc(workSlug, subjectId, pages, deadlineIdx, addons) {
+  function calc(workSlug, subjectId, pages, deadlineIdx) {
     const workType = pricing.workTypes.find(w => w.slug === workSlug);
     if (!workType) return null;
     const sc = pricing.subjectCoef[subjectId];
@@ -123,10 +116,6 @@ const pricingJson = JSON.stringify(pricing);
       base = workType.minPrice;
     }
     let price = Math.round(base * sc * d.k);
-    addons.forEach(id => {
-      const a = pricing.addons.find(x => x.id === id);
-      if (a && (!a.onlyFor || a.onlyFor.includes(workSlug))) price += a.price;
-    });
     return price;
   }
   function fmt(n){ return n.toLocaleString('uk-UA') + '\u00a0грн'; }
@@ -139,8 +128,7 @@ const pricingJson = JSON.stringify(pricing);
     const pagesBox = f.querySelector('[data-pages]');
     const pagesRange = f.querySelector('[data-pages-range]');
     const pagesValue = f.querySelector('[data-pages-value]');
-    const addonBox = f.querySelector('[data-addon]');
-    const addonCb = f.querySelector('[data-addon-cb]');
+
     const deadlineSeg = f.querySelector('[data-deadline]');
     const deadlineBtns = f.querySelectorAll('[data-deadline-btn]');
     const priceEl = f.querySelector('[data-price]');
@@ -164,13 +152,21 @@ const pricingJson = JSON.stringify(pricing);
         if (pagesRange) pagesRange.value = '0';
         if (pagesValue) pagesValue.textContent = '—';
       }
-      addonBox.style.display = w.slug === 'dyplomna-robota' ? '' : 'none';
+      updateSliderFill();
     }
 
     function updatePagesValue() {
       if (!pagesRange || !pagesValue) return;
       const v = parseInt(pagesRange.value, 10) || 60;
       pagesValue.textContent = v === 0 ? '—' : v + ' стор.';
+    }
+    function updateSliderFill() {
+      if (!pagesRange) return;
+      const min = parseFloat(pagesRange.min || '0');
+      const max = parseFloat(pagesRange.max || '100');
+      const val = parseFloat(pagesRange.value || '0');
+      const pct = ((val - min) / (max - min)) * 100;
+      pagesRange.style.setProperty('--fill', (isNaN(pct) ? 0 : pct) + '%');
     }
 
     function getDeadlineIdx() {
@@ -183,22 +179,22 @@ const pricingJson = JSON.stringify(pricing);
       const w = workSel.value;
       const subject = subjectSel.value;
       const pages = parseInt(pagesRange?.value || '0', 10) || 0;
-      const di = getDeadlineIdx();
-      const addons = addonCb && addonCb.checked ? ['presentation-defense'] : [];
-      const p = calc(w, subject, pages, di, addons);
+       const di = getDeadlineIdx();
+       const p = calc(w, subject, pages, di);
       if (p === null) { priceEl.textContent = 'Уточніть вартість у менеджера'; }
       else { priceEl.textContent = 'від ' + fmt(p); }
       updatePagesValue();
       // payload
-      const payload = { workType: w, subject, pagesFrom: pagesRange ? pagesRange.value : '0', pagesTo: pagesRange ? pagesRange.value : '0', topic: (f.querySelector('input[name="topic"]'))?.value || '', deadline: pricing.deadline[di].id, addons, price: p };
+       const payload = { workType: w, subject, pagesFrom: pagesRange ? pagesRange.value : '0', pagesTo: pagesRange ? pagesRange.value : '0', topic: (f.querySelector('input[name="topic"]'))?.value || '', deadline: pricing.deadline[di].id, price: p };
       hiddenCalc.value = JSON.stringify(payload);
     }
 
     applyWorkType();
+    updateSliderFill();
     updatePrice();
     workSel.addEventListener('change', () => { applyWorkType(); updatePrice(); });
     subjectSel.addEventListener('change', updatePrice);
-    pagesRange?.addEventListener('input', () => { updatePagesValue(); updatePrice(); });
+    pagesRange?.addEventListener('input', () => { updateSliderFill(); updatePagesValue(); updatePrice(); });
     deadlineBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
         deadlineBtns.forEach(b => { b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false'); });
@@ -207,9 +203,7 @@ const pricingJson = JSON.stringify(pricing);
         updatePrice();
       });
     });
-    addonCb?.addEventListener('change', updatePrice);
-
-    nextBtn?.addEventListener('click', () => {
+     nextBtn?.addEventListener('click', () => {
       // validate
       if (!workSel.value || !subjectSel.value) return;
       step1.hidden = true;
@@ -245,7 +239,7 @@ const pricingJson = JSON.stringify(pricing);
       const btn = f.querySelector('button[type="submit"]');
       if (btn) { btn.disabled = true; btn.textContent = 'Відправляємо…'; }
       setTimeout(() => {
-        if (status) status.textContent = 'Дякуємо! Ми зв\'яжемося з вами найближчим часом.';
+        if (status) status.textContent = 'Дякуємо! Ми зв’яжемося з тобою найближчим часом.';
         f.reset();
         applyWorkType();
         updatePrice();
@@ -263,36 +257,44 @@ const pricingJson = JSON.stringify(pricing);
     background: var(--accent-tint); color: var(--accent); padding: 0.3rem 0.8rem;
     border-radius: var(--r-btn); font-weight: 600; font-size: 0.85rem;
   }
-  .quick-order { padding: 1.25rem 1.5rem; }
+  .quick-order { padding: clamp(20px, 3vw, 32px); border-radius: 24px; border: 1px solid rgba(255, 243, 224, 0.12); }
   .qo-badge { font-size: 0.9rem; padding: 0.3rem 0.8rem; }
-  .qo-row { display: grid; grid-template-columns: 1fr; gap: 0.7rem; }
-  @media (min-width: 600px) { .qo-row { grid-template-columns: 1fr 1fr; } }
+.qo-row { display: grid; grid-template-columns: 1fr; gap: 0.7rem; }
+@media (min-width: 480px) { .qo-row { grid-template-columns: 1fr 1fr; } }
   .pages-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
-  .pages-value { font-size: clamp(1.5rem, 2.4vw, 1.75rem); font-weight: 700; color: var(--ink); line-height: 1; }
-  .range-labels { display: flex; justify-content: space-between; font-size: 1rem; color: var(--muted); margin-top: 0.35rem; font-weight: 600; }
-  .deadline-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
-  .seg-btn {
-    min-height: 52px; padding: 0.6rem 0.5rem; border-radius: var(--r-btn);
-    border: 2px solid var(--border); background: transparent; color: var(--ink);
-    font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s;
-  }
-  .seg-btn.is-active { background: var(--accent); color: var(--card); border-color: var(--accent); }
-  @media (max-width: 600px) { .deadline-seg { grid-template-columns: 1fr; } }
+  .pages-value { font-family: var(--font-heading); font-size: clamp(1.625rem, 3vw, 2.125rem); font-weight: 600; color: var(--ink); line-height: 1; font-variant-numeric: lining-nums; }
+  .range-labels { display: flex; justify-content: space-between; font-size: 0.8125rem; color: var(--muted); margin-top: 0.35rem; font-weight: 500; }
+.deadline-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.seg-btn {
+  min-height: 44px; padding: 0.4rem 0.35rem; border-radius: var(--r-btn);
+  border: 2px solid var(--border); background: transparent; color: var(--ink);
+  font-weight: 500; font-size: clamp(0.8125rem, 2vw, 0.875rem); cursor: pointer; transition: all 0.15s;
+  white-space: nowrap;
+}
+.seg-btn.is-active { background: var(--accent); color: var(--card); border-color: var(--accent); }
+.seg-btn:hover { border-color: var(--accent); }
+.seg-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .addon-label { display: inline-flex; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 1.05rem; cursor: pointer; }
   .addon-check { width: 22px; height: 22px; accent-color: var(--accent); flex-shrink: 0; }
-  .qo-title { margin-top: 0.35rem; margin-bottom: 0.85rem; font-size: clamp(1.1rem, 1.8vw, 1.2rem); font-weight: 700; line-height: 1.2; }
-  .qo-form .field { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.85rem; }
-  .qo-form label { font-weight: 600; font-size: 1.05rem; line-height: 1.25; }
-  .qo-form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-  .qo-form select,
-  .qo-form textarea {
-    background: var(--field-bg); border: 1px solid var(--field-border); border-radius: var(--r-input);
-    padding: 0.6rem 0.85rem; width: 100%; font-size: 1.1rem; min-height: 48px;
-  }
+  .qo-title { margin-top: 1.5rem; margin-bottom: 0.85rem; font-size: clamp(1.25rem, 2vw, 1.625rem); font-weight: 600; line-height: 1.2; }
+.qo-form .field { display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.15rem; }
+.qo-form label { font-weight: 500; font-size: 0.875rem; line-height: 1.25; color: rgba(255, 243, 224, 0.85); }
+.qo-form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.qo-form select,
+.qo-form textarea {
+  background: var(--field-bg); border: 1px solid var(--field-border); border-radius: 12px;
+  padding: 0 14px; width: 100%; font-size: 1rem; min-height: 48px; appearance: none;
+}
+.qo-form select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235D0D18' d='M2.5 4.5 L6 8 L9.5 4.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
   .qo-form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
   .qo-form select:focus,
   .qo-form textarea:focus {
-    border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); outline: none;
+    border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); outline: 2px solid var(--accent); outline-offset: 2px;
   }
 .pills { display: inline-flex; border: 1px solid var(--border); border-radius: var(--r-btn); overflow: hidden; gap: 0; }
   .pill { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.5rem 0.9rem; border: none; border-radius: 0; cursor: pointer; font-weight: 500; }
@@ -300,11 +302,38 @@ const pricingJson = JSON.stringify(pricing);
   .pill:has(input:checked) { background: var(--accent); color: var(--card); }
   .deadline-labels { display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--muted); margin-top: 0.3rem; flex-wrap: wrap; gap: 0.25rem; }
   .deadline-note { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
-  .qo-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0.9rem 0 0.3rem; flex-wrap: wrap; }
+  .qo-footer { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin: 1.25rem 0 0; padding-top: 1.25rem; border-top: 1px solid rgba(255,243,224,0.15); flex-wrap: wrap; }
   .qo-price { text-align: left; margin: 0; min-width: 0; }
   .qo-price-note { font-size: 0.85rem; color: var(--muted); }
-  .qo-price .price-display { font-size: clamp(1.3rem, 2.4vw, 1.7rem); }
-  input[type="range"] { width: 100%; height: 8px; accent-color: var(--accent); }
+  .qo-price .price-display { font-family: var(--font-heading); font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 700; line-height: 1; }
+  input[type="range"] {
+  --slider-fill: var(--accent);
+  width: 100%; height: 22px; background: transparent; cursor: pointer;
+  --fill: 50%;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px; border-radius: 999px;
+  background: linear-gradient(to right, var(--slider-fill) 0%, var(--slider-fill) var(--fill), rgba(255,243,224,0.25) var(--fill), rgba(255,243,224,0.25) 100%);
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #FFF9EB; border: none;
+  box-shadow: 0 2px 6px rgba(43,20,24,0.25);
+  margin-top: -8px;
+}
+input[type="range"]::-moz-range-track {
+  height: 6px; border-radius: 999px; background: rgba(255,243,224,0.25); border: none;
+}
+input[type="range"]::-moz-range-progress {
+  height: 6px; border-radius: 999px; background: var(--slider-fill);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px; height: 22px; border: none; border-radius: 50%;
+  background: #FFF9EB; box-shadow: 0 2px 6px rgba(43,20,24,0.25); cursor: pointer;
+}
+.quick-order--dark input[type="range"] { --slider-fill: var(--qo-badge-bg); }
+.quick-order--dark .range-labels, .quick-order--dark .deadline-note { color: rgba(255,243,224,0.7); }
   .qo-form .btn { min-height: 52px; font-size: 1rem; padding: 0.8rem 1.25rem; }
 
   .qo-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
@@ -337,7 +366,7 @@ const pricingJson = JSON.stringify(pricing);
   .quick-order--dark .qo-form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
   .quick-order--dark .qo-form select:focus,
   .quick-order--dark .qo-form textarea:focus {
-    border-color: var(--qo-fg); box-shadow: 0 0 0 3px var(--qo-focus); outline: none;
+    border-color: var(--qo-fg); box-shadow: 0 0 0 3px var(--qo-focus); outline: 2px solid var(--qo-fg); outline-offset: 2px;
   }
   .quick-order--dark .pills { border-color: var(--qo-fg); }
   .quick-order--dark .pill { color: var(--qo-fg); }

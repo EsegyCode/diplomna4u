@@ -412,7 +412,7 @@ p { max-width: 70ch; }
 /* --- Accent: section headings + step connectors --- */
 .section h2 { position: relative; padding-bottom: 0.6rem; }
 .section h2::after { content: ''; position: absolute; left: 0; bottom: 0; width: 3.75rem; height: 2px; background: var(--sage); border-radius: 1px; }
-.section h2.text-center::after { left: 50%; transform: translateX(-50%); }
+.section h2.text-center::after { left: 50%; transform: translateX(-50%); width: 3.5rem; height: 3px; }
 
 .steps { position: relative; }
 .step { position: relative; }

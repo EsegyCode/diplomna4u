@@ -136,19 +136,12 @@ export const pricing = {
 
 
   deadline: [
-    { id: 'long', label: '2–3 місяці і більше', k: 1, position: 0 },
+    { id: 'week', label: 'Менше тижня', k: 1.3, position: 0 },
     { id: 'month', label: 'Менше місяця', k: 1.15, position: 1 },
-    { id: 'week', label: 'Менше тижня', k: 1.3, position: 2 },
+    { id: 'long', label: 'Більше місяця', k: 1, position: 2 },
   ],
 
-  addons: [
-    {
-      id: 'presentation-defense',
-      label: 'Презентація та підготовка до захисту',
-      price: 2000,
-      onlyFor: ['dyplomna-robota'],
-    },
-  ],
+  addons: [],
 
   extraRevisionPrice: 250, // +250 грн за подію правок після першого місяця
 };
