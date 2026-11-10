@@ -9,7 +9,7 @@ const isActive = (href: string) => norm(pathname) === norm(href);
 <header class="site-header">
   <div class="container header-inner">
     <a href="/" class="logo" aria-label={site.brandUk}>
-      <img src="/logo.webp" alt={site.brandUk} width="48" height="48" loading="eager" />
+      <span class="logo-mark"><img src="/logo.webp" alt={site.brandUk} width="64" height="64" loading="eager" /></span>
       <span class="logo-text">Diplomna 4 U</span>
     </a>
 
@@ -86,12 +86,28 @@ const isActive = (href: string) => norm(pathname) === norm(href);
     display: flex;
     align-items: center;
     gap: 1rem;
-    min-height: 72px;
+    min-height: var(--header-h);
     justify-content: space-between;
   }
-  .logo { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; }
-  .logo img { display: block; width: auto; height: 48px; }
-  .logo-text { font-weight: 700; font-size: 1.05rem; color: var(--ink); line-height: 1.1; white-space: nowrap; }
+  .logo { display: inline-flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+  .logo-mark {
+    width: 64px; height: 64px;
+    background: var(--bg);
+    border-radius: var(--r-md);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; overflow: hidden;
+  }
+  .logo-mark img { display: block; width: calc(100% - 12px); height: auto; max-width: calc(100% - 12px); max-height: calc(100% - 12px); }
+  .logo-text {
+    font-family: var(--font-heading); font-weight: 700;
+    font-size: clamp(22px, 2vw, 28px);
+    color: var(--ink); line-height: 1.1; white-space: nowrap;
+  }
+  @media (max-width: 1023px) {
+    :root { --header-h: 68px; }
+    .logo-mark { width: 52px; height: 52px; }
+    .logo-mark img { width: calc(100% - 10px); max-width: calc(100% - 10px); max-height: calc(100% - 10px); }
+  }
   .header-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: nowrap; }
   .menu-btn {
     display: inline-flex;
@@ -112,7 +128,7 @@ const isActive = (href: string) => norm(pathname) === norm(href);
     position: absolute;
     left: 0;
     right: 0;
-    top: 100%;
+    top: var(--header-h);
     background: var(--bg);
     border-bottom: 1px solid var(--border);
     opacity: 0;
@@ -170,9 +186,10 @@ const isActive = (href: string) => norm(pathname) === norm(href);
     color: var(--ink);
   }
   @media (max-width: 600px) {
-    .header-inner { min-height: 64px; }
-    .logo img { height: 40px; }
-    .logo-text { font-size: 0.9rem; }
+    .header-inner { min-height: var(--header-h); }
+    .logo-mark { width: 52px; height: 52px; }
+    .logo-mark img { width: calc(100% - 10px); max-width: calc(100% - 10px); max-height: calc(100% - 10px); }
+    .logo-text { font-size: clamp(20px, 5vw, 24px); }
     .header-actions { gap: 0.5rem; }
     .menu-btn, .btn--sm { min-height: 44px; padding: 0.5rem 0.9rem; font-size: 0.9rem; }
   }
@@ -180,7 +197,7 @@ const isActive = (href: string) => norm(pathname) === norm(href);
     .mega-menu {
       position: fixed;
       inset: 0;
-      top: 0;
+      top: var(--header-h);
       overflow: auto;
       padding-top: 1rem;
     }

@@ -1,13 +1,6 @@
-// Єдине джерело правди для навігації (хедер, меню, футер)
+import { services } from './services.ts';
 
-export const servicesNav = [
-  { label: 'Дипломна робота', href: '/poslugy/dyplomna-robota/' },
-  { label: 'Курсова робота', href: '/poslugy/kursova-robota/' },
-  { label: 'Стаття', href: '/poslugy/stattia/' },
-  { label: 'Реферат', href: '/poslugy/referat/' },
-  { label: 'Звіт з практики', href: '/poslugy/zvit-z-praktyky/' },
-  { label: 'Теза', href: '/poslugy/teza/' },
-] as const;
+export const servicesNav = services.map(s => ({ label: s.label, href: `/poslugy/${s.slug}/` }));
 
 export const mainNav = [
   { label: 'Ціни', href: '/tsiny/' },

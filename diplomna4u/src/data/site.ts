@@ -1,6 +1,8 @@
 // src/data/site.ts
 // Єдине джерело правди для контактів і бренду
 
+import { services } from './services.ts';
+
 export const site = {
   brand: 'Diplomna 4 U',
   brandUk: 'Дипломна 4 U',
@@ -24,14 +26,7 @@ export const site = {
 };
 
 export const nav = {
-  services: [
-    { label: 'Дипломна робота', href: '/poslugy/dyplomna-robota/' },
-    { label: 'Курсова робота', href: '/poslugy/kursova-robota/' },
-    { label: 'Стаття', href: '/poslugy/stattia/' },
-    { label: 'Реферат', href: '/poslugy/referat/' },
-    { label: 'Звіт з практики', href: '/poslugy/zvit-z-praktyky/' },
-    { label: 'Теза', href: '/poslugy/teza/' },
-  ],
+  services: services.map(s => ({ label: s.label, href: `/poslugy/${s.slug}/` })),
   main: [
     { label: 'Ціни', href: '/tsiny/' },
     { label: 'Відгуки', href: '/vidhuky/' },

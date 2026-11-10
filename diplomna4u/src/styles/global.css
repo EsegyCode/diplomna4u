@@ -8,29 +8,41 @@
 
 /* --- Tokens --- */
 :root {
-  --bg: #FFFDF8;
-  --surface: #FFF9EB;
-  --sage: #9FB2AC;
-  --tint: #E6EDEA;
-  --deep: #5D0D18;
-  --deep-hover: #7A1626;
-  --ink: #2B1A1D;
-  --muted: #6B5A5D;
+  --bg: #FFFBF3;
+  --surface: #F9EEDB;
+  --sand: #EBD6AE;
+  --sand-hover: #E2CB9E;
+  --sand-deep: #B89A62;
+  --red: #AD1312;
+  --red-hover: #8E0F0E;
+  --red-2: #7A0C0B;
+  --cream: #F9EEDB;
+  --cream-2: #F3E4C8;
+  --tint: #F7E9CF;
+  --sage: var(--sand);
+  --sage-hover: var(--sand-hover);
+  --sage-deep: var(--sand-deep);
+  --deep: var(--red);
+  --deep-hover: var(--red-hover);
+  --deep-2: var(--red-2);
+  --ink: #2A1513;
+  --muted: #5E4C49;
   --error: #D92D20;
-  --field-bg: #fff;
+  --field-bg: #FFFFFF;
   --card: #FFFFFF;
-  --border: #E6EDEA;
-  --accent: var(--deep);
-  --accent-hover: var(--deep-hover);
-  --accent-tint: #F6E7E9;
-  --field-border: var(--sage);
-  --bloodstone: var(--deep);
-  --bloodstone-hover: var(--deep-hover);
+  --border: #E7DFC9;
+  --accent: var(--red);
+  --accent-hover: var(--red-hover);
+  --accent-tint: #F8E1D6;
+  --field-border: color-mix(in srgb, var(--sand-deep) 70%, white);
+  --bloodstone: var(--red);
+  --bloodstone-hover: var(--red-hover);
   --vanilla: var(--surface);
-  --cream-2: #FFF6E5;
-  --sage-deep: #6F8780;
-  --deep-2: #4A0A13;
-  --sage-hover: #8CA39C;
+  --qo-bg: var(--red);
+  --qo-fg: #F9EEDB;
+  --qo-badge-bg: #F9EEDB;
+  --qo-badge-fg: var(--red);
+  --qo-focus: color-mix(in srgb, var(--surface) 25%, transparent);
   --r-sm: 10px;
   --r-md: 16px;
   --r-lg: 32px;
@@ -57,6 +69,7 @@
   --r-input: 14px;
   --container: 1200px;
   --tap-min: 48px;
+  --header-h: 84px;
   --font-heading: 'Playfair Display', Georgia, serif;
   --font-body: 'Inter', system-ui, sans-serif;
   --shadow-card: 0 8px 28px rgba(43,26,29,.10);
@@ -452,7 +465,7 @@ p { max-width: 70ch; }
 }
 
 /* --- Anchor scroll for sticky header --- */
-#quick-order { scroll-margin-top: 96px; }
+#quick-order { scroll-margin-top: calc(var(--header-h) + 16px); }
 
 /* --- Reduced motion --- */
 @media (prefers-reduced-motion: reduce) {

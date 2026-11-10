@@ -1,0 +1,62 @@
+---
+import { site } from '@/data/site';
+import { getGuarantees } from '@/data/guarantees';
+
+interface Props {
+  service?: string;
+}
+const { service = 'dyplomna-robota' } = Astro.props;
+const cards = getGuarantees(service);
+
+const icons = [
+  '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15l2 2 4-4"></path>',
+  '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path>',
+  '<polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>',
+  '<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>',
+  '<path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path>',
+  '<rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>',
+];
+---
+<section class="section guarantees" data-theme="light" aria-labelledby="guarantees-title">
+  <div class="container">
+    <h2 id="guarantees-title">Гарантії якості</h2>
+    <p class="guarantees-lead">Працюємо за договором і відповідаємо за результат. Ось що ти отримуєш із кожною роботою.</p>
+    <div class="guarantees-grid">
+      {cards.map((card, i) => (
+        <div class:list={['card', 'guarantee-card', i === 0 ? 'card--sand' : 'card--default']}>
+          <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" set:html={icons[i]} /></span>
+          <h3>{card.title}</h3>
+          <p>{card.body}</p>
+        </div>
+      ))}
+    </div>
+    <div class="guarantees-actions">
+      <a href="#quick-order" class="btn btn--primary">Дізнатись ціну</a>
+      {site.telegram && (
+        <a href={site.telegram.url} target="_blank" rel="noopener noreferrer" class="btn btn--secondary">Написати в Telegram</a>
+      )}
+    </div>
+  </div>
+</section>
+<style>
+  .guarantees { }
+  .guarantees-lead { max-width: 62ch; color: var(--muted); font-size: 1.05rem; line-height: 1.6; margin: 0 0 1.5rem; }
+  .guarantees-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .guarantees-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .guarantees-grid { grid-template-columns: repeat(3, 1fr); } }
+  .guarantee-card { transition: transform 200ms cubic-bezier(.2,.7,.2,1), box-shadow 200ms cubic-bezier(.2,.7,.2,1); }
+  .guarantee-card:hover { transform: translateY(-3px); }
+  .icon-tile {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; border-radius: var(--r-md);
+    background: var(--sand); color: var(--red);
+    margin-bottom: 0.75rem;
+  }
+  .card--sand .icon-tile { background: var(--card); color: var(--red); }
+  .card--sand { color: var(--red); }
+  .guarantee-card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+  .guarantee-card p { color: inherit; opacity: 0.9; font-size: 0.95rem; line-height: 1.55; }
+  .card--default .guarantee-card p { color: var(--muted); opacity: 1; }
+  .card--default p { color: var(--muted); }
+  .guarantees-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 2rem; }
+</style>

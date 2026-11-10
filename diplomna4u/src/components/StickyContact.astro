@@ -72,19 +72,20 @@ const telegram = site.telegram;
 
 <style>
   .sticky-btn {
-    width: 78px; height: 78px;
+    width: 60px; height: 60px;
     border-radius: 50%;
-    background: var(--sage); color: var(--bloodstone);
-    border: 3px solid var(--bloodstone);
-    box-shadow: 0 6px 20px rgba(93, 13, 24, 0.25);
+    background: var(--card); color: var(--red);
+    border: 1.5px solid var(--red);
+    box-shadow: 0 0 0 4px var(--bg), 0 8px 24px -8px rgba(173,19,18,.35);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
     transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
   }
-  .sticky-btn:hover { background: var(--sage-hover); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(93, 13, 24, 0.3); }
-  .sticky-btn:focus-visible { outline: 3px solid var(--bloodstone); outline-offset: 2px; }
+  .sticky-btn svg { width: 26px; height: 26px; }
+  .sticky-btn:hover { background: var(--surface); transform: translateY(-2px); box-shadow: 0 0 0 4px var(--bg), 0 8px 24px -8px rgba(173,19,18,.35); }
+  .sticky-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
   .hp { display: none !important; }
-  .sticky-contact { position: fixed; right: 20px; bottom: 20px; z-index: 999; }
+  .sticky-contact { position: fixed; right: 16px; bottom: 16px; z-index: 999; }
   .sticky-panel {
     position: absolute; right: 0; bottom: 114px;
     width: 320px; max-width: calc(100vw - 40px);

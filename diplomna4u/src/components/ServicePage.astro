@@ -4,6 +4,7 @@ import Breadcrumbs from './Breadcrumbs.astro';
 import QuickOrder from './QuickOrder.astro';
 import FAQ from './FAQ.astro';
 import ServicesGrid from './ServicesGrid.astro';
+import Guarantees from './Guarantees.astro';
 
 interface Props { service: typeof services[number] }
 const { service } = Astro.props;
@@ -31,9 +32,10 @@ const { service } = Astro.props;
     <p>Від {service.minPrice.toLocaleString('uk-UA')} грн{service.minDays ? `. Мінімальний термін — від ${service.minDays} днів.` : '.'}</p>
   </div>
 </section>
+<Guarantees service={service.slug} />
 <section class="section">
   <div class="container">
-    <h2>Часті запитання</h2>
+    <h2>Р§Р°СЃС‚С– Р·Р°РїРёС‚Р°РЅРЅСЏ</h2>
     <FAQ items={service.faq} />
   </div>
 </section>
