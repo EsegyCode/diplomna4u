@@ -6,7 +6,7 @@ import { pricing } from '@/data/pricing';
 
 export interface PriceInput {
   workSlug: string;
-  subjectId: string;
+  specialtyKey: string;
   pages: number;         // вибрана кількість сторінок (повзунок)
   deadlineId: string;     // 'long' | 'month' | 'week'
   addons: string[];      // id додатків
@@ -28,8 +28,13 @@ export function calcPrice(input: PriceInput): PriceResult {
   const workType = pricing.workTypes.find(w => w.slug === input.workSlug);
   if (!workType) return { ok: false, reason: 'Невідомий тип роботи' };
 
-  const subjectCoef = pricing.subjectCoef[input.subjectId];
-  if (subjectCoef === undefined) return { ok: false, reason: 'Невідомий напрям' };
+  const workType2 = workType;
+  if (!workType2.hasCalculator) {
+    const price0 = workType2.basePrice || workType2.minPrice;
+    return { ok: true, price: price0, formatted: price0.toLocaleString('uk-UA') + '\\u00a0грн' };
+  }
+  const specialtyCoef = pricing.specialtyCoef?.[input.specialtyKey];
+  if (specialtyCoef === undefined) return { ok: false, reason: 'Невідома спеціальність' };
 
   const deadline = pricing.deadline.find(d => d.id === input.deadlineId);
   if (!deadline) return { ok: false, reason: 'Невідомий термін' };
@@ -48,7 +53,7 @@ export function calcPrice(input: PriceInput): PriceResult {
   }
 
   // Apply coefficients
-  const multiplied = base * subjectCoef * deadline.k;
+  const multiplied = base * specialtyCoef * deadline.k;
 
   // Round to nearest 1 грн (rounding: 1)
   let price = Math.round(multiplied);

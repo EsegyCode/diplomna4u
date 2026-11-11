@@ -23,6 +23,15 @@ const title = fill('Дипломна робота {inCity} — від {price} г
 const description = `Допомога з дипломною, курсовою та статтею ${city.inCity}. Університети міста, спеціальності, калькулятор ціни онлайн.`;
 const faqItems = city.localFaq.length ? city.localFaq : faqGeneral.slice(0, 4);
 const hasSpecialties = city.universities.some(u => u.specialties?.length);
+const usefulLinks = [
+  { title: 'Ціни', desc: 'Прейскурант і таблиця вартості всіх видів робіт', href: '/tsiny/' },
+  { title: 'Відгуки', desc: 'Що кажуть студенти, які вже замовляли', href: '/vidhuky/' },
+  { title: 'Дипломна робота', desc: 'Повний цикл: від теми до захисту', href: '/poslugy/dyplomna-robota/' },
+  { title: 'Курсова робота', desc: 'Теорія, практика й оформлення за методичкою', href: '/poslugy/kursova-robota/' },
+  { title: 'Стаття', desc: 'Наукова стаття з аналізом джерел і оформленням за вимогами видання', href: '/poslugy/stattia/' },
+  { title: 'Про нас', desc: 'Хто ми і як працюємо за договором', href: '/pro-nas/' },
+  { title: 'Інші міста', desc: 'Усі міста, де ми працюємо', href: '/mista/' },
+];
 const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'Service', name: 'Дипломна робота', areaServed: { '@type': 'City', name: city.name } },
   { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
@@ -40,10 +49,10 @@ function spec(key: string) { return pricing.specialties.find(s => s.key === key)
 <BaseLayout title={title} description={description} noindex={noindex} jsonLd={jsonLd}>
   <Section theme="bg">
     <Breadcrumbs items={[{ label: 'Головна', href: '/' }, { label: 'Де ми працюємо', href: '/mista/' }, { label: city.name }]} />
-    <h1>Замовити дипломну роботу, курсову роботу в {city.inCity}</h1>
-    <p class="text-muted">{city.region}. Допомога з дипломними, курсовими та статтями.</p>
-    {city.intro && <p>{city.intro}</p>}
-    <p>Працюємо за договором: заявка, узгодження вимог кафедри, передплата 50% і здача готової роботи. Сертифікат антиплагіату до кожної роботи, безкоштовні правки протягом місяця, мінімальний термін дипломної — від 3 днів.</p>
+    <h1>Замовити дипломну роботу {city.inCity}</h1>
+    <p class="city-lead-line">{city.region}. Допомога з дипломними, курсовими та статтями.</p>
+    {city.intro && <p class="city-intro">{city.intro}</p>}
+    <p class="city-intro">Працюємо за договором: заявка, узгодження вимог кафедри, передплата 50% і здача готової роботи. Сертифікат антиплагіату до кожної роботи, безкоштовні правки протягом місяця, мінімальний термін дипломної — від 3 днів.</p>
     {city.localFacts.length > 0 && (
       <ul class="city-facts">
         {city.localFacts.map(f => <li>{f}</li>)}
@@ -60,7 +69,7 @@ function spec(key: string) { return pricing.specialties.find(s => s.key === key)
   </Section>
   <WaveDivider />
   <Section theme="surface">
-    <h2>Університети, студентам яких ми допомагали в {city.genitive}</h2>
+    <h2>Університети, студентам яких ми допомагали {city.inCity}</h2>
     <LocalUniversities universities={city.universities} />
     <p class="text-muted" style="margin-top:0.75rem">Працюємо зі студентами перелічених закладів і готуємо роботу за методичкою кафедри. Не є партнерами чи представниками університетів.</p>
   </Section>
@@ -68,7 +77,7 @@ function spec(key: string) { return pricing.specialties.find(s => s.key === key)
     <>
       <WaveDivider />
       <Section theme="bg">
-        <h2>Спеціальності, за якими пишемо роботи в {city.genitive}</h2>
+        <h2>Спеціальності, за якими пишемо роботи {city.inCity}</h2>
         {city.universities.filter(u => u.specialties?.length).map(u => (
           <div class="uni-specialties">
             <h3>{u.name}{u.short ? ` (${u.short})` : ''}</h3>
@@ -107,16 +116,15 @@ function spec(key: string) { return pricing.specialties.find(s => s.key === key)
     )}
   </Section>
   <WaveDivider />
-  <Section theme="bg">
+  <Section theme="surface">
     <h2>Корисні розділи</h2>
-    <div class="city-links">
-      <a href="/tsiny/" class="chip">Ціни</a>
-      <a href="/vidhuky/" class="chip">Відгуки</a>
-      <a href="/poslugy/dyplomna-robota/" class="chip">Дипломна робота</a>
-      <a href="/poslugy/kursova-robota/" class="chip">Курсова робота</a>
-      <a href="/poslugy/stattia/" class="chip">Стаття</a>
-      <a href="/pro-nas/" class="chip">Про нас</a>
-      <a href="/mista/" class="chip">Інші міста</a>
+    <div class="useful-grid">
+      {usefulLinks.map(l => (
+        <a href={l.href} class="useful-card">
+          <span class="useful-title">{l.title} →</span>
+          <span class="useful-desc">{l.desc}</span>
+        </a>
+      ))}
     </div>
   </Section>
   <WaveDivider />
@@ -152,17 +160,30 @@ function spec(key: string) { return pricing.specialties.find(s => s.key === key)
 </script>
 
 <style>
+  h2 { margin-bottom: 1.5rem; }
+  .city-lead-line { font-weight: 600; color: var(--ink); margin-top: 1.25rem; margin-bottom: 1rem; }
+  .city-intro { font-size: 1.25rem; line-height: 1.65; max-width: 60ch; margin: 0 0 1rem; color: var(--muted); }
   .city-facts { list-style: disc; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; margin-top: 1rem; color: var(--muted); }
-  .city-stats { display: grid; gap: 0.75rem; grid-template-columns: repeat(2, 1fr); margin-top: 1rem; }
+  .city-stats { display: grid; gap: 1.25rem; grid-template-columns: repeat(2, 1fr); margin-top: 1.25rem; }
   @media (min-width: 640px) { .city-stats { grid-template-columns: repeat(4, 1fr); } }
-  .city-stat { background: var(--surface); border-radius: var(--r-sm); padding: 0.75rem; text-align: center; font-size: 0.95rem; color: var(--muted); }
-  .city-stat span { display: block; font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: var(--ink); line-height: 1.1; }
-  .city-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .uni-specialties { margin-bottom: 2rem; }
-  .specialty-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-top: 1rem; }
+  .city-stat { background: var(--surface); border-radius: var(--r-card); padding: 1.5rem 1rem; text-align: center; font-size: 1rem; color: var(--muted); }
+  .city-stat span { display: block; font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; color: var(--ink); line-height: 1; margin-bottom: 0.5rem; }
+  .useful-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .useful-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .useful-grid { grid-template-columns: repeat(3, 1fr); } }
+  .useful-card { display: flex; flex-direction: column; gap: 0.4rem; padding: 1.25rem; border: 1px solid var(--border); border-radius: var(--r-card); background: var(--card); text-decoration: none; transition: border-color 0.15s, background 0.15s; }
+  .useful-card:hover { border-color: var(--accent); background: var(--accent-tint); }
+  .useful-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .useful-title { font-size: 1.25rem; font-weight: 700; color: var(--accent); }
+  .useful-desc { font-size: 1rem; color: var(--muted); line-height: 1.45; }
+  .uni-specialties { margin-bottom: 4rem; }
+  .uni-specialties h3 { margin: 0 0 1.5rem; font-size: 1.25rem; }
+  .specialty-grid { display: grid; gap: 1.25rem; grid-template-columns: 1fr; margin-top: 0; grid-auto-rows: 1fr; }
   @media (min-width: 640px) { .specialty-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 1024px) { .specialty-grid { grid-template-columns: repeat(3, 1fr); } }
-  .specialty-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-card); padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
-  .specialty-badge { display: inline-block; align-self: flex-start; padding: 0.2rem 0.6rem; border-radius: var(--r-btn); background: var(--accent-tint); color: var(--accent); font-weight: 700; font-size: 0.85rem; }
-  .specialty-card h4 { font-size: 1rem; margin: 0; }
+  .specialty-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-card); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; min-height: 180px; }
+  .specialty-badge { display: inline-block; align-self: flex-start; padding: 0.25rem 0.6rem; border-radius: var(--r-btn); background: var(--accent-tint); color: var(--accent); font-weight: 700; font-size: 0.875rem; }
+  .specialty-card h4 { font-size: 1.125rem; font-weight: 700; margin: 0.5rem 0 0; color: var(--ink); }
+  .specialty-card p { color: var(--muted); font-size: 0.9375rem; line-height: 1.5; margin: 0; }
+  .specialty-card .btn { margin-top: auto; align-self: flex-start; min-height: 44px; background: var(--accent); color: var(--vanilla); border-color: var(--accent); }
 </style>

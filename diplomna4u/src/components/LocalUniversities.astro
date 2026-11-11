@@ -1,17 +1,27 @@
 ---
 interface Props {
-  universities: { name: string; short?: string; note?: string }[];
+  universities: { name: string; short?: string; shortName?: string; fullName?: string; address?: string; note?: string }[];
 }
 const { universities } = Astro.props;
 ---
+
 <div class="local-universities">
-  <h3>Університети міста</h3>
   {universities.length === 0 ? <p class="text-muted">Список буде додано.</p> : (
-    <ul>
-      {universities.map(u => <li>{u.name}{u.short ? ` (${u.short})` : ''}</li>)}
-    </ul>
+    <div class="uni-grid">
+      {universities.map(u => (
+        <article class="uni-card">
+          <h4>{u.shortName || u.short || u.name}</h4>
+          <p class="uni-full">{u.fullName || u.name}</p>
+          {u.address && <p class="uni-address">{u.address}</p>}
+        </article>
+      ))}
+    </div>
   )}
 </div>
 <style>
-  .local-universities ul { list-style: disc; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .uni-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .uni-card { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--border); border-radius: var(--r-card); padding: 1.25rem; min-height: 100%; }
+  .uni-card h4 { font-family: var(--font-heading); font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 700; margin: 0 0 0.4rem; }
+  .uni-full { color: var(--ink); font-size: 1rem; line-height: 1.4; margin: 0; }
+  .uni-address { margin-top: auto; padding-top: 0.75rem; font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
 </style>

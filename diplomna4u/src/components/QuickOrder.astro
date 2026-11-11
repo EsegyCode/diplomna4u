@@ -29,12 +29,6 @@ const pricingJson = JSON.stringify(pricing);
         </select>
       </div>
   <div class="field">
-    <label>Напрям *</label>
-    <select name="subject" data-subject required>
-      {pricing.subjects.map(s => <option value={s.id}>{s.label}</option>)}
-    </select>
-  </div>
-  <div class="field">
     <label>Спеціальність</label>
     <select name="specialty" data-specialty data-specialty-select>
       {pricing.specialties.map(s => <option value={s.key} selected={s.key === 'H1'}>{s.label}</option>)}
@@ -108,7 +102,7 @@ const pricingJson = JSON.stringify(pricing);
 
 <script define:vars={{ pricingJson }}>
   const pricing = JSON.parse(pricingJson);
-  function calc(workSlug, subjectId, specialtyKey, pages, deadlineIdx) {
+  function calc(workSlug, specialtyKey, pages, deadlineIdx) {
     const workType = pricing.workTypes.find(w => w.slug === workSlug);
     if (!workType) return null;
     const d = pricing.deadline[deadlineIdx];
@@ -131,7 +125,6 @@ const pricingJson = JSON.stringify(pricing);
     const f = form;
     const root = f.closest('.quick-order');
     const workSel = f.querySelector('[data-work]');
-    const subjectSel = f.querySelector('[data-subject]');
     const specialtySel = f.querySelector('[data-specialty]');
     const pagesBox = f.querySelector('[data-pages]');
     const pagesRange = f.querySelector('[data-pages-range]');
@@ -151,14 +144,22 @@ const pricingJson = JSON.stringify(pricing);
 
     function applyWorkType() {
       const w = workType();
-      if (w.hasPages) {
-        pagesBox.style.display = '';
-        if (pagesRange) pagesRange.value = '60';
-        updatePagesValue();
-      } else {
-        pagesBox.style.display = 'none';
+      const deadlineField = deadlineSeg?.closest('.field') as HTMLElement | null;
+      if (!w.hasCalculator) {
+        if (pagesBox) pagesBox.style.display = 'none';
+        if (deadlineField) deadlineField.style.display = 'none';
         if (pagesRange) pagesRange.value = '0';
         if (pagesValue) pagesValue.textContent = '—';
+      } else {
+        if (pagesBox) pagesBox.style.display = w.hasPages ? '' : 'none';
+        if (deadlineField) deadlineField.style.display = '';
+        if (w.hasPages) {
+          if (pagesRange) pagesRange.value = '60';
+          updatePagesValue();
+        } else {
+          if (pagesRange) pagesRange.value = '0';
+          if (pagesValue) pagesValue.textContent = '—';
+        }
       }
       updateSliderFill();
     }
@@ -185,16 +186,24 @@ const pricingJson = JSON.stringify(pricing);
 
     function updatePrice() {
       const w = workSel.value;
-      const subject = subjectSel.value;
+      const workTypeObj = pricing.workTypes.find(x => x.slug === w) || pricing.workTypes[0];
       const specialty = specialtySel?.value || 'H1';
       const pages = parseInt(pagesRange?.value || '0', 10) || 0;
        const di = getDeadlineIdx();
-       const p = calc(w, subject, specialty, pages, di);
+      if (!workTypeObj.hasCalculator) {
+        const basePrice = workTypeObj.basePrice || workTypeObj.minPrice;
+        priceEl.textContent = 'від ' + fmt(basePrice);
+        updatePagesValue();
+        const payload = { workType: w, specialty, pagesFrom: pagesRange ? pagesRange.value : '0', pagesTo: pagesRange ? pagesRange.value : '0', topic: (f.querySelector('input[name="topic"]'))?.value || '', deadline: null, price: basePrice };
+        hiddenCalc.value = JSON.stringify(payload);
+        return;
+      }
+       const p = calc(w, specialty, pages, di);
       if (p === null) { priceEl.textContent = 'Уточніть вартість у менеджера'; }
       else { priceEl.textContent = 'від ' + fmt(p); }
       updatePagesValue();
       // payload
-       const payload = { workType: w, subject, specialty, pagesFrom: pagesRange ? pagesRange.value : '0', pagesTo: pagesRange ? pagesRange.value : '0', topic: (f.querySelector('input[name="topic"]'))?.value || '', deadline: pricing.deadline[di].id, price: p };
+       const payload = { workType: w, specialty, pagesFrom: pagesRange ? pagesRange.value : '0', pagesTo: pagesRange ? pagesRange.value : '0', topic: (f.querySelector('input[name="topic"]'))?.value || '', deadline: pricing.deadline[di].id, price: p };
       hiddenCalc.value = JSON.stringify(payload);
     }
 
@@ -202,7 +211,6 @@ const pricingJson = JSON.stringify(pricing);
     updateSliderFill();
     updatePrice();
     workSel.addEventListener('change', () => { applyWorkType(); updatePrice(); });
-    subjectSel.addEventListener('change', updatePrice);
     specialtySel?.addEventListener('change', updatePrice);
     pagesRange?.addEventListener('input', () => { updateSliderFill(); updatePagesValue(); updatePrice(); });
     deadlineBtns.forEach((btn) => {
@@ -288,7 +296,7 @@ const pricingJson = JSON.stringify(pricing);
   .addon-check { width: 22px; height: 22px; accent-color: var(--accent); flex-shrink: 0; }
   .qo-title { margin-top: 1.5rem; margin-bottom: 0.85rem; font-size: clamp(1.25rem, 2vw, 1.625rem); font-weight: 600; line-height: 1.2; }
 .qo-form .field { display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.15rem; }
-.qo-form label { font-weight: 500; font-size: 0.875rem; line-height: 1.25; color: rgba(255, 243, 224, 0.85); }
+  .qo-form label { font-weight: 500; font-size: 0.875rem; line-height: 1.25; color: var(--ink); }
 .qo-form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 .qo-form select,
 .qo-form textarea {

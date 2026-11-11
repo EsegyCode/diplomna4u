@@ -5,6 +5,8 @@ export interface WorkTypePricing {
   slug: string;
   label: string;
   minPrice: number;
+  hasCalculator: boolean;
+  basePrice: number;
   hasPages: boolean;
   pagesMin: number | null;
   pagesMax: number | null;
@@ -25,7 +27,9 @@ export const pricing = {
       slug: 'dyplomna-robota',
       label: 'Дипломна робота',
       minPrice: 14800,
-      hasPages: true,
+      hasCalculator: true,
+      basePrice: 14800,      hasCalculator: true,
+      basePrice: 14800,      hasPages: true,
       pagesMin: null,
       pagesMax: null,
       pagesDefault: [45, 60],
@@ -39,7 +43,9 @@ export const pricing = {
       slug: 'kursova-robota',
       label: 'Курсова робота',
       minPrice: 3250,
-      hasPages: true,
+      hasCalculator: true,
+      basePrice: 3250,      hasCalculator: true,
+      basePrice: 3250,      hasPages: true,
       pagesMin: null,
       pagesMax: null,
       pagesDefault: null,
@@ -53,7 +59,9 @@ export const pricing = {
       slug: 'stattia',
       label: 'Стаття',
       minPrice: 460,
-      hasPages: true,
+      hasCalculator: false,
+      basePrice: 460,      hasCalculator: false,
+      basePrice: 460,      hasPages: true,
       pagesMin: 7,
       pagesMax: null,
       pagesDefault: null,
@@ -66,7 +74,9 @@ export const pricing = {
       slug: 'teza',
       label: 'Теза',
       minPrice: 280,
-      hasPages: true,
+      hasCalculator: false,
+      basePrice: 280,      hasCalculator: false,
+      basePrice: 280,      hasPages: true,
       pagesMin: null,
       pagesMax: 5,
       pagesDefault: null,
@@ -79,7 +89,9 @@ export const pricing = {
       slug: 'referat',
       label: 'Реферат',
       minPrice: 960,
-      hasPages: true,
+      hasCalculator: false,
+      basePrice: 960,      hasCalculator: false,
+      basePrice: 960,      hasPages: true,
       pagesMin: null,
       pagesMax: null,
       pagesDefault: null,
@@ -92,7 +104,9 @@ export const pricing = {
       slug: 'zvit-z-praktyky',
       label: 'Звіт з практики',
       minPrice: 3200,
-      hasPages: false,
+      hasCalculator: false,
+      basePrice: 3200,      hasCalculator: false,
+      basePrice: 3200,      hasPages: false,
       pagesMin: null,
       pagesMax: null,
       pagesDefault: null,
@@ -105,7 +119,9 @@ export const pricing = {
       slug: 'prezentatsiya',
       label: 'Презентація',
       minPrice: 300,
-      hasPages: false,
+      hasCalculator: false,
+      basePrice: 300,      hasCalculator: false,
+      basePrice: 300,      hasPages: false,
       pagesMin: null,
       pagesMax: null,
       pagesDefault: null,
@@ -115,25 +131,6 @@ export const pricing = {
       note: 'Лише в калькуляторі, окремої сторінки немає',
     },
   ] as WorkTypePricing[],
-
-  subjectCoef: {
-    agronomy: 1,
-    forestry: 1.15,
-    'plant-protection': 1.15,
-    ecology: 1.15,
-    'landscape-gardening': 1.15,
-    other: 1.15,
-  } as Record<string, number>,
-
-  subjects: [
-    { id: 'agronomy', label: 'Агрономія', coef: 1 },
-    { id: 'forestry', label: 'Лісове господарство', coef: 1.15 },
-    { id: 'plant-protection', label: 'Захист рослин', coef: 1.15 },
-    { id: 'ecology', label: 'Екологія', coef: 1.15 },
-    { id: 'landscape-gardening', label: 'Садово-паркове господарство', coef: 1.15 },
-    { id: 'other', label: 'Інше', coef: 1.15 },
-  ],
-
 
   deadline: [
     { id: 'week', label: 'Менше тижня', k: 1.3, position: 0 },
@@ -173,4 +170,4 @@ export const pricing = {
   } as Record<string, number>,
 };
 
-export type SubjectId = keyof typeof pricing.subjectCoef;
+// subject removed; use SpecialtyKey instead
