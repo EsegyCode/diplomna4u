@@ -19,10 +19,10 @@ const telegram = site.telegram;
       <a class="btn btn--ghost" href={viber.url} target="_blank" rel="noopener noreferrer" style="margin-bottom:0.5rem">Viber</a>
     )}
     <form class="mini-form" id="stickyForm">
-      <input type="text" name="name" placeholder="Ім'я" required />
-      <input type="tel" name="phone" placeholder="Телефон або @username" />
+      <input type="text" name="name" placeholder="Наприклад, Олена" required />
+      <input type="tel" name="phone" placeholder="@username, +380 50 123 45 67 або name@email.com" />
       <select name="workType" required>
-        <option value="">Тип роботи</option>
+        <option value="" disabled selected>Оберіть тип роботи</option>
         {nav.services.map(s => <option value={s.label}>{s.label}</option>)}
       </select>
       <input type="text" name="hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
@@ -58,12 +58,12 @@ const telegram = site.telegram;
   mobileOpen?.addEventListener('click', openPanel);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePanel(); });
   document.addEventListener('click', (e) => {
-    const t = e.target as Node;
+    const t = e.target;
     const root = document.getElementById('stickyContact');
     if (root && !root.contains(t)) closePanel();
   });
   // Mock submit
-  const form = document.getElementById('stickyForm') as HTMLFormElement | null;
+  const form = document.getElementById('stickyForm');
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
     const status = form.querySelector('.form-status');

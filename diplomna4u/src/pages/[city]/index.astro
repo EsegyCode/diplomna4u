@@ -134,7 +134,7 @@ function spec(key: string) { return pricing.specialties.find(s => s.key === key)
   </Section>
   <WaveDivider />
   <Section theme="invert">
-    <h2 style="text-align:center">Готовий почати?</h2>
+    <h2 class="text-center" style="text-align:center;margin-bottom:2rem">Готовий почати?</h2>
     <div style="max-width:600px;margin:0 auto">
       <LeadForm variant="page" source="city" city={city.slug} />
     </div>
@@ -149,7 +149,7 @@ function spec(key: string) { return pricing.specialties.find(s => s.key === key)
   document.querySelectorAll('[data-pick-specialty]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const key = btn.getAttribute('data-pick-specialty');
-      const select = document.querySelector('[data-specialty-select]') as HTMLSelectElement | null;
+      const select = document.querySelector('[data-specialty-select]');
       if (key && select) {
         select.value = key;
         select.dispatchEvent(new Event('change', { bubbles: true }));

@@ -7,9 +7,23 @@ const list = others.filter(c => c.slug !== current);
 ---
 {list.length > 0 && (
   <nav class="other-cities">
-    <h4>Інші міста</h4>
-    <div class="chips">
-      {list.map(c => <a href={`/${c.slug}/`} class="chip">{c.name}</a>)}
+    <h3 class="other-cities-title">Інші міста</h3>
+    <div class="city-chips">
+      {list.map(c => <a href={`/${c.slug}/`} class="city-chip">{c.name}</a>)}
     </div>
   </nav>
 )}
+<style>
+  .other-cities-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.25rem; }
+  .city-chips { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .city-chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 1.0625rem; font-weight: 600;
+    padding: 0.875rem 1.5rem; min-height: 48px;
+    border-radius: var(--r-btn); border: 1px solid var(--border);
+    background: var(--card); color: var(--ink);
+    text-decoration: none; transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .city-chip:hover { background: var(--accent-tint); border-color: var(--accent); color: var(--accent); }
+  .city-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>

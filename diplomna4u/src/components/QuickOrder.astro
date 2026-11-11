@@ -77,15 +77,15 @@ const pricingJson = JSON.stringify(pricing);
       <input type="hidden" name="contact_type" data-contact-type value="" />
       <div class="field">
         <label>Ім’я *</label>
-        <input type="text" name="qo_name" data-qo-name required />
+        <input type="text" name="qo_name" data-qo-name required placeholder="Наприклад, Олена" />
       </div>
       <div class="field">
         <label>Telegram @username, телефон або email *</label>
-        <input type="text" name="qo_contact" data-qo-contact required placeholder="@username, +380… або email" />
+        <input type="text" name="qo_contact" data-qo-contact required placeholder="@username, +380 50 123 45 67 або name@email.com" />
       </div>
       <div class="field">
         <label>Коментар (необов'язково)</label>
-        <textarea name="qo_comment" rows="3" placeholder="Тема роботи, вимоги методички, побажання"></textarea>
+        <textarea name="qo_comment" rows="3" placeholder="Наприклад: тема, спеціальність, університет, термін здачі. Методичку можна надіслати в Telegram"></textarea>
       </div>
       <label class="consent">
         <input type="checkbox" class="consent-check" data-qo-consent required />
