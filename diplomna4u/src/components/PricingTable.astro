@@ -8,7 +8,7 @@ import { pricing } from '@/data/pricing';
         {pricing.workTypes.map(w => (
           <tr>
             <td>{w.label}</td>
-            <td class="pt-factors">обсяг, напрям, унікальність, термін{w.note ? ` — ${w.note}` : ''}</td>
+            <td class="pt-factors">обсяг, спеціальність, унікальність, термін{w.note ? ` — ${w.note}` : ''}</td>
             <td><strong>{w.minPrice.toLocaleString('uk-UA')} грн</strong></td>
           </tr>
         ))}

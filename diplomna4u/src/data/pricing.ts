@@ -164,8 +164,8 @@ export const pricing = {
   ] as { key: string; code: string; name: string; legacyCode: string; label: string; coef: number }[],
 
   specialtyCoef: {
-    H1: 1, H2: 1.1, H3: 1.1, H4: 1.1, H5: 1.1, H6: 1.1, H7: 1.1,
-    E2: 1.1, E4: 1.1, E1: 1.1, C6: 1.1, G18: 1.1, G21: 1.1, G2: 1.1, G14: 1.1, G13: 1.1, J3: 1.1,
+    H1: 1, H2: 1.15, H3: 1.15, H4: 1.15, H5: 1.15, H6: 1.15, H7: 1.15,
+    E2: 1.15, E4: 1.15, E1: 1.15, C6: 1.15, G18: 1.15, G21: 1.15, G2: 1.15, G14: 1.15, G13: 1.15, J3: 1.15,
     other: 1.15,
   } as Record<string, number>,
 };

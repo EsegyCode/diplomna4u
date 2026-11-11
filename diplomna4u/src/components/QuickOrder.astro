@@ -115,7 +115,7 @@ const pricingJson = JSON.stringify(pricing);
     } else {
       base = workType.minPrice;
     }
-    const specialtyCoef = pricing.specialtyCoef?.[specialtyKey] ?? 1;
+    const specialtyCoef = pricing.specialtyCoef?.[specialtyKey] ?? 1.15;
     let price = Math.round(base * specialtyCoef * d.k);
     return price;
   }
@@ -144,7 +144,7 @@ const pricingJson = JSON.stringify(pricing);
 
     function applyWorkType() {
       const w = workType();
-      const deadlineField = deadlineSeg?.closest('.field') as HTMLElement | null;
+      const deadlineField = deadlineSeg?.closest('.field');
       if (!w.hasCalculator) {
         if (pagesBox) pagesBox.style.display = 'none';
         if (deadlineField) deadlineField.style.display = 'none';
@@ -223,7 +223,7 @@ const pricingJson = JSON.stringify(pricing);
     });
      nextBtn?.addEventListener('click', () => {
       // validate
-      if (!workSel.value || !subjectSel.value) return;
+      if (!workSel.value) return;
       step1.hidden = true;
       step2.hidden = false;
     });
