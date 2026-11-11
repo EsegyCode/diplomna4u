@@ -389,5 +389,18 @@ input[type="range"]::-moz-range-thumb {
   .quick-order--dark .range-labels { color: var(--qo-fg); opacity: 0.85; }
   .quick-order--dark input[type="range"] { accent-color: var(--qo-fg); }
   .quick-order--dark .addon-check { accent-color: var(--qo-fg); }
+
+  @media (max-width: 640px) {
+    .deadline-seg { grid-template-columns: 1fr; }
+    .seg-btn { white-space: normal; font-size: 0.9rem; }
+    .qo-row { grid-template-columns: 1fr; }
+    .quick-order { padding: 16px; }
+    .qo-form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+    .qo-form select, .qo-form textarea { font-size: 16px; }
+    .consent { align-items: flex-start; }
+    .qo-actions { flex-direction: column; }
+    .qo-actions .btn, .qo-actions button { width: 100%; }
+    .pages-value { font-size: 1.5rem; }
+  }
 </style>
 

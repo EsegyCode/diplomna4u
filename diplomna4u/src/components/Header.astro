@@ -17,7 +17,7 @@ const isActive = (href: string) => norm(pathname) === norm(href);
       <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="megaMenu" aria-label="Меню">
         <span aria-hidden="true">☰</span> Меню
       </button>
-      <a href={ctaNav.href} class="btn btn--sm">{ctaNav.label}</a>
+      <a href={ctaNav.href} class="btn btn--sm header-cta"><span class="header-cta__full">{ctaNav.label}</span><span class="header-cta__short">Ціна</span></a>
     </div>
   </div>
 
@@ -204,6 +204,23 @@ const isActive = (href: string) => norm(pathname) === norm(href);
     .mega-close { display: inline-flex; align-items: center; justify-content: center; }
     .mega-panel nav { grid-template-columns: 1fr; padding: 3.5rem 1.5rem 2rem; }
     .menu-list li a { min-height: 52px; }
+  }
+  .header-cta__short { display: none; }
+  @media (max-width: 360px) {
+    .header-cta__full { display: none; }
+    .header-cta__short { display: inline; }
+  }
+  @media (max-width: 768px) {
+    .header-inner { gap: 0.5rem; }
+    .logo { gap: 0.5rem; }
+    .header-actions { gap: 0.4rem; }
+    .logo-text { font-size: clamp(16px, 4.2vw, 20px); }
+    .menu-btn, .header-actions .btn {
+      min-height: 44px;
+      padding: 0.45rem 0.8rem;
+      font-size: 0.875rem;
+      white-space: nowrap;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     .mega-menu { transition: none; transform: none; }

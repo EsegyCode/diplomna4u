@@ -16,7 +16,8 @@ import { pricing } from '@/data/pricing';
   </table>
 </div>
 <style>
-  .pricing-table { border: 1.5px solid var(--bloodstone); border-radius: var(--r-card); overflow: hidden; }
+  .pricing-table { border: 1.5px solid var(--bloodstone); border-radius: var(--r-card); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .pt { min-width: 480px; }
   .pt { width: 100%; border-collapse: collapse; font-size: 1.05rem; }
   .pt th, .pt td { padding: 1rem 1.1rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; min-height: 3rem; }
   .pt thead { background: var(--bloodstone); color: var(--qo-fg); }

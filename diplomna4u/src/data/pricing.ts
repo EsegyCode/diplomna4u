@@ -24,7 +24,7 @@ export const pricing = {
     {
       slug: 'dyplomna-robota',
       label: 'Дипломна робота',
-      minPrice: 15000,
+      minPrice: 14800,
       hasPages: true,
       pagesMin: null,
       pagesMax: null,

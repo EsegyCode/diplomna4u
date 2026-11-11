@@ -471,3 +471,13 @@ p { max-width: 70ch; }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+@media (max-width: 768px) {
+  body { padding-bottom: 92px; }
+  img, video, canvas, svg { max-width: 100%; }
+  .container { padding-inline: 1rem; }
+  input, select, textarea { font-size: 16px; }
+  h1, h2, h3, h4 { overflow-wrap: anywhere; }
+  p, li, span, a, td, th { overflow-wrap: anywhere; }
+  .pricing-teaser, .pricing-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
