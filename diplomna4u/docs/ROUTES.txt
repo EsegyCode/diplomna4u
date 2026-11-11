@@ -4,6 +4,7 @@ path | title | template/type | indexable (yes/no) | in sitemap (yes/no) | inboun
 /blog/ | Блог | Diplomna 4 U | static | yes | yes | - | - | - | -
 /cherkasy/ | Дипломна робота у Черкасах — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
 /chernihiv/ | Дипломна робота у Чернігові — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/dialkuye/ | Дякуємо | Diplomna 4 U | static | yes | yes | - | - | - | -
 /dnipro/ | Дипломна робота у Дніпрі — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
 /faq/ | Часті запитання про замовлення робіт | Diplomna 4 U | static | yes | yes | - | - | - | -
 / | Diplomna 4 U — дипломна робота для тебе | від 14 800 грн | static | yes | yes | - | - | - | -
