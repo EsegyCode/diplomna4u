@@ -1,4 +1,4 @@
-# Р”РёРїР»РѕРјРЅР° 4 U — повний контент для LLM
+# Дипломна 4 U — повний контент для LLM
 
 Сайт: http://localhost:4321
 Email: diplomna4u@gmail.com
