@@ -58,7 +58,7 @@ function spec(key: string) { return pricing.specialties.find(s => s.key === key)
         {city.localFacts.map(f => <li>{f}</li>)}
       </ul>
     )}
-    <div style="margin-top:1.5rem">
+    <div style="margin-top:2rem">
       <a href="#quick-order" class="btn">Дізнатись вартість →</a>
     </div>
   </Section>
@@ -71,7 +71,7 @@ function spec(key: string) { return pricing.specialties.find(s => s.key === key)
   <Section theme="surface">
     <h2>Університети, студентам яких ми допомагали {city.inCity}</h2>
     <LocalUniversities universities={city.universities} />
-    <p class="text-muted" style="margin-top:0.75rem">Працюємо зі студентами перелічених закладів і готуємо роботу за методичкою кафедри. Не є партнерами чи представниками університетів.</p>
+    <p class="uni-note">Працюємо зі студентами перелічених закладів і готуємо роботу за методичкою кафедри. Не є партнерами чи представниками університетів.</p>
   </Section>
   {hasSpecialties && (
     <>
@@ -161,8 +161,9 @@ function spec(key: string) { return pricing.specialties.find(s => s.key === key)
 
 <style>
   h2 { margin-bottom: 1.5rem; }
-  .city-lead-line { font-weight: 600; color: var(--ink); margin-top: 1.25rem; margin-bottom: 1rem; }
-  .city-intro { font-size: 1.25rem; line-height: 1.65; max-width: 60ch; margin: 0 0 1rem; color: var(--muted); }
+  .city-lead-line { font-size: var(--fs-lead); line-height: 1.6; font-weight: 600; color: var(--ink); margin-top: 2rem; margin-bottom: 1rem; max-width: 60ch; }
+  .city-intro { font-size: var(--fs-lead); line-height: 1.6; max-width: 60ch; margin: 0 0 1.25rem; color: var(--ink); }
+  .uni-note { font-size: var(--fs-lead); line-height: 1.6; color: var(--ink); margin-top: 1rem; max-width: 60ch; }
   .city-facts { list-style: disc; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; margin-top: 1rem; color: var(--muted); }
   .city-stats { display: grid; gap: 1.25rem; grid-template-columns: repeat(2, 1fr); margin-top: 1.25rem; }
   @media (min-width: 640px) { .city-stats { grid-template-columns: repeat(4, 1fr); } }
