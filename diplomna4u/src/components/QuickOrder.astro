@@ -53,7 +53,6 @@ const pricingJson = JSON.stringify(pricing);
       </div>
 
 
-
       <div class="field">
         <label>Коли здача?</label>
         <div class="deadline-seg" data-deadline>
@@ -242,31 +241,6 @@ const pricingJson = JSON.stringify(pricing);
       return null;
     }
 
-    f.addEventListener('submit', (e) => {
-      e.preventDefault();
-      // mock success
-      const qName = f.querySelector('[data-qo-name]')?.value?.trim() || '';
-      const qContact = f.querySelector('[data-qo-contact]')?.value?.trim() || '';
-      const consent = f.querySelector('[data-qo-consent]');
-      const contactType = detectContactType(qContact);
-      const contactTypeInput = f.querySelector('[data-contact-type]');
-      if (qName.length < 2 || !contactType || !consent?.checked) {
-        if (status) status.textContent = contactType ? 'Перевірте обов\'язкові поля. Вкажи Telegram @username, телефон або email.' : 'Вкажи Telegram @username, телефон або email.';
-        return;
-      }
-      if (contactTypeInput) contactTypeInput.value = contactType;
-      const btn = f.querySelector('button[type="submit"]');
-      if (btn) { btn.disabled = true; btn.textContent = 'Відправляємо…'; }
-      setTimeout(() => {
-        if (status) status.textContent = 'Дякуємо! Ми зв’яжемося з тобою найближчим часом.';
-        f.reset();
-        applyWorkType();
-        updatePrice();
-        if (btn) { btn.disabled = false; btn.textContent = 'Відправити заявку'; }
-        if (contactTypeInput) contactTypeInput.value = '';
-        step2.hidden = true; step1.hidden = false;
-      }, 800);
-    });
   });
 </script>
 <style>

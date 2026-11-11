@@ -18,6 +18,8 @@
     "generate:og": "node --experimental-strip-types scripts/generate-og.mjs",
     "generate:llms": "node --experimental-strip-types scripts/generate-llms.mjs",
     "routes": "node scripts/routes.mjs",
+    "test:lead": "node scripts/test-lead.mjs",
+    "dev:functions": "npm run build && wrangler pages dev dist",
     "seo:check": "npm run check:seo"
   },
   "dependencies": {

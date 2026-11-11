@@ -62,17 +62,6 @@ const telegram = site.telegram;
     const root = document.getElementById('stickyContact');
     if (root && !root.contains(t)) closePanel();
   });
-  // Mock submit
-  const form = document.getElementById('stickyForm');
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const status = form.querySelector('.form-status');
-    if (status) { status.textContent = 'Відправляємо…'; }
-    setTimeout(() => {
-      if (status) { status.textContent = 'Дякуємо! Ми зв\'яжемося з вами найближчим часом.'; }
-      form.reset();
-    }, 800);
-  });
 </script>
 
 <style>

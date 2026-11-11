@@ -108,7 +108,11 @@ const allJsonLd = [orgSchema, websiteSchema, ...jsonLd];
     <Footer />
     <StickyContact />
     <CookieBanner />
-  </body>
+  <script>
+  import { initLeadForms } from '../scripts/lead-form.ts';
+  initLeadForms();
+</script>
+</body>
 </html>
 ---
 <!-- script -->

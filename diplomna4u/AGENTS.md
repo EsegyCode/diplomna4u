@@ -28,3 +28,5 @@ Astro static site for "Diplomna 4 U". Content is Ukrainian. Output is static HTM
 - Keyboard focus visible; contrast acceptable.
 - No console errors.
 - Internal links valid.
+## 9. Forms and Telegram
+All forms use src/scripts/lead-form.ts and /api/lead. Never put secrets in client code or repo; never hard-code chat id. The function validates everything. To add a form: assign source, add label in function.

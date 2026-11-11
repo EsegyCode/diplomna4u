@@ -60,3 +60,5 @@ flowchart LR
 
 ## Build pipeline
 prebuild: generate icons, OG images, llms, robots; build static pages; sitemap integration. Post-build checks: `check:seo`, `check:encoding`, `routes`.
+## Forms and Telegram
+Client form -> /api/lead (Cloudflare Pages Function) -> Telegram sendMessage. Secrets stay in Cloudflare env.
