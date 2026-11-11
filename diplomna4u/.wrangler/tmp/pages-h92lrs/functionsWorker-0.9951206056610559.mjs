@@ -138,6 +138,7 @@ async function sendTelegram(env, text, keyboard) {
     } catch {
       body = null;
     }
+    console.log("telegram_api_response", JSON.stringify({ status: res.status, ok: res.ok, body, time: (/* @__PURE__ */ new Date()).toISOString() }));
     if (res.ok && body && body.ok) return { ok: true, status: res.status };
     const retryAfter = body?.parameters?.retry_after;
     const migrateTo = body?.parameters?.migrate_to_chat_id;
@@ -151,6 +152,7 @@ async function sendTelegram(env, text, keyboard) {
     };
   } catch (e) {
     clearTimeout(timer);
+    console.error("telegram_api_error", JSON.stringify({ message: e?.message || "network error", time: (/* @__PURE__ */ new Date()).toISOString() }));
     return { ok: false, status: 0, description: e?.message || "network error" };
   }
 }
@@ -162,8 +164,12 @@ async function attemptSend(env, text, keyboard) {
   if (retriable) {
     let wait = 1e3;
     if (result.retryAfter && result.retryAfter <= 3) wait = result.retryAfter * 1e3;
+    console.warn("telegram_retry", JSON.stringify({ status: result.status, waitMs: wait, time: (/* @__PURE__ */ new Date()).toISOString() }));
     await new Promise((r) => setTimeout(r, wait));
     result = await sendTelegram(env, text, keyboard);
+  }
+  if (!result.ok) {
+    console.error("telegram_send_failed", JSON.stringify({ status: result.status, description: result.description, time: (/* @__PURE__ */ new Date()).toISOString() }));
   }
   return result;
 }
@@ -225,15 +231,18 @@ async function handlePost(context) {
   }
   const honey = cleanString(data.website, 200);
   if (honey) {
+    console.log("lead_drop", JSON.stringify({ reason: "honeypot", source: cleanString(data.source, 40), contact: cleanString(data.contact, 254), startedAt: data.formStartedAt, time: (/* @__PURE__ */ new Date()).toISOString() }));
     return json({ ok: true }, 200);
   }
   const started = Number(data.formStartedAt);
   if (started && Number.isFinite(started)) {
     const age = Date.now() - started;
     if (age < 2500) {
+      console.log("lead_drop", JSON.stringify({ reason: "time_trap_fast", source: cleanString(data.source, 40), contact: cleanString(data.contact, 254), ageMs: age, thresholdMs: 2500, time: (/* @__PURE__ */ new Date()).toISOString() }));
       return json({ ok: true }, 200);
     }
     if (age > 24 * 60 * 60 * 1e3) {
+      console.log("lead_drop", JSON.stringify({ reason: "time_trap_stale", source: cleanString(data.source, 40), contact: cleanString(data.contact, 254), ageMs: age, thresholdMs: 864e5, time: (/* @__PURE__ */ new Date()).toISOString() }));
       return json({ ok: false, code: "validation", fields: {} }, 400);
     }
   }
@@ -241,6 +250,7 @@ async function handlePost(context) {
   const turnstileToken = cleanString(data["cf-turnstile-response"], 2048);
   const turnstileOk = await verifyTurnstile(rawEnv, turnstileToken, ip);
   if (!turnstileOk) {
+    console.log("lead_drop", JSON.stringify({ reason: "turnstile_failed", source, ip, time: (/* @__PURE__ */ new Date()).toISOString() }));
     return json({ ok: false, code: "spam", fields: {} }, 400);
   }
   const source = cleanString(data.source, 40) || "lead";
@@ -267,10 +277,13 @@ async function handlePost(context) {
   if (!contact) fields.contact = "\u0412\u043A\u0430\u0436\u0438 Telegram, \u0442\u0435\u043B\u0435\u0444\u043E\u043D \u0430\u0431\u043E email";
   if (data.consent !== true) fields.consent = "\u041F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0438 \u0437\u0433\u043E\u0434\u0443 \u043D\u0430 \u043E\u0431\u0440\u043E\u0431\u043A\u0443 \u0434\u0430\u043D\u0438\u0445";
   if (Object.keys(fields).length > 0) {
+    console.log("lead_drop", JSON.stringify({ reason: "validation_failed", source, fields, time: (/* @__PURE__ */ new Date()).toISOString() }));
     return json({ ok: false, code: "validation", fields }, 400);
   }
   const textForLinks = `${topic} ${comment}`;
-  if (countUrls(textForLinks) > 3) {
+  const linkCount = countUrls(textForLinks);
+  if (linkCount > 3) {
+    console.log("lead_drop", JSON.stringify({ reason: "too_many_links", source, contactType: contact.type, contact, linkCount, threshold: 3, time: (/* @__PURE__ */ new Date()).toISOString() }));
     return json({ ok: true }, 200);
   }
   const consent = data.consent === true;
@@ -298,10 +311,11 @@ async function handlePost(context) {
   }
   const result = await attemptSend(rawEnv, text, keyboard);
   if (result.ok) {
+    console.log("lead_accepted", JSON.stringify({ source, contactType: contact.type, contact, time: (/* @__PURE__ */ new Date()).toISOString() }));
     return json({ ok: true }, 200);
   }
   console.error("telegram_error", result.status, result.description);
-  return json({ ok: false, code: "telegram" }, 502);
+  return json({ ok: false, code: "telegram", reason: "telegram_failed" }, 502);
 }
 __name(handlePost, "handlePost");
 async function onRequest(context) {
@@ -849,7 +863,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-YerkoX/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-WVsvi7/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -881,7 +895,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-YerkoX/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-WVsvi7/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

@@ -164,6 +164,8 @@ async function sendTelegram(env: Env, text: string, keyboard: unknown): Promise<
     let body: any = null;
     try { body = await res.json(); } catch { body = null; }
 
+    console.log('telegram_api_response', JSON.stringify({ status: res.status, ok: res.ok, body, time: new Date().toISOString() }));
+
     if (res.ok && body && body.ok) return { ok: true, status: res.status };
 
     const retryAfter = body?.parameters?.retry_after;
@@ -176,8 +178,9 @@ async function sendTelegram(env: Env, text: string, keyboard: unknown): Promise<
       retryAfter: typeof retryAfter === 'number' ? retryAfter : undefined,
       migrateTo,
     };
-  } catch (e) {
+   } catch (e) {
     clearTimeout(timer);
+    console.error('telegram_api_error', JSON.stringify({ message: (e as Error)?.message || 'network error', time: new Date().toISOString() }));
     return { ok: false, status: 0, description: (e as Error)?.message || 'network error' };
   }
 }
@@ -191,8 +194,12 @@ async function attemptSend(env: Env, text: string, keyboard: unknown): Promise<{
   if (retriable) {
     let wait = 1000;
     if (result.retryAfter && result.retryAfter <= 3) wait = result.retryAfter * 1000;
+    console.warn('telegram_retry', JSON.stringify({ status: result.status, waitMs: wait, time: new Date().toISOString() }));
     await new Promise(r => setTimeout(r, wait));
     result = await sendTelegram(env, text, keyboard);
+  }
+  if (!result.ok) {
+    console.error('telegram_send_failed', JSON.stringify({ status: result.status, description: result.description, time: new Date().toISOString() }));
   }
   return result;
 }
@@ -266,6 +273,7 @@ async function handlePost(context: any): Promise<Response> {
   // Honeypot
   const honey = cleanString(data.website, 200);
   if (honey) {
+    console.log('lead_drop', JSON.stringify({ reason: 'honeypot', source: cleanString(data.source, 40), contact: cleanString(data.contact, 254), startedAt: data.formStartedAt, time: new Date().toISOString() }));
     return json({ ok: true }, 200);
   }
 
@@ -274,9 +282,11 @@ async function handlePost(context: any): Promise<Response> {
   if (started && Number.isFinite(started)) {
     const age = Date.now() - started;
     if (age < 2500) {
+      console.log('lead_drop', JSON.stringify({ reason: 'time_trap_fast', source: cleanString(data.source, 40), contact: cleanString(data.contact, 254), ageMs: age, thresholdMs: 2500, time: new Date().toISOString() }));
       return json({ ok: true }, 200); // too fast: silent drop
     }
     if (age > 24 * 60 * 60 * 1000) {
+      console.log('lead_drop', JSON.stringify({ reason: 'time_trap_stale', source: cleanString(data.source, 40), contact: cleanString(data.contact, 254), ageMs: age, thresholdMs: 86400000, time: new Date().toISOString() }));
       return json({ ok: false, code: 'validation', fields: {} }, 400);
     }
   }
@@ -286,6 +296,7 @@ async function handlePost(context: any): Promise<Response> {
   const turnstileToken = cleanString(data['cf-turnstile-response'], 2048);
   const turnstileOk = await verifyTurnstile(rawEnv, turnstileToken, ip);
   if (!turnstileOk) {
+    console.log('lead_drop', JSON.stringify({ reason: 'turnstile_failed', source, ip, time: new Date().toISOString() }));
     return json({ ok: false, code: 'spam', fields: {} }, 400);
   }
 
@@ -320,12 +331,15 @@ async function handlePost(context: any): Promise<Response> {
   if (data.consent !== true) fields.consent = 'Підтверди згоду на обробку даних';
 
   if (Object.keys(fields).length > 0) {
+    console.log('lead_drop', JSON.stringify({ reason: 'validation_failed', source, fields, time: new Date().toISOString() }));
     return json({ ok: false, code: 'validation', fields }, 400);
   }
 
   // Link/repeat guard
   const textForLinks = `${topic} ${comment}`;
-  if (countUrls(textForLinks) > 3) {
+  const linkCount = countUrls(textForLinks);
+  if (linkCount > 3) {
+    console.log('lead_drop', JSON.stringify({ reason: 'too_many_links', source, contactType: contact!.type, contact, linkCount, threshold: 3, time: new Date().toISOString() }));
     return json({ ok: true }, 200);
   }
 
@@ -352,11 +366,12 @@ async function handlePost(context: any): Promise<Response> {
 
   const result = await attemptSend(rawEnv, text, keyboard);
   if (result.ok) {
+    console.log('lead_accepted', JSON.stringify({ source, contactType: contact!.type, contact, time: new Date().toISOString() }));
     return json({ ok: true }, 200);
   }
 
   console.error('telegram_error', result.status, result.description);
-  return json({ ok: false, code: 'telegram' }, 502);
+  return json({ ok: false, code: 'telegram', reason: 'telegram_failed' }, 502);
 }
 
 export async function onRequest(context: any): Promise<Response> {
