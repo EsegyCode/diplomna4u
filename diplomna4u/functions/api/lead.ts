@@ -216,6 +216,7 @@ const SOURCE_LABELS: Record<string, string> = {
   contact: 'Форма на сторінці',
   'quick-order': 'Калькулятор',
   'sticky-contact': 'Липка форма',
+  'sticky-widget': 'Віджет «Зв’язок з нами»',
   'lead': 'Форма',
 };
 

@@ -1,12 +1,5 @@
 type ContactResult = { type: string; value: string } | null;
 
-const sourceLabels: Record<string, string> = {
-  contact: 'Форма на сторінці',
-  'quick-order': 'Калькулятор',
-  'sticky-contact': 'Липка форма',
-  lead: 'Форма',
-};
-
 function clean(v: unknown): string {
   if (typeof v !== 'string') return '';
   return v.replace(/[\u0000-\u001F\u007F]/g, '').replace(/\s+/g, ' ').trim();
@@ -60,18 +53,6 @@ function collectUtm(): Record<string, string> {
   return params;
 }
 
-function ensureHidden(form: HTMLFormElement, name: string, value = ''): HTMLInputElement {
-  let el = form.querySelector<HTMLInputElement>(`input[name="${name}"]`);
-  if (!el) {
-    el = document.createElement('input');
-    el.type = 'hidden';
-    el.name = name;
-    el.value = value;
-    form.appendChild(el);
-  }
-  return el;
-}
-
 function closestStatus(form: HTMLFormElement): HTMLElement {
   let el = form.querySelector<HTMLElement>('.form-status, [data-qo-status]');
   if (!el) {
@@ -80,17 +61,25 @@ function closestStatus(form: HTMLFormElement): HTMLElement {
     el.setAttribute('role', 'status');
     el.setAttribute('aria-live', 'polite');
     form.appendChild(el);
+  } else if (!el.hasAttribute('aria-live')) {
+    el.setAttribute('aria-live', 'polite');
   }
+  if (!el.hasAttribute('role')) el.setAttribute('role', 'status');
   return el;
 }
 
 function setError(form: HTMLFormElement, field: string, msg: string) {
   const el = form.querySelector<HTMLElement>(`[data-err="${field}"]`);
   if (el) el.textContent = msg;
-  const input = form.querySelector<HTMLElement>(`[name="${field}"]`);
+  let input: HTMLElement | null = null;
+  if (field === 'work_type') {
+    input = form.querySelector<HTMLElement>('[name="work_type"], [name="workType"], [data-qo-worktype]');
+  } else {
+    input = form.querySelector<HTMLElement>(`[name="${field}"]`);
+  }
   if (input) input.setAttribute('aria-invalid', 'true');
   if (field === 'consent') {
-    const consentInput = form.querySelector<HTMLElement>('input[name="consent"], input[name="qo_consent"]');
+    const consentInput = form.querySelector<HTMLElement>('input[name="consent"], input[name="qo_consent"], [data-qo-consent]');
     consentInput?.setAttribute('aria-invalid', 'true');
   }
 }
@@ -105,7 +94,7 @@ function collectPayload(form: HTMLFormElement): { ok: boolean; payload?: Record<
   let source = sourceHidden?.value?.trim() || '';
   if (!source) {
     if (form.hasAttribute('data-qo')) source = 'quick-order';
-    else if (form.id === 'stickyForm') source = 'sticky-contact';
+    else if (form.id === 'stickyForm') source = 'sticky-widget';
     else source = 'contact';
   }
 
@@ -123,7 +112,7 @@ function collectPayload(form: HTMLFormElement): { ok: boolean; payload?: Record<
   const comment = form.querySelector<HTMLTextAreaElement>('[data-qo-comment]')?.value?.trim()
     || form.querySelector<HTMLTextAreaElement>('textarea[name="comment"]')?.value?.trim() || '';
 
-  const consentEl = form.querySelector<HTMLInputElement>('input[name="consent"]') || form.querySelector<HTMLInputElement>('input[name="qo_consent"]');
+  const consentEl = form.querySelector<HTMLInputElement>('input[name="consent"]') || form.querySelector<HTMLInputElement>('input[name="qo_consent"]') || form.querySelector<HTMLInputElement>('[data-qo-consent]');
   const consent = !!consentEl?.checked;
 
   const calcRaw = form.querySelector<HTMLInputElement>('input[name="calc_payload"]')?.value || '';
@@ -165,6 +154,15 @@ function collectPayload(form: HTMLFormElement): { ok: boolean; payload?: Record<
   } else {
     payload.contactType = contactRes.type;
   }
+
+  const hasWorkTypeField = !!form.querySelector('select[name="work_type"], select[name="workType"], [data-qo-worktype]');
+  const resolvedWorkType = String(payload.workType || '');
+  if (hasWorkTypeField && !resolvedWorkType.trim()) {
+    setError(form, 'work_type', 'Оберіть тип роботи');
+    ok = false;
+    if (!firstInvalid) firstInvalid = 'work_type';
+  }
+
   if (!consent) {
     setError(form, 'consent', 'Підтверди згоду на обробку даних');
     ok = false;
@@ -177,20 +175,131 @@ function collectPayload(form: HTMLFormElement): { ok: boolean; payload?: Record<
   return { ok: true, payload, firstInvalid: '' };
 }
 
+const COOLDOWN_MS = 15000;
+const COOLDOWN_KEY = 'lead_cooldown_until';
+
+function cooldownUntil(): number {
+  try { return Number(localStorage.getItem(COOLDOWN_KEY) || '0'); } catch { return 0; }
+}
+
+function setCooldown(ms = COOLDOWN_MS) {
+  const until = Date.now() + Math.max(1000, ms);
+  try { localStorage.setItem(COOLDOWN_KEY, String(until)); } catch { /* ignore */ }
+  syncAllForms();
+  scheduleCooldownSync();
+  startCooldownTicker();
+}
+
+function cooldownActive(): boolean {
+  return Date.now() < cooldownUntil();
+}
+
+function cooldownRemainingSec(): number {
+  const ms = cooldownUntil() - Date.now();
+  return ms > 0 ? Math.ceil(ms / 1000) : 0;
+}
+
+function parseRetryAfter(res: Response): number {
+  const h = res.headers.get('Retry-After');
+  if (!h) return COOLDOWN_MS;
+  const sec = Number(h);
+  if (Number.isFinite(sec) && sec > 0) return sec * 1000;
+  const date = Date.parse(h);
+  if (!isNaN(date)) {
+    const ms = date - Date.now();
+    if (ms > 0) return ms;
+  }
+  return COOLDOWN_MS;
+}
+
+const boundForms: HTMLFormElement[] = [];
+
+let cooldownTicker: number | null = null;
+
+function startCooldownTicker() {
+  if (cooldownTicker !== null) return;
+  cooldownTicker = window.setInterval(() => {
+    syncAllForms();
+    if (!cooldownActive()) {
+      if (cooldownTicker !== null) {
+        window.clearInterval(cooldownTicker);
+        cooldownTicker = null;
+      }
+      syncAllForms();
+    }
+  }, 1000);
+}
+
+function syncAllForms() {
+  boundForms.forEach((f) => syncConsent(f));
+}
+
+function scheduleCooldownSync() {
+  const delay = cooldownUntil() - Date.now();
+  if (delay > 0) {
+    window.setTimeout(() => {
+      syncAllForms();
+      const rest = cooldownUntil() - Date.now();
+      if (rest > 0) scheduleCooldownSync();
+    }, delay + 50);
+  }
+}
+
+function syncConsent(form: HTMLFormElement) {
+  const consent = form.querySelector<HTMLInputElement>('input[name="consent"], input[name="qo_consent"], [data-qo-consent]');
+  const btn = form.querySelector<HTMLButtonElement>('button[type="submit"], .submit-btn');
+  const hint = form.querySelector<HTMLElement>('[data-consent-hint]');
+  const checked = !!consent?.checked;
+  const cd = cooldownActive();
+  const disabled = !checked || cd;
+  if (btn) {
+    // Keep HTML disabled only for cooldown/hard-block; consent-only uses aria-disabled
+    // so the control stays focusable and can surface validation on activation attempts.
+    btn.disabled = cd;
+    btn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+  }
+  if (hint) {
+    if (!checked) {
+      hint.textContent = 'Постав галочку згоди, щоб надіслати заявку.';
+      hint.style.display = '';
+    } else if (cd) {
+      const sec = cooldownRemainingSec();
+      hint.textContent = sec > 0
+        ? `Повторно можна надіслати через ${sec} с.`
+        : 'Зачекай перед наступною заявкою.';
+      hint.style.display = '';
+    } else {
+      hint.style.display = 'none';
+    }
+  }
+  const status = form.querySelector<HTMLElement>('.form-status, [data-qo-status]');
+  if (status && !status.hasAttribute('aria-live')) status.setAttribute('aria-live', 'polite');
+}
+
 async function submitForm(form: HTMLFormElement) {
   const btn = form.querySelector<HTMLButtonElement>('button[type="submit"], .submit-btn');
   const status = closestStatus(form);
   const result = collectPayload(form);
   if (!result.ok) {
     if (result.firstInvalid) {
-      const field = form.querySelector<HTMLElement>(`[name="${result.firstInvalid}"]`);
-      field?.focus();
+      let field: HTMLElement | null = null;
+      if (result.firstInvalid === 'work_type') {
+        field = form.querySelector<HTMLElement>('[name="work_type"], [name="workType"], [data-qo-worktype]');
+      } else {
+        field = form.querySelector<HTMLElement>(`[name="${result.firstInvalid}"], [data-err="${result.firstInvalid}"]`);
+      }
+      field?.focus?.();
     }
     return;
   }
   const payload = result.payload!;
+
   if (btn) {
+    if (!btn.dataset.originalLabel) {
+      btn.dataset.originalLabel = btn.textContent?.trim() || btn.dataset.label || 'Відправити заявку';
+    }
     btn.disabled = true;
+    btn.setAttribute('aria-disabled', 'true');
     btn.setAttribute('aria-busy', 'true');
     btn.textContent = 'Надсилаємо…';
   }
@@ -207,8 +316,12 @@ async function submitForm(form: HTMLFormElement) {
     });
     clearTimeout(timer);
     const json = await res.json().catch(() => ({}));
-    if (res.ok && json.ok) {
+    if (res.status === 429) {
+      status.textContent = 'Забагато спроб, спробуйте пізніше';
+      setCooldown(parseRetryAfter(res));
+    } else if (res.ok && json.ok) {
       status.textContent = 'Дякуємо! Ми зв’яжемося з тобою найближчим часом.';
+      setCooldown();
       form.reset();
       const ts = form.querySelector<HTMLInputElement>('input[name="formStartedAt"]');
       if (ts) ts.value = String(Date.now());
@@ -237,23 +350,18 @@ async function submitForm(form: HTMLFormElement) {
     if (btn) {
       btn.disabled = false;
       btn.removeAttribute('aria-busy');
-      btn.textContent = (btn as HTMLButtonElement).dataset.label || 'Відправити заявку';
+      const restore = btn.dataset.originalLabel || btn.dataset.label || 'Відправити заявку';
+      btn.textContent = restore;
     }
+    syncAllForms();
+    scheduleCooldownSync();
   }
-}
-
-function syncConsent(form: HTMLFormElement) {
-  const consent = form.querySelector<HTMLInputElement>('input[name="consent"], input[name="qo_consent"]');
-  const btn = form.querySelector<HTMLButtonElement>('button[type="submit"], .submit-btn');
-  const hint = form.querySelector<HTMLElement>('[data-consent-hint]');
-  const checked = !!consent?.checked;
-  if (btn) btn.disabled = !checked;
-  if (hint) hint.style.display = checked ? 'none' : '';
 }
 
 function initForm(form: HTMLFormElement) {
   if (form.dataset.leadBound === '1') return;
   form.dataset.leadBound = '1';
+  boundForms.push(form);
 
   const hp = document.createElement('input');
   hp.type = 'text';
@@ -275,8 +383,11 @@ function initForm(form: HTMLFormElement) {
   form.appendChild(ts);
 
   syncConsent(form);
-  const consent = form.querySelector<HTMLInputElement>('input[name="consent"], input[name="qo_consent"]');
-  consent?.addEventListener('change', () => syncConsent(form));
+  const consent = form.querySelector<HTMLInputElement>('input[name="consent"], input[name="qo_consent"], [data-qo-consent]');
+  consent?.addEventListener('change', () => {
+    syncConsent(form);
+    syncAllForms();
+  });
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -288,4 +399,14 @@ function initForm(form: HTMLFormElement) {
 export function initLeadForms() {
   const forms = Array.from(document.querySelectorAll<HTMLFormElement>('[data-lead-form], [data-qo], #stickyForm'));
   forms.forEach(initForm);
+  syncAllForms();
+  scheduleCooldownSync();
+  if (cooldownActive()) startCooldownTicker();
+  window.addEventListener('storage', (e) => {
+    if (e.key === COOLDOWN_KEY) {
+      syncAllForms();
+      scheduleCooldownSync();
+      if (cooldownActive()) startCooldownTicker();
+    }
+  });
 }

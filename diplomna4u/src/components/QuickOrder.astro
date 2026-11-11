@@ -23,12 +23,13 @@ const pricingJson = JSON.stringify(pricing);
       <div class="qo-row">
       <div class="field">
         <label>Тип роботи *</label>
-        <select name="workType" data-work required>
-          {pricing.workTypes.map(w => (
-            <option value={w.slug} selected={defaultWork === w.slug || (defaultWork==='' && w.slug==='dyplomna-robota')}>{w.label}</option>
-          ))}
-        </select>
-      </div>
+          <select name="workType" data-work required>
+            {pricing.workTypes.map(w => (
+              <option value={w.slug} selected={defaultWork === w.slug || (defaultWork==='' && w.slug==='dyplomna-robota')}>{w.label}</option>
+            ))}
+          </select>
+          <span class="field-error" data-err="work_type"></span>
+        </div>
   <div class="field">
     <label>Спеціальність</label>
     <select name="specialty" data-specialty data-specialty-select>

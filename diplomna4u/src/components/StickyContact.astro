@@ -4,12 +4,12 @@ const viber = (site as any).viber as { url: string; label?: string } | null;
 const telegram = site.telegram;
 ---
 <div class="sticky-contact" id="stickyContact">
-  <button class="sticky-btn" id="stickyToggle" aria-label="Зв'язатися з нами" aria-expanded="false">
+  <button class="sticky-btn" id="stickyToggle" aria-label="Зв’язатися з нами" aria-expanded="false">
     <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
   </button>
   <div class="sticky-panel" id="stickyPanel" hidden>
     <div class="sticky-panel-head">
-      <strong>Зв'язок з нами</strong>
+      <strong>Зв’язок з нами</strong>
       <button id="stickyClose" aria-label="Закрити">×</button>
     </div>
     {telegram && (
@@ -18,20 +18,34 @@ const telegram = site.telegram;
     {viber && (
       <a class="btn btn--ghost" href={viber.url} target="_blank" rel="noopener noreferrer" style="margin-bottom:0.5rem">Viber</a>
     )}
-    <form class="mini-form" id="stickyForm">
-      <input type="text" name="name" placeholder="Наприклад, Олена" required />
-      <input type="tel" name="phone" placeholder="@username, +380 50 123 45 67 або name@email.com" />
-      <select name="workType" required>
-        <option value="" disabled selected>Оберіть тип роботи</option>
-        {nav.services.map(s => <option value={s.label}>{s.label}</option>)}
-      </select>
-      <input type="text" name="hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <form class="mini-form" id="stickyForm" data-lead-form novalidate>
+      <input type="hidden" name="source" value="sticky-widget" />
+      <div class="field">
+        <label class="sr-only" for="sticky-name">Ім’я *</label>
+        <input id="sticky-name" type="text" name="name" required minlength="2" autocomplete="name" placeholder="Наприклад, Олена" />
+        <span class="field-error" data-err="name"></span>
+      </div>
+      <div class="field">
+        <label class="sr-only" for="sticky-contact">Telegram, телефон або email *</label>
+        <input id="sticky-contact" type="text" name="contact" required autocomplete="tel" placeholder="@username, +380 50 123 45 67 або name@email.com" />
+        <span class="field-error" data-err="contact"></span>
+      </div>
+      <div class="field">
+        <label class="sr-only" for="sticky-workType">Тип роботи</label>
+        <select id="sticky-workType" name="work_type" required>
+          <option value="" disabled selected>Оберіть тип роботи</option>
+          {nav.services.map(s => <option value={s.label}>{s.label}</option>)}
+        </select>
+        <span class="field-error" data-err="work_type"></span>
+      </div>
       <label class="consent">
-        <input type="checkbox" required />
-        Погоджуюсь з <a href="/polityka-konfidentsiinosti/" target="_blank">політикою конфіденційності</a>
+        <input type="checkbox" name="consent" required />
+        Погоджуюсь з <a href="/polityka-konfidentsiinosti/" target="_blank" rel="noopener">політикою конфіденційності</a>.
       </label>
-      <button type="submit" class="btn">Залишити заявку</button>
-      <p class="form-status" aria-live="polite"></p>
+      <p class="consent-hint" data-consent-hint aria-live="polite">Постав галочку згоди, щоб надіслати заявку.</p>
+      <span class="field-error" data-err="consent"></span>
+      <button type="submit" class="btn" data-label="Залишити заявку">Залишити заявку</button>
+      <p class="form-status" role="status" aria-live="polite"></p>
     </form>
   </div>
   <div class="sticky-mobile-bar">
@@ -78,11 +92,12 @@ const telegram = site.telegram;
   .sticky-btn svg { width: 26px; height: 26px; }
   .sticky-btn:hover { background: var(--surface); transform: translateY(-2px); box-shadow: 0 0 0 4px var(--bg), 0 8px 24px -8px rgba(173,19,18,.35); }
   .sticky-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
-  .hp { display: none !important; }
-  .sticky-contact { position: fixed; right: 16px; bottom: 16px; z-index: 999; }
+  .sticky-contact { position: fixed; right: 16px; bottom: 16px; z-index: var(--z-widget); }
   .sticky-panel {
     position: absolute; right: 0; bottom: 114px;
     width: 320px; max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 140px);
+    overflow-y: auto; overscroll-behavior: contain;
     background: var(--bg); border: 1px solid var(--tint);
     border-radius: var(--r-card); padding: 1rem;
     box-shadow: var(--shadow-card);
@@ -91,38 +106,50 @@ const telegram = site.telegram;
   .sticky-panel[hidden] { display: none; }
   .sticky-panel-head { display: flex; justify-content: space-between; align-items: center; }
   .mini-form { display: flex; flex-direction: column; gap: 0.5rem; }
-  .mini-form input, .mini-form select { padding: 0.6rem 0.8rem; border: 1px solid var(--sage); border-radius: var(--r-input); background: var(--field-bg); }
-  .consent { font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem; }
+  .mini-form .field { display: flex; flex-direction: column; gap: 0.25rem; }
+  .mini-form input, .mini-form select { padding: 0.6rem 0.8rem; border: 1px solid var(--sage); border-radius: var(--r-input); background: var(--field-bg); color: var(--ink); font-size: 1rem; }
+  .mini-form .field-error { color: var(--error); font-size: 0.8rem; min-height: 1em; }
+  .hp { display: none !important; }
+  .consent { font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem; color: var(--ink); }
+  .consent-hint { font-size: 0.8rem; color: var(--muted); min-height: 1.2em; }
   .form-status { font-size: 0.85rem; color: var(--deep); min-height: 1.2em; }
+  .mini-form button[type="submit"][disabled], .mini-form button[type="submit"][aria-disabled="true"] {
+    opacity: 1;
+    background: color-mix(in srgb, var(--red) 45%, var(--tint));
+    color: var(--cream);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
   .sticky-mobile-bar { display: none; }
   @media (max-width: 600px) {
     .sticky-contact { left: 0; right: 0; bottom: 0; }
     .sticky-btn { display: none; }
-  .sticky-mobile-bar {
-    display: flex; gap: 12px;
-    background: color-mix(in srgb, var(--bg) 94%, transparent);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    border-top: 1px solid var(--border);
-    box-shadow: 0 -8px 24px -12px rgba(42,21,19,.18);
-    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-  }
-  .sticky-mobile-bar a, .sticky-mobile-bar button {
-    flex: 1 1 0; min-height: 48px; padding: 0.5rem 0.75rem;
-    border-radius: var(--r-btn); font-size: 0.9375rem; font-weight: 600;
-    display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
-    text-decoration: none;
-    box-shadow: 0 4px 14px rgba(42,21,19,.18);
-  }
-  .sticky-mobile-bar .sticky-mobile-telegram {
-    background: var(--card); color: var(--red); border: 1.5px solid var(--red);
-  }
-  .sticky-mobile-bar button {
-    background: var(--red); color: var(--vanilla); border: none;
-  }
-    .sticky-panel { bottom: calc(64px + env(safe-area-inset-bottom)); right: 8px; left: 8px; width: auto; }
+    .sticky-mobile-bar {
+      display: flex; gap: 12px;
+      background: color-mix(in srgb, var(--bg) 94%, transparent);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -8px 24px -12px rgba(42,21,19,.18);
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    }
+    .sticky-mobile-bar a, .sticky-mobile-bar button {
+      flex: 1 1 0; min-height: 48px; padding: 0.5rem 0.75rem;
+      border-radius: var(--r-btn); font-size: 0.9375rem; font-weight: 600;
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(42,21,19,.18);
+    }
+    .sticky-mobile-bar .sticky-mobile-telegram {
+      background: var(--card); color: var(--red); border: 1.5px solid var(--red);
+    }
+    .sticky-mobile-bar button {
+      background: var(--red); color: var(--vanilla); border: none;
+    }
+    .sticky-panel { bottom: calc(64px + env(safe-area-inset-bottom)); right: 8px; left: 8px; width: auto; max-height: calc(100vh - 140px); }
   }
   @media (prefers-reduced-motion: no-preference) {
     .sticky-btn { animation: pulse 2s infinite; }
   }
-  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 4px var(--bg), 0 8px 24px -8px rgba(173,19,18,.35); } 50% { box-shadow: 0 0 0 7px var(--bg), 0 10px 28px -8px rgba(173,19,18,.45); } }
 </style>

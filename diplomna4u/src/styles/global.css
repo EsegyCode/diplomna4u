@@ -76,6 +76,14 @@
   --font-body: 'Inter', system-ui, sans-serif;
   --shadow-card: 0 8px 28px rgba(43,26,29,.10);
 
+  /* Z-index scale (one place) */
+  --z-base: 1;
+  --z-header: 900;
+  --z-widget: 1050;
+  --z-chat: 990;
+  --z-cookie: 1000;
+  --z-modal: 1100;
+
   /* Section defaults */
   --s-bg: var(--bg);
   --s-fg: var(--ink);

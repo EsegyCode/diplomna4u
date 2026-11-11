@@ -20,12 +20,17 @@
     "routes": "node scripts/routes.mjs",
     "test:lead": "node scripts/test-lead.mjs",
     "dev:functions": "npm run build && wrangler pages dev dist",
-    "seo:check": "npm run check:seo"
+    "seo:check": "npm run check:seo",
+    "test:e2e": "npx playwright test",
+    "audit": "npm audit"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.12",
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.4.8",
     "typescript": "^6.0.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0"
   }
 }

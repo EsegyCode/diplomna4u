@@ -34,10 +34,11 @@ import { site } from '@/data/site';
 
   <div class="field">
     <label>Який тип роботи цікавить?</label>
-    <select name="work_type">
+    <select name="work_type" required>
       <option value="" disabled selected>Оберіть тип роботи</option>
       {nav.services.map(s => <option value={s.label} selected={workTypeDefault === s.label}>{s.label}</option>)}
     </select>
+    <span class="field-error" data-err="work_type"></span>
   </div>
 
   {variant !== 'compact' && (
@@ -89,14 +90,14 @@ import { site } from '@/data/site';
   .form-actions .btn { min-height: 52px; padding: 0 28px; border-radius: var(--r-btn); font-weight: 600; font-size: 1rem; background: var(--red-light); color: #fff; border: 1px solid rgba(255,255,255,.35); }
   .form-actions .btn:hover { background: var(--red-light-hover); transform: translateY(-1px); }
   .form-actions .btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-  .form-actions .btn[disabled] { background: color-mix(in srgb, var(--red-light) 70%, var(--red)); color: #fff; cursor: not-allowed; }
+  .form-actions .btn[disabled], .form-actions .btn[aria-disabled="true"] { background: color-mix(in srgb, var(--red-light) 70%, var(--red)); color: #fff; cursor: not-allowed; }
   .consent-hint { margin: 8px 0 0; font-size: 0.875rem; color: rgba(255,255,255,.85); min-height: 1.2em; }
   .field { font-size: 1rem; }
   .field label { font-size: 0.9375rem; font-weight: 500; }
   .field input, .field select, .field textarea { font-size: 1rem; min-height: 52px; border-radius: 14px; }
   .field textarea { min-height: 112px; }
   .section[data-theme="deep"] .form-actions .btn { background: var(--vanilla); color: var(--deep); border-color: var(--vanilla); }
-  .section[data-theme="deep"] .form-actions .btn[disabled] { opacity: 0.6; }
+  .section[data-theme="deep"] .form-actions .btn[disabled], .section[data-theme="deep"] .form-actions .btn[aria-disabled="true"] { opacity: 0.6; }
   @media (max-width: 480px) { .form-actions { flex-direction: column; } .form-actions .btn { width: 100%; } }
   .lead-form .form-status { min-height: 1.2em; color: var(--deep); font-size: 0.9rem; }
   .lead-form--sticky { }

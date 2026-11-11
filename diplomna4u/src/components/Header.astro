@@ -78,7 +78,7 @@ const isActive = (href: string) => norm(pathname) === norm(href);
   .site-header {
     position: sticky;
     top: 0;
-    z-index: 900;
+    z-index: var(--z-header);
     background: var(--bg);
     border-bottom: 1px solid var(--border);
   }

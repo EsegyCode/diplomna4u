@@ -187,6 +187,7 @@ var SOURCE_LABELS = {
   contact: "\u0424\u043E\u0440\u043C\u0430 \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456",
   "quick-order": "\u041A\u0430\u043B\u044C\u043A\u0443\u043B\u044F\u0442\u043E\u0440",
   "sticky-contact": "\u041B\u0438\u043F\u043A\u0430 \u0444\u043E\u0440\u043C\u0430",
+  "sticky-widget": "\u0412\u0456\u0434\u0436\u0435\u0442 \xAB\u0417\u0432\u2019\u044F\u0437\u043E\u043A \u0437 \u043D\u0430\u043C\u0438\xBB",
   "lead": "\u0424\u043E\u0440\u043C\u0430"
 };
 async function handlePost(context) {
@@ -848,7 +849,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-G57pEr/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-3UMI6M/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -880,7 +881,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-G57pEr/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-3UMI6M/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
