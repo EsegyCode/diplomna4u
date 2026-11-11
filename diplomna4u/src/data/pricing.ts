@@ -144,6 +144,33 @@ export const pricing = {
   addons: [],
 
   extraRevisionPrice: 250, // +250 грн за подію правок після першого місяця
+
+  specialties: [
+    { key: 'H1', code: 'H1', name: 'Агрономія', legacyCode: '201', label: 'H1 · Агрономія (201)', coef: 1 },
+    { key: 'H2', code: 'H2', name: 'Тваринництво', legacyCode: '204', label: 'H2 · Тваринництво (204)', coef: 1.1 },
+    { key: 'H3', code: 'H3', name: 'Садово-паркове господарство', legacyCode: '206', label: 'H3 · Садово-паркове господарство (206)', coef: 1.1 },
+    { key: 'H4', code: 'H4', name: 'Лісове господарство', legacyCode: '205', label: 'H4 · Лісове господарство (205)', coef: 1.1 },
+    { key: 'H5', code: 'H5', name: 'Водні біоресурси та аквакультура', legacyCode: '207', label: 'H5 · Водні біоресурси та аквакультура (207)', coef: 1.1 },
+    { key: 'H6', code: 'H6', name: 'Ветеринарна медицина', legacyCode: '211', label: 'H6 · Ветеринарна медицина (211)', coef: 1.1 },
+    { key: 'H7', code: 'H7', name: 'Агроінженерія', legacyCode: '208', label: 'H7 · Агроінженерія (208)', coef: 1.1 },
+    { key: 'E2', code: 'E2', name: 'Екологія', legacyCode: '101', label: 'E2 · Екологія (101)', coef: 1.1 },
+    { key: 'E4', code: 'E4', name: 'Науки про Землю', legacyCode: '103', label: 'E4 · Науки про Землю (103)', coef: 1.1 },
+    { key: 'E1', code: 'E1', name: 'Біологія та біохімія', legacyCode: '091', label: 'E1 · Біологія та біохімія (091)', coef: 1.1 },
+    { key: 'C6', code: 'C6', name: 'Географія та регіональні студії', legacyCode: '106', label: 'C6 · Географія та регіональні студії (106)', coef: 1.1 },
+    { key: 'G18', code: 'G18', name: 'Геодезія та землеустрій', legacyCode: '193', label: 'G18 · Геодезія та землеустрій (193)', coef: 1.1 },
+    { key: 'G21', code: 'G21', name: 'Біотехнології та біоінженерія', legacyCode: '162', label: 'G21 · Біотехнології та біоінженерія (162)', coef: 1.1 },
+    { key: 'G2', code: 'G2', name: 'Технології захисту навколишнього середовища', legacyCode: '183', label: 'G2 · Технології захисту навколишнього середовища (183)', coef: 1.1 },
+    { key: 'G14', code: 'G14', name: 'Деревообробні та меблеві технології', legacyCode: '187', label: 'G14 · Деревообробні та меблеві технології (187)', coef: 1.1 },
+    { key: 'G13', code: 'G13', name: 'Харчові технології', legacyCode: '181', label: 'G13 · Харчові технології (181)', coef: 1.1 },
+    { key: 'J3', code: 'J3', name: 'Туризм та рекреація', legacyCode: '242', label: 'J3 · Туризм та рекреація (242)', coef: 1.1 },
+    { key: 'other', code: 'інше', name: 'Інша спеціальність / не з переліку', legacyCode: '', label: 'Інша спеціальність / не з переліку', coef: 1.15 },
+  ] as { key: string; code: string; name: string; legacyCode: string; label: string; coef: number }[],
+
+  specialtyCoef: {
+    H1: 1, H2: 1.1, H3: 1.1, H4: 1.1, H5: 1.1, H6: 1.1, H7: 1.1,
+    E2: 1.1, E4: 1.1, E1: 1.1, C6: 1.1, G18: 1.1, G21: 1.1, G2: 1.1, G14: 1.1, G13: 1.1, J3: 1.1,
+    other: 1.15,
+  } as Record<string, number>,
 };
 
 export type SubjectId = keyof typeof pricing.subjectCoef;

@@ -11,6 +11,7 @@ import QuickOrder from '@/components/QuickOrder.astro';
 import { cities } from '@/data/cities';
 import { faqGeneral } from '@/data/faq';
 import { stats } from '@/data/stats';
+import { pricing } from '@/data/pricing';
 import { fill } from '@/utils/template';
 
 export function getStaticPaths() {
@@ -18,9 +19,10 @@ export function getStaticPaths() {
 }
 const { city } = Astro.props as { city: (typeof cities)[number] };
 const noindex = !city.localContentReady;
-const title = fill('Замовити дипломну роботу {inCity} — від {price} грн | {brand}', city);
-const description = `Допомога з дипломною, курсовою та статтею ${city.inCity}. Університети міста, калькулятор ціни онлайн, дипломна від 3 днів.`;
+const title = fill('Дипломна робота {inCity} — від {price} грн | {brand}', city);
+const description = `Допомога з дипломною, курсовою та статтею ${city.inCity}. Університети міста, спеціальності, калькулятор ціни онлайн.`;
 const faqItems = city.localFaq.length ? city.localFaq : faqGeneral.slice(0, 4);
+const hasSpecialties = city.universities.some(u => u.specialties?.length);
 const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'Service', name: 'Дипломна робота', areaServed: { '@type': 'City', name: city.name } },
   { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
@@ -32,50 +34,65 @@ const jsonLd = [
     '@type': 'Question', name: it.q, acceptedAnswer: { '@type': 'Answer', text: it.a },
   })) },
 ];
-const advantages = [
-  { title: 'Відповідність вимогам ВНЗ', desc: 'Перевіряємо роботу за нормами кафедри та антиплагіату.' },
-  { title: 'Терміни від 3 днів', desc: 'Мінімальний термін дипломної — від 3 днів.' },
-  { title: 'Безкоштовні правки', desc: 'Протягом місяця після передачі роботи.' },
-];
+function spec(key: string) { return pricing.specialties.find(s => s.key === key); }
 ---
 
 <BaseLayout title={title} description={description} noindex={noindex} jsonLd={jsonLd}>
   <Section theme="bg">
     <Breadcrumbs items={[{ label: 'Головна', href: '/' }, { label: 'Де ми працюємо', href: '/mista/' }, { label: city.name }]} />
-    <h1>Замовити написання дипломної роботи {city.inCity}</h1>
+    <h1>Замовити дипломну роботу, курсову роботу в {city.inCity}</h1>
     <p class="text-muted">{city.region}. Допомога з дипломними, курсовими та статтями.</p>
     {city.intro && <p>{city.intro}</p>}
+    <p>Працюємо за договором: заявка, узгодження вимог кафедри, передплата 50% і здача готової роботи. Сертифікат антиплагіату до кожної роботи, безкоштовні правки протягом місяця, мінімальний термін дипломної — від 3 днів.</p>
     {city.localFacts.length > 0 && (
       <ul class="city-facts">
         {city.localFacts.map(f => <li>{f}</li>)}
       </ul>
     )}
-    <div class="city-advantages">
-      {advantages.map((a, i) => (
-        <div class="city-advantage">
-          <span class="city-advantage-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-              {i === 0 && <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15l2 2 4-4"></path></>}
-              {i === 1 && <><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></>}
-              {i === 2 && <><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></>}
-            </svg>
-          </span>
-          <h3>{a.title}</h3>
-          <p class="text-muted">{a.desc}</p>
-        </div>
-      ))}
-    </div>
     <div style="margin-top:1.5rem">
       <a href="#quick-order" class="btn">Дізнатись вартість →</a>
     </div>
   </Section>
   <WaveDivider />
-  <Section theme="surface">
-    <h2>Працюємо з університетами {city.genitive}</h2>
-    <LocalUniversities universities={city.universities} />
+  <Section theme="bg" id="quick-order">
+    <h2>Калькулятор вартості</h2>
+    <QuickOrder variant="compact" />
   </Section>
   <WaveDivider />
-  <Section theme="bg">
+  <Section theme="surface">
+    <h2>Університети, студентам яких ми допомагали в {city.genitive}</h2>
+    <LocalUniversities universities={city.universities} />
+    <p class="text-muted" style="margin-top:0.75rem">Працюємо зі студентами перелічених закладів і готуємо роботу за методичкою кафедри. Не є партнерами чи представниками університетів.</p>
+  </Section>
+  {hasSpecialties && (
+    <>
+      <WaveDivider />
+      <Section theme="bg">
+        <h2>Спеціальності, за якими пишемо роботи в {city.genitive}</h2>
+        {city.universities.filter(u => u.specialties?.length).map(u => (
+          <div class="uni-specialties">
+            <h3>{u.name}{u.short ? ` (${u.short})` : ''}</h3>
+            <div class="specialty-grid">
+              {(u.specialties || []).map(key => {
+                const s = spec(key);
+                const programs = u.programs?.[key];
+                return s && (
+                  <article class="specialty-card">
+                    <span class="specialty-badge">{s.code} ({s.legacyCode})</span>
+                    <h4>{s.name}</h4>
+                    {programs?.length && <p class="text-muted">{programs.join('; ')}</p>}
+                    <button type="button" class="btn btn--sm" data-pick-specialty={key}>Замовити роботу</button>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </Section>
+    </>
+  )}
+  <WaveDivider />
+  <Section theme="surface">
     <h2>Наш досвід у цифрах</h2>
     {stats.showStats && (
       <div class="city-stats">
@@ -90,19 +107,17 @@ const advantages = [
     )}
   </Section>
   <WaveDivider />
-  <Section theme="surface">
+  <Section theme="bg">
     <h2>Корисні розділи</h2>
     <div class="city-links">
       <a href="/tsiny/" class="chip">Ціни</a>
       <a href="/vidhuky/" class="chip">Відгуки</a>
-      <a href="/blog/" class="chip">Блог</a>
+      <a href="/poslugy/dyplomna-robota/" class="chip">Дипломна робота</a>
+      <a href="/poslugy/kursova-robota/" class="chip">Курсова робота</a>
+      <a href="/poslugy/stattia/" class="chip">Стаття</a>
       <a href="/pro-nas/" class="chip">Про нас</a>
+      <a href="/mista/" class="chip">Інші міста</a>
     </div>
-  </Section>
-  <WaveDivider />
-  <Section theme="bg" id="quick-order">
-    <h2>Калькулятор вартості</h2>
-    <QuickOrder variant="compact" />
   </Section>
   <WaveDivider />
   <Section theme="surface">
@@ -122,17 +137,32 @@ const advantages = [
   </Section>
 </BaseLayout>
 
+<script>
+  document.querySelectorAll('[data-pick-specialty]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const key = btn.getAttribute('data-pick-specialty');
+      const select = document.querySelector('[data-specialty-select]') as HTMLSelectElement | null;
+      if (key && select) {
+        select.value = key;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      document.getElementById('quick-order')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
 <style>
   .city-facts { list-style: disc; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; margin-top: 1rem; color: var(--muted); }
-  .city-advantages { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-top: 1.5rem; }
-  @media (min-width: 640px) { .city-advantages { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .city-advantages { grid-template-columns: repeat(3, 1fr); } }
-  .city-advantage { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-card); padding: 1rem; }
-  .city-advantage h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
-  .city-advantage-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: var(--r-md); background: var(--sand); color: var(--red); margin-bottom: 0.6rem; }
   .city-stats { display: grid; gap: 0.75rem; grid-template-columns: repeat(2, 1fr); margin-top: 1rem; }
   @media (min-width: 640px) { .city-stats { grid-template-columns: repeat(4, 1fr); } }
   .city-stat { background: var(--surface); border-radius: var(--r-sm); padding: 0.75rem; text-align: center; font-size: 0.95rem; color: var(--muted); }
   .city-stat span { display: block; font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: var(--ink); line-height: 1.1; }
   .city-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .uni-specialties { margin-bottom: 2rem; }
+  .specialty-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-top: 1rem; }
+  @media (min-width: 640px) { .specialty-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .specialty-grid { grid-template-columns: repeat(3, 1fr); } }
+  .specialty-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-card); padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .specialty-badge { display: inline-block; align-self: flex-start; padding: 0.2rem 0.6rem; border-radius: var(--r-btn); background: var(--accent-tint); color: var(--accent); font-weight: 700; font-size: 0.85rem; }
+  .specialty-card h4 { font-size: 1rem; margin: 0; }
 </style>

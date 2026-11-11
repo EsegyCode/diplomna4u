@@ -28,12 +28,18 @@ const pricingJson = JSON.stringify(pricing);
           ))}
         </select>
       </div>
-      <div class="field">
-        <label>Напрям *</label>
-        <select name="subject" data-subject required>
-          {pricing.subjects.map(s => <option value={s.id}>{s.label}</option>)}
-        </select>
-      </div>
+  <div class="field">
+    <label>Напрям *</label>
+    <select name="subject" data-subject required>
+      {pricing.subjects.map(s => <option value={s.id}>{s.label}</option>)}
+    </select>
+  </div>
+  <div class="field">
+    <label>Спеціальність</label>
+    <select name="specialty" data-specialty data-specialty-select>
+      {pricing.specialties.map(s => <option value={s.key} selected={s.key === 'H1'}>{s.label}</option>)}
+    </select>
+  </div>
       </div>
       <div class="field">
 <label>Тема роботи (необов’язково)</label>
@@ -102,11 +108,9 @@ const pricingJson = JSON.stringify(pricing);
 
 <script define:vars={{ pricingJson }}>
   const pricing = JSON.parse(pricingJson);
-  function calc(workSlug, subjectId, pages, deadlineIdx) {
+  function calc(workSlug, subjectId, specialtyKey, pages, deadlineIdx) {
     const workType = pricing.workTypes.find(w => w.slug === workSlug);
     if (!workType) return null;
-    const sc = pricing.subjectCoef[subjectId];
-    if (sc === undefined) return null;
     const d = pricing.deadline[deadlineIdx];
     if (!d) return null;
     let base;
@@ -117,7 +121,8 @@ const pricingJson = JSON.stringify(pricing);
     } else {
       base = workType.minPrice;
     }
-    let price = Math.round(base * sc * d.k);
+    const specialtyCoef = pricing.specialtyCoef?.[specialtyKey] ?? 1;
+    let price = Math.round(base * specialtyCoef * d.k);
     return price;
   }
   function fmt(n){ return n.toLocaleString('uk-UA') + '\u00a0грн'; }
@@ -127,6 +132,7 @@ const pricingJson = JSON.stringify(pricing);
     const root = f.closest('.quick-order');
     const workSel = f.querySelector('[data-work]');
     const subjectSel = f.querySelector('[data-subject]');
+    const specialtySel = f.querySelector('[data-specialty]');
     const pagesBox = f.querySelector('[data-pages]');
     const pagesRange = f.querySelector('[data-pages-range]');
     const pagesValue = f.querySelector('[data-pages-value]');
@@ -180,14 +186,15 @@ const pricingJson = JSON.stringify(pricing);
     function updatePrice() {
       const w = workSel.value;
       const subject = subjectSel.value;
+      const specialty = specialtySel?.value || 'H1';
       const pages = parseInt(pagesRange?.value || '0', 10) || 0;
        const di = getDeadlineIdx();
-       const p = calc(w, subject, pages, di);
+       const p = calc(w, subject, specialty, pages, di);
       if (p === null) { priceEl.textContent = 'Уточніть вартість у менеджера'; }
       else { priceEl.textContent = 'від ' + fmt(p); }
       updatePagesValue();
       // payload
-       const payload = { workType: w, subject, pagesFrom: pagesRange ? pagesRange.value : '0', pagesTo: pagesRange ? pagesRange.value : '0', topic: (f.querySelector('input[name="topic"]'))?.value || '', deadline: pricing.deadline[di].id, price: p };
+       const payload = { workType: w, subject, specialty, pagesFrom: pagesRange ? pagesRange.value : '0', pagesTo: pagesRange ? pagesRange.value : '0', topic: (f.querySelector('input[name="topic"]'))?.value || '', deadline: pricing.deadline[di].id, price: p };
       hiddenCalc.value = JSON.stringify(payload);
     }
 
@@ -196,6 +203,7 @@ const pricingJson = JSON.stringify(pricing);
     updatePrice();
     workSel.addEventListener('change', () => { applyWorkType(); updatePrice(); });
     subjectSel.addEventListener('change', updatePrice);
+    specialtySel?.addEventListener('change', updatePrice);
     pagesRange?.addEventListener('input', () => { updateSliderFill(); updatePagesValue(); updatePrice(); });
     deadlineBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
