@@ -33,6 +33,9 @@
 - [Дніпро](https://diplomna4u.cx.ua/dnipro/): Допомога студентам у Дніпрі.
 - [Вінниця](https://diplomna4u.cx.ua/vinnytsia/): Допомога студентам у Вінниці.
 - [Одеса](https://diplomna4u.cx.ua/odesa/): Допомога студентам в Одесі.
+- [Запоріжжя](https://diplomna4u.cx.ua/zaporizhzhia/): Допомога студентам у Запоріжжі.
+- [Чернігів](https://diplomna4u.cx.ua/chernihiv/): Допомога студентам у Чернігові.
+- [Черкаси](https://diplomna4u.cx.ua/cherkasy/): Допомога студентам у Черкасах.
 
 ## Юридичне
 - [Політика конфіденційності](https://diplomna4u.cx.ua/polityka-konfidentsiinosti/): обробка персональних даних.

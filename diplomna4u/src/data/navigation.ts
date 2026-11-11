@@ -30,6 +30,12 @@ export const footerGroups = [
     title: 'Де ми працюємо',
     links: [
       { label: 'Міста', href: '/mista/' },
+      { label: 'Суми', href: '/sumy/' },
+      { label: 'Київ', href: '/kyiv/' },
+      { label: 'Харків', href: '/kharkiv/' },
+      { label: 'Львів', href: '/lviv/' },
+      { label: 'Дніпро', href: '/dnipro/' },
+      { label: 'Одеса', href: '/odesa/' },
       { label: 'Усі міста', href: '/mista/' },
       { label: 'Університети', href: '/universytety/' },
     ],
