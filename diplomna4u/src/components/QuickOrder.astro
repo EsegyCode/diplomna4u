@@ -110,7 +110,9 @@ const pricingJson = JSON.stringify(pricing);
     const d = pricing.deadline[deadlineIdx];
     if (!d) return null;
     let base;
-    if (workType.ratePerPage !== null && workType.hasPages) {
+    if (workType.slug === 'dyplomna-robota' && workType.hasPages) {
+      base = workType.minPrice + Math.max(0, pages - 60) * 150;
+    } else if (workType.ratePerPage !== null && workType.hasPages) {
       base = Math.max(workType.minPrice, pages * workType.ratePerPage);
     } else {
       base = workType.minPrice;
