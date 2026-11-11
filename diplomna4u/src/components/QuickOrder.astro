@@ -5,13 +5,14 @@ interface Props {
   variant?: 'hero' | 'compact' | 'page';
   defaultWork?: string;
   dark?: boolean;
+  showPriceBadge?: boolean;
 }
-const { defaultWork = '', dark = false } = Astro.props;
+const { defaultWork = '', dark = false, showPriceBadge = true } = Astro.props;
 
 const pricingJson = JSON.stringify(pricing);
 ---
 <div class={`quick-order card card--light${dark ? ' quick-order--dark' : ''}`} id="quick-order">
-  <div class="qo-badge">Ціна від {pricing.workTypes.find(w=>w.slug==='dyplomna-robota')?.minPrice.toLocaleString('uk-UA')} грн</div>
+  {showPriceBadge && <div class="qo-badge">Ціна від {pricing.workTypes.find(w=>w.slug==='dyplomna-robota')?.minPrice.toLocaleString('uk-UA')} грн</div>}
   <h3 class="qo-title">Уточнимо деталі й безкоштовно проконсультуємо</h3>
 
   <form class="qo-form" data-qo>
