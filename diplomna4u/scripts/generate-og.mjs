@@ -14,7 +14,7 @@ const { services } = await import('../src/data/services.ts');
 
 const BRAND = site.brandUk || 'Diplomna 4 U';
 const DOMAIN = site.domain;
-const NOINDEX = new Set(['/polityka-cookie/', '/karta-saitu/']);
+const NOINDEX = new Set(['/polityka-konfidentsiinosti/']);
 
 const logoB64 = await sharp(source).resize(96, 96, { fit: 'contain', background: '#FFFDF8' }).png().toBuffer().then((b) => b.toString('base64'));
 
@@ -31,7 +31,7 @@ add('/vidhuky/', `Відгуки | ${BRAND}`, 'Відгуки клієнтів.'
 add('/blog/', `Блог | ${BRAND}`, 'Корисні матеріали для студентів.');
 add('/pro-nas/', `Про нас | ${BRAND}`, 'Хто ми і як працюємо.');
 add('/mista/', `Міста | ${BRAND}`, 'Локальні сторінки по містах України.');
-add('/universytety/', `Університети | ${BRAND}`, 'Університети, з якими працюємо.');
+
 add('/faq/', `FAQ | ${BRAND}`, 'Відповіді на часті запитання.');
 add('/kontakty/', `Контакти | ${BRAND}`, 'Контакти та форма заявки.');
 add('/polityka-konfidentsiinosti/', `Політика конфіденційності | ${BRAND}`, 'Політика конфіденційності.');

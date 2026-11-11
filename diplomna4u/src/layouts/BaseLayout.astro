@@ -69,7 +69,7 @@ const allJsonLd = [orgSchema, websiteSchema, ...jsonLd];
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" hreflang={lang} href={canonicalUrl} />
     <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
-    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     <meta name="theme-color" content="#6B0F1F" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
