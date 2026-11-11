@@ -34,6 +34,6 @@ export const nav = {
     { label: 'Про нас', href: '/pro-nas/' },
   ],
   cities: { label: 'Міста', href: '/mista/' },
-  universities: { label: 'Університети', href: '/universytety/' },
+  // universities page removed; city pages list universities
   cta: { label: 'Дізнатись ціну', href: '/#quick-order' },
 };

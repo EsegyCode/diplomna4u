@@ -4,7 +4,7 @@ const ready = cities.filter(c => c.localContentReady);
 ---
 <section class="cities-teaser">
   <div class="container">
-    <h3>Міста, з якими ми працюємо</h3>
+    <h3 style="margin-bottom:1.5rem">Міста, з якими ми працюємо</h3>
     {ready.length === 0 ? (
       <p class="text-muted">Скоро додамо локальні сторінки міст.</p>
     ) : (
@@ -12,6 +12,6 @@ const ready = cities.filter(c => c.localContentReady);
         {ready.map(c => <a href={`/${c.slug}/`} class="chip">Дипломні роботи {c.inCity}</a>)}
       </div>
     )}
-    <p style="margin-top:1rem"><a href="/universytety/">Університети →</a></p>
+
   </div>
 </section>

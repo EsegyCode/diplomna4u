@@ -37,7 +37,6 @@ export const footerGroups = [
       { label: 'Дніпро', href: '/dnipro/' },
       { label: 'Одеса', href: '/odesa/' },
       { label: 'Усі міста', href: '/mista/' },
-      { label: 'Університети', href: '/universytety/' },
     ],
   },
   {
