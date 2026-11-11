@@ -73,7 +73,7 @@ function ensureHidden(form: HTMLFormElement, name: string, value = ''): HTMLInpu
 }
 
 function closestStatus(form: HTMLFormElement): HTMLElement {
-  let el = form.querySelector<HTMLElement>('.form-status');
+  let el = form.querySelector<HTMLElement>('.form-status, [data-qo-status]');
   if (!el) {
     el = document.createElement('div');
     el.className = 'form-status';

@@ -242,19 +242,19 @@ async function handlePost(context: any): Promise<Response> {
   }
 
   // Body size
-  let text = '';
+  let bodyText = '';
   try {
-    text = await request.text();
+    bodyText = await request.text();
   } catch {
     return json({ ok: false, code: 'bad_request' }, 400);
   }
-  if (text.length > 16 * 1024) {
+  if (bodyText.length > 16 * 1024) {
     return json({ ok: false, code: 'too_large' }, 413);
   }
 
   let data: LeadData;
   try {
-    data = JSON.parse(text || '{}');
+    data = JSON.parse(bodyText || '{}');
   } catch {
     return json({ ok: false, code: 'validation', fields: { contact: 'Невірний формат даних' } }, 400);
   }
