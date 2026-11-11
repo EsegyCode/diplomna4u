@@ -12,6 +12,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "check:seo": "node scripts/check-seo.mjs",
+    "check:encoding": "node scripts/check-encoding.mjs",
     "generate:icons": "node scripts/generate-icons.mjs",
     "generate:og": "node --experimental-strip-types scripts/generate-og.mjs",
     "generate:llms": "node --experimental-strip-types scripts/generate-llms.mjs",
