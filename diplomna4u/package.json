@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "prebuild": "npm run generate:icons && npm run generate:og && npm run generate:llms",
+    "generate:robots": "node scripts/generate-robots.mjs",
+    "prebuild": "npm run generate:icons && npm run generate:og && npm run generate:llms && npm run generate:robots",
     "preview": "astro preview",
     "astro": "astro",
     "check:seo": "node scripts/check-seo.mjs",
@@ -16,6 +17,7 @@
     "generate:icons": "node scripts/generate-icons.mjs",
     "generate:og": "node --experimental-strip-types scripts/generate-og.mjs",
     "generate:llms": "node --experimental-strip-types scripts/generate-llms.mjs",
+    "routes": "node scripts/routes.mjs",
     "seo:check": "npm run check:seo"
   },
   "dependencies": {

@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-const SITE = 'https://diplomna4u.cx.ua';
+const SITE = (process.env.PUBLIC_SITE_URL || '').trim().replace(/\/+$/, '') || 'http://localhost:4321';
 
 const NOINDEX_PATHS = [
   '/polityka-cookie/',

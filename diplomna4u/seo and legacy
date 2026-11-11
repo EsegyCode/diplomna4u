@@ -1,0 +1,77 @@
+You are a senior technical SEO + Astro engineer. Audit and prepare this site (Astro, Ukrainian, lang="uk", localhost:4321) for deployment on Cloudflare Pages on a custom domain. Work in the phases below, in order. Do not redesign anything and do not rewrite page copy, except where a phase explicitly says to. Use the existing design system (red #AD1312, cream #F9EEDB, sand #EBD6AE, Playfair Display + Inter). Do NOT implement form submission or the Telegram bot: that will be done later on Cloudflare Pages (just report what each form currently posts to).
+
+The final domain is not known yet. Create ONE config source of truth: `src/data/site.ts` (site name "Diplomna 4 U", contact email, Telegram link, language, default OG, etc.) and read the production URL from an env variable `PUBLIC_SITE_URL` (also set `site` in astro.config from it). The production build must FAIL with a clear message if it is missing; dev uses http://localhost:4321. Every canonical, sitemap URL, og:url, og:image, JSON-LD @id and llms.txt link must be built from it. No hard-coded domains anywhere.
+
+═══ PHASE 0. RECON ═══
+1. Read the project structure, astro.config, package.json, all layouts, `src/pages`, content collections, `public/`.
+2. Run a production build and inspect `dist/`. Everything below is verified against the BUILT output, not only the source.
+3. Create a route registry `src/data/routes.ts` only if one does not exist (otherwise extend it): path, title, template type, indexable (true/false + reason), priority, changefreq, parent (for breadcrumbs). Make sitemap, llms.txt, breadcrumbs, schema, OG generation and the HTML sitemap page read from it so nothing can drift.
+
+═══ PHASE 1. ROUTE INVENTORY FILE ═══
+Create `docs/ROUTES.txt` listing EVERY page/route on the site (static pages, services, cities, universities, blog, legal, utility pages, 404, redirects, API/function routes if any). One line per route, pipe-separated:
+`path | page title | template/type | indexable (yes/no) | in sitemap (yes/no) | inbound internal links | has OG image | JSON-LD types | notes`
+Add a header with the generation date, total counts per type, and a short legend. Generate it with a script `scripts/routes.mjs` (run as `npm run routes`) that reads `dist/` after build, so it can be regenerated any time in the future.
+
+═══ PHASE 2. CORE TECHNICAL FILES AND META ═══
+Check each item, then fix or create it. Record PASS / FIXED / NEEDS OWNER in `docs/SEO-TECH-REPORT.md`.
+1. `robots.txt` (see Phase 5 for AI rules): absolute `Sitemap:` line, disallow only utility/non-indexable paths (thank-you, search, API).
+2. Sitemap: `sitemap-index.xml` + `sitemap-0.xml` (via @astrojs/sitemap or equivalent). Only indexable, canonical, 200-status URLs; exclude 404, thank-you, drafts and noindex pages; correct `lastmod` (from git/content dates, not the build time for everything); consistent trailing slashes. Also verify there is an HTML sitemap page (the footer links to "Карта сайту") listing all indexable pages grouped by type.
+3. `llms.txt` at the root, generated at build from the route registry, in the standard Markdown format: H1 with the site name, a blockquote with a 1–2 sentence factual summary, then H2 sections (Послуги, Ціни та умови, Міста, Університети, Про компанію, Юридичне) with `- [Title](absolute URL): one-line description`. Add `llms-full.txt` with clean Markdown of the key pages' facts (services, price constants, terms: min deadline from 3 days, uniqueness 85–90% with certificate, free edits within a month, payment 50% + 50%, contract). Take every fact and price from the site's own constants/content; invent nothing.
+4. Per-page meta, for all indexable pages: unique `<title>` (≤ 60 chars) and meta description (120–160 chars), exactly one `<h1>`, logical heading order, `<link rel="canonical">` (self-referencing, absolute), `<meta name="robots">` only where needed, `<html lang="uk">`, `og:locale uk_UA`, `og:site_name`, `og:type`, `og:title`, `og:description`, `og:url`, `og:image` (+ width/height/alt), `twitter:card=summary_large_image`. Report duplicates and missing values; fix them in the layout/head component, using the route registry for titles and descriptions where pages lack their own.
+5. Favicons and manifest: favicon.ico + SVG favicon, apple-touch-icon 180, icons 192/512 (+ maskable), `site.webmanifest` with brand colors, `<meta name="theme-color" content="#FFFBF3">`. Generate them from the logo source file via script so they can be re-generated when the logo is replaced (a NEW logo is coming).
+6. Error pages: custom `404.astro` in the site design (search-free; links to home, services, prices, contact), returns a real 404 on Cloudflare Pages, `noindex`.
+7. Cloudflare Pages readiness (files only, no dashboard work):
+   - `public/_headers`: security headers on all routes (X-Content-Type-Options: nosniff, Referrer-Policy: strict-origin-when-cross-origin, Permissions-Policy minimal, X-Frame-Options: SAMEORIGIN); long immutable cache for `/_astro/*` and fonts; short cache for HTML; and a rule so that preview deployments are never indexed: for `https://*.pages.dev/*` set `X-Robots-Tag: noindex, nofollow`. No strict CSP yet (report-only is fine, or skip), because the Telegram integration comes later.
+   - `public/_redirects`: only what is needed (e.g., enforce one trailing-slash policy if Astro config does not already; no invented legacy redirects). Verify the Astro `trailingSlash` and `build.format` settings match the URLs used in links, canonicals and the sitemap.
+   - Verify no absolute localhost URLs, no mixed content, no `noindex` meta accidentally left in the production layout, and that the site works as pure static output (no features requiring a server runtime unless an adapter is configured). List any server-only features.
+8. Structured data (JSON-LD), generated by ONE `<Schema>` component driven by the route registry:
+   - Site-wide: `Organization` (name, url, logo, email, sameAs with the Telegram link; do NOT invent address/phone) and `WebSite` (no SearchAction unless site search exists), with stable `@id`s.
+   - `BreadcrumbList` on every non-home page, matching the visible breadcrumbs.
+   - Service pages: `Service` (provider → the Organization @id, areaServed "UA", serviceType) with `Offer`/price only if the price is visible on the page (use the single price constants).
+   - City pages: `Service` with `areaServed` set to the city. University pages: `WebPage` with `about`. Blog posts: `BlogPosting` (headline, datePublished, dateModified, author as the Organization). Contacts: `ContactPage`. About: `AboutPage`.
+   - `FAQPage` ONLY where the FAQ is visibly rendered on that same page with the same text.
+   - Do NOT add `Review`/`AggregateRating`/star ratings anywhere: the reviews section currently contains placeholder text ("Ім’я автора", "Тут буде текст відгуку"). Do not mark up fake or placeholder content.
+   - Validate that every JSON-LD block parses, has no empty fields, and matches visible content.
+
+═══ PHASE 3. OG IMAGES ═══
+Check which pages have a real `og:image`. Then generate missing ones at build time with a re-runnable script (`npm run og`, e.g., satori + @resvg/resvg-js or sharp; fonts as local TTF/OTF/WOFF files, not from a CDN):
+- Size 1200×630 PNG (also output a WebP if useful), saved to `public/og/<slug>.png` or generated through a static endpoint; filenames stable and derived from the route.
+- Design (design-system compliant): background --bg (#FFFBF3) with a sand (#EBD6AE) accent shape, the logo top-left, the page H1 in Playfair Display 700 in red #AD1312 (max 3 lines, auto-fit), a short Inter subtitle in --ink, and a small red pill with the brand name at the bottom. No dark red full-bleed backgrounds, no gradients, no stock photos.
+- One image per indexable page (each service, city, university, blog post, legal, about, prices, FAQ, contacts, home) with the page's own title, plus `og-default.png` as the fallback. Make sure every page's `og:image` URL is absolute and returns 200 in the build.
+- Cyrillic must render correctly (verify visually on at least 3 generated images and mention it in the report).
+- The generator must read the logo from a single source file so images can be regenerated when the new logo arrives.
+
+═══ PHASE 4. INTERNAL LINKING AUDIT AND FIXES ═══
+Write `scripts/audit.mjs` (run as `npm run audit` after build) that crawls `dist/` and reports:
+- broken internal links and anchors (#id that does not exist), links to redirected or non-canonical URLs, links missing/adding trailing slash inconsistently;
+- orphan pages (0 inbound links), weakly linked pages (< 3 inbound links from distinct pages), click depth from the home page (target ≤ 3);
+- pages where every inbound link comes only from the footer/menu;
+- generic anchor texts ("тут", "детальніше" without context) and links with empty text;
+- sitemap vs. real pages mismatch; pages in the sitemap that are noindex or redirect;
+- missing alt text on images, missing `rel` on external links (`noopener`; Telegram links are fine).
+Save the human-readable results in `docs/LINKING-REPORT.md` (a table of pages with inbound/outbound counts plus problems found). Then FIX the problems using reusable components, without link stuffing (≤ ~100 links per page, descriptive anchors):
+- Service pages: link to the other services (a "Інші послуги" block following the site order: Дипломна, Курсова, Стаття, Теза, Реферат, Звіт з практики), to Ціни, to the calculator (#quick-order), to Міста, and to FAQ.
+- City pages: link to the relevant services, to 3–4 other cities, and back to the Міста index; university pages: same pattern.
+- Міста / Університети / Усі міста indexes: link to every child page.
+- Blog posts: link to the most relevant service pages and to the blog index; the blog index links to all posts.
+- Home: link to every service, Ціни, Відгуки, FAQ, Міста, Блог, Контакти.
+- Header menu + footer cover all top-level pages; breadcrumbs on all inner pages; legal pages linked from the footer and from the consent checkbox in forms.
+- No page may remain orphaned. If a page is a draft/placeholder, mark it as such in the report instead of linking it everywhere.
+
+═══ PHASE 5. AI CRAWLER ACCESS ═══
+Check and set `robots.txt` so AI search/assistant crawlers are ALLOWED (the owner wants AI assistants to be able to read and cite the site). Add explicit groups (User-agent + Allow: /, with the same disallows as for other bots) for: OAI-SearchBot, ChatGPT-User, GPTBot, ClaudeBot, Claude-User, Claude-SearchBot, anthropic-ai, PerplexityBot, Perplexity-User, Google-Extended, Applebot, Applebot-Extended, Amazonbot, meta-externalagent, CCBot, Bytespider, Bingbot, Googlebot. Put the list in one clearly commented block so that the owner can switch off training-only bots (GPTBot, Google-Extended, Applebot-Extended, CCBot, anthropic-ai, Bytespider) with one edit later.
+Also verify across the built site and `_headers`: no `X-Robots-Tag`, `noai`, `noimageai` or `noindex` meta that would block them; important content is present in the static HTML (not only rendered by client-side JS); no bot-blocking rules, no forced cookie/consent wall that hides content from crawlers; `llms.txt` is reachable at the root with `text/plain` or `text/markdown` content type.
+In `docs/DEPLOY-CLOUDFLARE.md` write an OWNER checklist (things the agent cannot do from code): in the Cloudflare dashboard, new domains may have "Block AI bots"/AI Crawl Control or a managed robots.txt enabled by default: check it and set it to ALLOW the bots above; check Bot Fight Mode / WAF rules are not blocking them; verify the live `/robots.txt` is what we shipped (Cloudflare can prepend its own directives); set `PUBLIC_SITE_URL` in Pages environment variables; add the custom domain and www→apex redirect; enable HTTPS redirect; submit the sitemap to Google Search Console and Bing Webmaster Tools; later add the Pages Function for form → Telegram bot (group chat) with the bot token stored as an encrypted secret.
+
+═══ PHASE 6. LEGACY / EXPECTED PAGES CHECK ═══
+Verify that these exist, are reachable from the footer, have real content, a title/description/canonical, and are in the sitemap (legal ones may be indexable but low priority). Report each as EXISTS / MISSING / PLACEHOLDER:
+Головна; Послуги (index) + each service page (Дипломна робота, Курсова робота, Стаття, Теза, Реферат, Звіт з практики); Ціни; Відгуки; Про нас; Контакти; FAQ; Блог (+ at least the index); Міста (+ Усі міста) and each city page; Університети; Карта сайту (HTML); Політика конфіденційності; Публічна оферта; Політика cookie; 404; a "Дякуємо"/thank-you page or in-page success state for the forms (noindex); cookie-consent banner behavior (works, remembers choice, "Змінити налаштування" link works).
+- Create ONLY the missing technical/utility pages (404, thank-you, HTML sitemap, a minimal Контакти with email + Telegram if absent) in the site design.
+- For missing LEGAL texts (privacy, offer, cookie), do NOT invent legal language: create a clearly marked draft page with a TODO banner, set it `noindex` and list it under NEEDS OWNER / LEGAL REVIEW. Do the same for any page that contains placeholder text (e.g., "Скоро додамо локальні сторінки міст", placeholder reviews): keep it, but flag it, and give it `indexable: false` in the route registry (with the reason) until real content is added; one flag flips it back.
+- Check the footer, header, sitemap page and cookie banner link to the correct legal URLs; check that the consent checkbox in the forms links to the privacy policy.
+
+═══ FINAL OUTPUT ═══
+1. Files created/changed (grouped by phase) and the npm scripts added: `routes`, `og`, `audit`.
+2. Deliverables: `docs/ROUTES.txt`, `docs/SEO-TECH-REPORT.md` (table: item | status PASS/FIXED/NEEDS OWNER | note), `docs/LINKING-REPORT.md`, `docs/DEPLOY-CLOUDFLARE.md`, `/llms.txt`, `/llms-full.txt`, `/robots.txt`, sitemap files, OG images.
+3. A short list of everything that needs a decision or real content from the owner (placeholder pages/reviews, legal texts, domain, new logo → re-run `npm run og` and the favicon script, form → Telegram setup).
+4. Confirm that `npm run build` and `npm run audit` pass, and paste the audit summary (counts of broken links, orphans, missing meta, invalid JSON-LD = 0).

@@ -1,0 +1,34 @@
+# Route registry generated from dist
+path | title | template/type | indexable (yes/no) | in sitemap (yes/no) | inbound internal links | has OG image | JSON-LD types | notes
+/bila-tserkva/ | Дипломна робота у Білій Церкві — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/blog/ | Блог | Diplomna 4 U | static | yes | yes | - | - | - | -
+/cherkasy/ | Дипломна робота у Черкасах — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/chernihiv/ | Дипломна робота у Чернігові — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/dnipro/ | Дипломна робота у Дніпрі — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/faq/ | Часті запитання про замовлення робіт | Diplomna 4 U | static | yes | yes | - | - | - | -
+/ | Diplomna 4 U — дипломна робота для тебе | від 14 800 грн | static | yes | yes | - | - | - | -
+/karta-saitu/ | Карта сайту | Diplomna 4 U | static | yes | yes | - | - | - | -
+/kharkiv/ | Дипломна робота у Харкові — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/kontakty/ | Контакти — Diplomna 4 U | Telegram, email, графік | static | yes | yes | - | - | - | -
+/kyiv/ | Дипломна робота у Києві — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/lviv/ | Дипломна робота у Львові — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/mista/ | Де ми працюємо — дипломні й курсові по всій Україні | static | yes | yes | - | - | - | -
+/odesa/ | Дипломна робота в Одесі — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/polityka-cookie/ | Політика cookie | Diplomna 4 U | static | yes | yes | - | - | - | -
+/polityka-konfidentsiinosti/ | Політика конфіденційності | Diplomna 4 U | static | yes | yes | - | - | - | -
+/poltava/ | Дипломна робота у Полтаві — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/poslugy/dyplomna-robota/ | Дипломна робота | Diplomna 4 U | static | yes | yes | - | - | - | -
+/poslugy/ | Наші послуги | Diplomna 4 U | static | yes | yes | - | - | - | -
+/poslugy/kursova-robota/ | Курсова робота | Diplomna 4 U | static | yes | yes | - | - | - | -
+/poslugy/referat/ | Реферат | Diplomna 4 U | static | yes | yes | - | - | - | -
+/poslugy/stattia/ | Стаття | Diplomna 4 U | static | yes | yes | - | - | - | -
+/poslugy/teza/ | Теза | Diplomna 4 U | static | yes | yes | - | - | - | -
+/poslugy/zvit-z-praktyky/ | Звіт з практики | Diplomna 4 U | static | yes | yes | - | - | - | -
+/pro-nas/ | Про нас — Diplomna 4 U: хто ми і як працюємо | static | yes | yes | - | - | - | -
+/publichna-oferta/ | Публічна оферта (договір) | Diplomna 4 U | static | yes | yes | - | - | - | -
+/sumy/ | Дипломна робота у Сумах — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/tsiny/ | Ціни на дипломі, курсові, статті та реферати | Diplomna 4 U | static | yes | yes | - | - | - | -
+/vidhuky/ | Відгуки | Diplomna 4 U | static | yes | yes | - | - | - | -
+/vinnytsia/ | Дипломна робота у Вінниці — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/zaporizhzhia/ | Дипломна робота у Запоріжжі — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
+/zhytomyr/ | Дипломна робота у Житомирі — від 14 800 грн | Diplomna 4 U | static | yes | yes | - | - | - | -
