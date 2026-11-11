@@ -1,4 +1,4 @@
-﻿// src/data/site.ts
+// src/data/site.ts
 // Single source of truth for contacts and brand
 
 import { services } from './services.ts';

@@ -1,4 +1,4 @@
-﻿interface Env {
+interface Env {
   TELEGRAM_BOT_TOKEN?: string;
   TELEGRAM_CHAT_ID?: string;
   TURNSTILE_SECRET_KEY?: string;
@@ -128,26 +128,26 @@ function kyivTime(): string {
 
 function buildMessage(data: Record<string, unknown>, sourceLabel: string): string {
   const lines: string[] = [];
-  lines.push(`рџ†• <b>РќРѕРІР° Р·Р°СЏРІРєР°</b> В· ${esc(sourceLabel)}`);
+  lines.push(`🆕 <b>Нова заявка</b> · ${esc(sourceLabel)}`);
   lines.push('');
-  if (data.name) lines.push(`рџ‘¤ <b>Р†РјКјСЏ:</b> ${esc(String(data.name))}`);
-  if (data.contact) lines.push(`рџ“І <b>РљРѕРЅС‚Р°РєС‚ (${esc(String(data.contactType))}):</b> ${esc(String(data.contact))}`);
-  if (data.workType) lines.push(`рџЋ“ <b>РўРёРї СЂРѕР±РѕС‚Рё:</b> ${esc(String(data.workType))}`);
-  if (data.direction) lines.push(`рџ§­ <b>РќР°РїСЂСЏРј:</b> ${esc(String(data.direction))}`);
-  if (data.topic) lines.push(`рџ“ќ <b>РўРµРјР°:</b> ${esc(String(data.topic)).slice(0, 4096)}`);
-  if (data.pages) lines.push(`рџ“„ <b>РћР±СЃСЏРі:</b> ${esc(String(data.pages))} СЃС‚РѕСЂ.`);
-  if (data.deadline) lines.push(`вЏ± <b>РўРµСЂРјС–РЅ:</b> ${esc(String(data.deadline))}`);
-  if (data.estimatedPrice) lines.push(`рџ’° <b>РћСЂС–С”РЅС‚РѕРІРЅР° РІР°СЂС‚С–СЃС‚СЊ:</b> ${esc(String(data.estimatedPrice))}`);
-  if (data.comment) lines.push(`рџ’¬ <b>РљРѕРјРµРЅС‚Р°СЂ:</b> ${esc(String(data.comment)).slice(0, 4096)}`);
-  if (data.pageUrl) lines.push(`рџ”— <b>РЎС‚РѕСЂС–РЅРєР°:</b> ${esc(String(data.pageUrl))}`);
+  if (data.name) lines.push(`👤 <b>Імʼя:</b> ${esc(String(data.name))}`);
+  if (data.contact) lines.push(`📲 <b>Контакт (${esc(String(data.contactType))}):</b> ${esc(String(data.contact))}`);
+  if (data.workType) lines.push(`🎓 <b>Тип роботи:</b> ${esc(String(data.workType))}`);
+  if (data.direction) lines.push(`🧭 <b>Напрям:</b> ${esc(String(data.direction))}`);
+  if (data.topic) lines.push(`📝 <b>Тема:</b> ${esc(String(data.topic)).slice(0, 4096)}`);
+  if (data.pages) lines.push(`📄 <b>Обсяг:</b> ${esc(String(data.pages))} стор.`);
+  if (data.deadline) lines.push(`⏱ <b>Термін:</b> ${esc(String(data.deadline))}`);
+  if (data.estimatedPrice) lines.push(`💰 <b>Орієнтовна вартість:</b> ${esc(String(data.estimatedPrice))}`);
+  if (data.comment) lines.push(`💬 <b>Коментар:</b> ${esc(String(data.comment)).slice(0, 4096)}`);
+  if (data.pageUrl) lines.push(`🔗 <b>Сторінка:</b> ${esc(String(data.pageUrl))}`);
   if (data.utm && typeof data.utm === 'object') {
     const utm = Object.entries(data.utm as Record<string, string>)
       .filter(([, v]) => v)
       .map(([k, v]) => `${k}=${v}`)
       .join(', ');
-    if (utm) lines.push(`рџ“€ <b>UTM:</b> ${esc(utm)}`);
+    if (utm) lines.push(`📈 <b>UTM:</b> ${esc(utm)}`);
   }
-  lines.push(`рџ•’ ${kyivTime()} (РљРёС—РІ)`);
+  lines.push(`🕒 ${kyivTime()} (Київ)`);
 
   let text = lines.join('\n');
   if (text.length > 4096) text = text.slice(0, 4093) + '...';
@@ -167,7 +167,7 @@ async function sendTelegram(env: Env, text: string, keyboard: unknown): Promise<
   try {
     const res = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify(payload),
       signal: controller.signal,
     });
@@ -232,11 +232,11 @@ async function verifyTurnstile(env: Env, token: string, ip: string): Promise<boo
 }
 
 const SOURCE_LABELS: Record<string, string> = {
-  contact: 'Р¤РѕСЂРјР° РЅР° СЃС‚РѕСЂС–РЅС†С–',
-  'quick-order': 'РљР°Р»СЊРєСѓР»СЏС‚РѕСЂ',
-  'sticky-contact': 'Р›РёРїРєР° С„РѕСЂРјР°',
-  'sticky-widget': 'Р’С–РґР¶РµС‚ В«Р—РІвЂ™СЏР·РѕРє Р· РЅР°РјРёВ»',
-  'lead': 'Р¤РѕСЂРјР°',
+  contact: 'Форма на сторінці',
+  'quick-order': 'Калькулятор',
+  'sticky-contact': 'Липка форма',
+  'sticky-widget': 'Віджет «Зв’язок з нами»',
+  'lead': 'Форма',
 };
 
 async function handlePost(context: any): Promise<Response> {
@@ -276,7 +276,7 @@ async function handlePost(context: any): Promise<Response> {
   try {
     data = JSON.parse(bodyText || '{}');
   } catch {
-    return json({ ok: false, code: 'validation', fields: { contact: 'РќРµРІС–СЂРЅРёР№ С„РѕСЂРјР°С‚ РґР°РЅРёС…' } }, 400);
+    return json({ ok: false, code: 'validation', fields: { contact: 'Невірний формат даних' } }, 400);
   }
   if (typeof data !== 'object' || data === null) {
     return json({ ok: false, code: 'validation', fields: {} }, 400);
@@ -364,9 +364,9 @@ async function handlePost(context: any): Promise<Response> {
   const contact = normalizeContact(rawContact);
 
   const fields: Record<string, string> = {};
-  if (name.length < 2) fields.name = 'Р’РєР°Р¶Рё С–РјКјСЏ';
-  if (!contact) fields.contact = 'Р’РєР°Р¶Рё Telegram, С‚РµР»РµС„РѕРЅ Р°Р±Рѕ email';
-  if (data.consent !== true) fields.consent = 'РџС–РґС‚РІРµСЂРґРё Р·РіРѕРґСѓ РЅР° РѕР±СЂРѕР±РєСѓ РґР°РЅРёС…';
+  if (name.length < 2) fields.name = 'Вкажи імʼя';
+  if (!contact) fields.contact = 'Вкажи Telegram, телефон або email';
+  if (data.consent !== true) fields.consent = 'Підтверди згоду на обробку даних';
 
   if (Object.keys(fields).length > 0) {
     console.log('lead_drop', JSON.stringify({ reason: 'validation_failed', source, fields, time: new Date().toISOString() }));
@@ -386,7 +386,7 @@ async function handlePost(context: any): Promise<Response> {
 
   // deadline check: if provided, just string, already capped
 
-  const sourceLabel = SOURCE_LABELS[source] || 'Р¤РѕСЂРјР°';
+  const sourceLabel = SOURCE_LABELS[source] || 'Форма';
 
   const payload: Record<string, unknown> = {
     name, contact: contact!.value, contactType: contact!.type, workType, direction, topic, pages, deadline, estimatedPrice, comment, pageUrl, utm,
@@ -395,7 +395,7 @@ async function handlePost(context: any): Promise<Response> {
   const text = (suspiciousHoneypot ? '\u26A0\uFE0F \u043C\u043E\u0436\u043B\u0438\u0432\u0438\u0439 \u0441\u043F\u0430\u043C\n' : '') + buildMessage(payload, sourceLabel);
 
   const keyboard = contact!.type === 'telegram' ? {
-    inline_keyboard: [[{ text: 'Р’С–РґРїРѕРІС–СЃС‚Рё РІ Telegram', url: `https://t.me/${contact!.value.replace(/^@/, '')}` }]],
+    inline_keyboard: [[{ text: 'Відповісти в Telegram', url: `https://t.me/${contact!.value.replace(/^@/, '')}` }]],
   } : undefined;
 
   if (rawEnv.DRY_RUN === '1') {

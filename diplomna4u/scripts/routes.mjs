@@ -1,4 +1,4 @@
-﻿import { readFileSync, readdirSync, existsSync, mkdirSync, writeFileSync } from 'fs';
+import { readFileSync, readdirSync, existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 const DIST = 'dist';
 function walk(dir, acc = []) {

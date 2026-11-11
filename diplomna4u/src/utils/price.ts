@@ -1,4 +1,4 @@
-﻿// Pure price calculation for calculator (B12)
+// Pure price calculation for calculator (B12)
 // Formula: price = round(base * specialtyCoef * deadlineK) + addons
 
 import { pricing } from '@/data/pricing';

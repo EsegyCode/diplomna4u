@@ -1,4 +1,4 @@
-﻿---
+---
 import { pricing } from '@/data/pricing';
 
 interface Props {
@@ -12,8 +12,8 @@ const { defaultWork = '', dark = false, showPriceBadge = true } = Astro.props;
 const pricingJson = JSON.stringify(pricing);
 ---
 <div class={`quick-order card card--light${dark ? ' quick-order--dark' : ''}`} id="quick-order">
-  {showPriceBadge && <div class="qo-badge">Р¦С–РЅР° РІС–Рґ {pricing.workTypes.find(w=>w.slug==='dyplomna-robota')?.minPrice.toLocaleString('uk-UA')} РіСЂРЅ</div>}
-  <h3 class="qo-title">РЈС‚РѕС‡РЅРёРјРѕ РґРµС‚Р°Р»С– Р№ Р±РµР·РєРѕС€С‚РѕРІРЅРѕ РїСЂРѕРєРѕРЅСЃСѓР»СЊС‚СѓС”РјРѕ</h3>
+  {showPriceBadge && <div class="qo-badge">Ціна від {pricing.workTypes.find(w=>w.slug==='dyplomna-robota')?.minPrice.toLocaleString('uk-UA')} грн</div>}
+  <h3 class="qo-title">Уточнимо деталі й безкоштовно проконсультуємо</h3>
 
   <form class="qo-form" data-qo>
     <input type="hidden" name="calc_payload" value="" />
@@ -23,7 +23,7 @@ const pricingJson = JSON.stringify(pricing);
     <div class="qo-step qo-step-1">
       <div class="qo-row">
       <div class="field">
-        <label>РўРёРї СЂРѕР±РѕС‚Рё *</label>
+        <label>Тип роботи *</label>
           <select name="workType" data-work required>
             {pricing.workTypes.map(w => (
               <option value={w.slug} selected={defaultWork === w.slug || (defaultWork==='' && w.slug==='dyplomna-robota')}>{w.label}</option>
@@ -32,20 +32,20 @@ const pricingJson = JSON.stringify(pricing);
           <span class="field-error" data-err="work_type"></span>
         </div>
   <div class="field">
-    <label>РЎРїРµС†С–Р°Р»СЊРЅС–СЃС‚СЊ</label>
+    <label>Спеціальність</label>
     <select name="specialty" data-specialty data-specialty-select>
       {pricing.specialties.map(s => <option value={s.key} selected={s.key === 'H1'}>{s.label}</option>)}
     </select>
   </div>
       </div>
       <div class="field">
-<label>РўРµРјР° СЂРѕР±РѕС‚Рё (РЅРµРѕР±РѕРІвЂ™СЏР·РєРѕРІРѕ)</label>
-<input type="text" name="topic" placeholder="РќР°РїСЂ., Р’РїР»РёРІ РґРѕР±СЂРёРІ РЅР° РІСЂРѕР¶Р°Р№РЅС–СЃС‚СЊ РїС€РµРЅРёС†С–" />
+<label>Тема роботи (необов’язково)</label>
+<input type="text" name="topic" placeholder="Напр., Вплив добрив на врожайність пшениці" />
       </div>
       <div class="field qo-pages" data-pages>
         <div class="pages-head">
-          <label>РћР±СЃСЏРі СЂРѕР±РѕС‚Рё</label>
-          <div class="pages-value" data-pages-value>60&nbsp;СЃС‚РѕСЂ.</div>
+          <label>Обсяг роботи</label>
+          <div class="pages-value" data-pages-value>60&nbsp;стор.</div>
         </div>
         <input type="range" name="pages" data-pages-range min="40" max="90" step="5" value="60" />
         <div class="range-labels">
@@ -56,21 +56,21 @@ const pricingJson = JSON.stringify(pricing);
 
 
       <div class="field">
-        <label>РљРѕР»Рё Р·РґР°С‡Р°?</label>
+        <label>Коли здача?</label>
         <div class="deadline-seg" data-deadline>
           {pricing.deadline.map((d, i) => (
             <button type="button" class={`seg-btn${i === 0 ? ' is-active' : ''}`} data-deadline-btn data-idx={i} aria-pressed={i === 0 ? 'true' : 'false'}>{d.label}</button>
           ))}
         </div>
-        <p class="deadline-note">Р§РёРј СЂР°РЅС–С€Рµ Р·Р°РјРѕРІРёС€, С‚РёРј РІРёРіС–РґРЅС–С€Рµ. РњС–РЅС–РјР°Р»СЊРЅРёР№ С‚РµСЂРјС–РЅ РґРёРїР»РѕРјРЅРѕС— СЂРѕР±РѕС‚Рё вЂ” РІС–Рґ 3 РґРЅС–РІ.</p>
+        <p class="deadline-note">Чим раніше замовиш, тим вигідніше. Мінімальний термін дипломної роботи — від 3 днів.</p>
       </div>
 
 <div class="qo-footer">
         <div class="qo-price">
-          <div class="price-display" data-price>вЂ”</div>
-          <div class="qo-price-note">РћСЂС–С”РЅС‚РѕРІРЅР° РІР°СЂС‚С–СЃС‚СЊ. РўРѕС‡РЅСѓ СЃСѓРјСѓ СѓС‚РѕС‡РЅРёС‚СЊ РјРµРЅРµРґР¶РµСЂ.</div>
+          <div class="price-display" data-price>—</div>
+          <div class="qo-price-note">Орієнтовна вартість. Точну суму уточнить менеджер.</div>
         </div>
-        <button type="button" class="btn" data-next>Р”Р°Р»С– в†’</button>
+        <button type="button" class="btn" data-next>Далі →</button>
       </div>
     </div>
 
@@ -78,24 +78,24 @@ const pricingJson = JSON.stringify(pricing);
     <div class="qo-step qo-step-2" hidden>
       <input type="hidden" name="contact_type" data-contact-type value="" />
       <div class="field">
-        <label>Р†РјвЂ™СЏ *</label>
-        <input type="text" name="qo_name" data-qo-name required placeholder="РќР°РїСЂРёРєР»Р°Рґ, РћР»РµРЅР°" />
+        <label>Ім’я *</label>
+        <input type="text" name="qo_name" data-qo-name required placeholder="Наприклад, Олена" />
       </div>
       <div class="field">
-        <label>Telegram @username, С‚РµР»РµС„РѕРЅ Р°Р±Рѕ email *</label>
-        <input type="text" name="qo_contact" data-qo-contact required placeholder="@username, +380 50 123 45 67 Р°Р±Рѕ name@email.com" />
+        <label>Telegram @username, телефон або email *</label>
+        <input type="text" name="qo_contact" data-qo-contact required placeholder="@username, +380 50 123 45 67 або name@email.com" />
       </div>
       <div class="field">
-        <label>РљРѕРјРµРЅС‚Р°СЂ (РЅРµРѕР±РѕРІ'СЏР·РєРѕРІРѕ)</label>
-        <textarea name="qo_comment" rows="3" placeholder="РќР°РїСЂРёРєР»Р°Рґ: С‚РµРјР°, СЃРїРµС†С–Р°Р»СЊРЅС–СЃС‚СЊ, СѓРЅС–РІРµСЂСЃРёС‚РµС‚, С‚РµСЂРјС–РЅ Р·РґР°С‡С–. РњРµС‚РѕРґРёС‡РєСѓ РјРѕР¶РЅР° РЅР°РґС–СЃР»Р°С‚Рё РІ Telegram"></textarea>
+        <label>Коментар (необов'язково)</label>
+        <textarea name="qo_comment" rows="3" placeholder="Наприклад: тема, спеціальність, університет, термін здачі. Методичку можна надіслати в Telegram"></textarea>
       </div>
       <label class="consent">
         <input type="checkbox" name="consent" class="consent-check" data-qo-consent required />
-        <span>РџРѕРіРѕРґР¶СѓСЋСЃСЊ Р· <a href="/polityka-konfidentsiinosti/" target="_blank">РїРѕР»С–С‚РёРєРѕСЋ РєРѕРЅС„С–РґРµРЅС†С–Р№РЅРѕСЃС‚С–</a></span>
+        <span>Погоджуюсь з <a href="/polityka-konfidentsiinosti/" target="_blank">політикою конфіденційності</a></span>
       </label>
       <div class="qo-actions">
-        <button type="button" class="btn btn--ghost" data-back>в†ђ РќР°Р·Р°Рґ</button>
-        <button type="submit" class="btn">Р’С–РґРїСЂР°РІРёС‚Рё Р·Р°СЏРІРєСѓ</button>
+        <button type="button" class="btn btn--ghost" data-back>← Назад</button>
+        <button type="submit" class="btn">Відправити заявку</button>
       </div>
       <p class="form-status" data-qo-status aria-live="polite"></p>
     </div>
@@ -121,7 +121,7 @@ const pricingJson = JSON.stringify(pricing);
     let price = Math.round(base * specialtyCoef * d.k);
     return price;
   }
-  function fmt(n){ return n.toLocaleString('uk-UA') + '\u00a0РіСЂРЅ'; }
+  function fmt(n){ return n.toLocaleString('uk-UA') + '\u00a0грн'; }
 
   document.querySelectorAll('[data-qo]').forEach((form) => {
     const f = form;
@@ -151,7 +151,7 @@ const pricingJson = JSON.stringify(pricing);
         if (pagesBox) pagesBox.style.display = 'none';
         if (deadlineField) deadlineField.style.display = 'none';
         if (pagesRange) pagesRange.value = '0';
-        if (pagesValue) pagesValue.textContent = 'вЂ”';
+        if (pagesValue) pagesValue.textContent = '—';
       } else {
         if (pagesBox) pagesBox.style.display = w.hasPages ? '' : 'none';
         if (deadlineField) deadlineField.style.display = '';
@@ -160,7 +160,7 @@ const pricingJson = JSON.stringify(pricing);
           updatePagesValue();
         } else {
           if (pagesRange) pagesRange.value = '0';
-          if (pagesValue) pagesValue.textContent = 'вЂ”';
+          if (pagesValue) pagesValue.textContent = '—';
         }
       }
       updateSliderFill();
@@ -169,7 +169,7 @@ const pricingJson = JSON.stringify(pricing);
     function updatePagesValue() {
       if (!pagesRange || !pagesValue) return;
       const v = parseInt(pagesRange.value, 10) || 60;
-      pagesValue.textContent = v === 0 ? 'вЂ”' : v + ' СЃС‚РѕСЂ.';
+      pagesValue.textContent = v === 0 ? '—' : v + ' стор.';
     }
     function updateSliderFill() {
       if (!pagesRange) return;
@@ -194,15 +194,15 @@ const pricingJson = JSON.stringify(pricing);
        const di = getDeadlineIdx();
       if (!workTypeObj.hasCalculator) {
         const basePrice = workTypeObj.basePrice || workTypeObj.minPrice;
-        priceEl.textContent = 'РІС–Рґ ' + fmt(basePrice);
+        priceEl.textContent = 'від ' + fmt(basePrice);
         updatePagesValue();
         const payload = { workType: w, specialty, pagesFrom: pagesRange ? pagesRange.value : '0', pagesTo: pagesRange ? pagesRange.value : '0', topic: (f.querySelector('input[name="topic"]'))?.value || '', deadline: null, price: basePrice };
         hiddenCalc.value = JSON.stringify(payload);
         return;
       }
        const p = calc(w, specialty, pages, di);
-      if (p === null) { priceEl.textContent = 'РЈС‚РѕС‡РЅС–С‚СЊ РІР°СЂС‚С–СЃС‚СЊ Сѓ РјРµРЅРµРґР¶РµСЂР°'; }
-      else { priceEl.textContent = 'РІС–Рґ ' + fmt(p); }
+      if (p === null) { priceEl.textContent = 'Уточніть вартість у менеджера'; }
+      else { priceEl.textContent = 'від ' + fmt(p); }
       updatePagesValue();
       // payload
        const payload = { workType: w, specialty, pagesFrom: pagesRange ? pagesRange.value : '0', pagesTo: pagesRange ? pagesRange.value : '0', topic: (f.querySelector('input[name="topic"]'))?.value || '', deadline: pricing.deadline[di].id, price: p };
