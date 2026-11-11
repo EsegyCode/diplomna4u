@@ -1,16 +1,16 @@
----
+﻿---
 import { site, nav } from '@/data/site';
 const viber = (site as any).viber as { url: string; label?: string } | null;
 const telegram = site.telegram;
 ---
 <div class="sticky-contact" id="stickyContact">
-  <button class="sticky-btn" id="stickyToggle" aria-label="Зв’язатися з нами" aria-expanded="false">
+  <button class="sticky-btn" id="stickyToggle" aria-label="Р—РІвЂ™СЏР·Р°С‚РёСЃСЏ Р· РЅР°РјРё" aria-expanded="false">
     <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
   </button>
   <div class="sticky-panel" id="stickyPanel" hidden>
     <div class="sticky-panel-head">
-      <strong>Зв’язок з нами</strong>
-      <button id="stickyClose" aria-label="Закрити">×</button>
+      <strong>Р—РІвЂ™СЏР·РѕРє Р· РЅР°РјРё</strong>
+      <button id="stickyClose" aria-label="Р—Р°РєСЂРёС‚Рё">Г—</button>
     </div>
     {telegram && (
       <a class="btn" href={telegram.url} target="_blank" rel="noopener noreferrer" style="margin-bottom:0.5rem">{telegram.label}</a>
@@ -20,31 +20,32 @@ const telegram = site.telegram;
     )}
     <form class="mini-form" id="stickyForm" data-lead-form novalidate>
       <input type="hidden" name="source" value="sticky-widget" />
+      <input type="text" name="hp_trap_x7" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" />
       <div class="field">
-        <label class="sr-only" for="sticky-name">Ім’я *</label>
-        <input id="sticky-name" type="text" name="name" required minlength="2" autocomplete="name" placeholder="Наприклад, Олена" />
+        <label class="sr-only" for="sticky-name">Р†РјвЂ™СЏ *</label>
+        <input id="sticky-name" type="text" name="name" required minlength="2" autocomplete="name" placeholder="РќР°РїСЂРёРєР»Р°Рґ, РћР»РµРЅР°" />
         <span class="field-error" data-err="name"></span>
       </div>
       <div class="field">
-        <label class="sr-only" for="sticky-contact">Telegram, телефон або email *</label>
-        <input id="sticky-contact" type="text" name="contact" required autocomplete="tel" placeholder="@username, +380 50 123 45 67 або name@email.com" />
+        <label class="sr-only" for="sticky-contact">Telegram, С‚РµР»РµС„РѕРЅ Р°Р±Рѕ email *</label>
+        <input id="sticky-contact" type="text" name="contact" required autocomplete="tel" placeholder="@username, +380 50 123 45 67 Р°Р±Рѕ name@email.com" />
         <span class="field-error" data-err="contact"></span>
       </div>
       <div class="field">
-        <label class="sr-only" for="sticky-workType">Тип роботи</label>
+        <label class="sr-only" for="sticky-workType">РўРёРї СЂРѕР±РѕС‚Рё</label>
         <select id="sticky-workType" name="work_type" required>
-          <option value="" disabled selected>Оберіть тип роботи</option>
+          <option value="" disabled selected>РћР±РµСЂС–С‚СЊ С‚РёРї СЂРѕР±РѕС‚Рё</option>
           {nav.services.map(s => <option value={s.label}>{s.label}</option>)}
         </select>
         <span class="field-error" data-err="work_type"></span>
       </div>
       <label class="consent">
         <input type="checkbox" name="consent" required />
-        Погоджуюсь з <a href="/polityka-konfidentsiinosti/" target="_blank" rel="noopener">політикою конфіденційності</a>.
+        РџРѕРіРѕРґР¶СѓСЋСЃСЊ Р· <a href="/polityka-konfidentsiinosti/" target="_blank" rel="noopener">РїРѕР»С–С‚РёРєРѕСЋ РєРѕРЅС„С–РґРµРЅС†С–Р№РЅРѕСЃС‚С–</a>.
       </label>
-      <p class="consent-hint" data-consent-hint aria-live="polite">Постав галочку згоди, щоб надіслати заявку.</p>
+      <p class="consent-hint" data-consent-hint aria-live="polite">РџРѕСЃС‚Р°РІ РіР°Р»РѕС‡РєСѓ Р·РіРѕРґРё, С‰РѕР± РЅР°РґС–СЃР»Р°С‚Рё Р·Р°СЏРІРєСѓ.</p>
       <span class="field-error" data-err="consent"></span>
-      <button type="submit" class="btn" data-label="Залишити заявку">Залишити заявку</button>
+      <button type="submit" class="btn" data-label="Р—Р°Р»РёС€РёС‚Рё Р·Р°СЏРІРєСѓ">Р—Р°Р»РёС€РёС‚Рё Р·Р°СЏРІРєСѓ</button>
       <p class="form-status" role="status" aria-live="polite"></p>
     </form>
   </div>
@@ -56,7 +57,7 @@ const telegram = site.telegram;
       </a>
     )}
     {viber && <a href={viber.url} target="_blank" rel="noopener noreferrer">Viber</a>}
-    <button id="stickyMobileOpen">Заявка</button>
+    <button id="stickyMobileOpen">Р—Р°СЏРІРєР°</button>
   </div>
 </div>
 
@@ -65,7 +66,7 @@ const telegram = site.telegram;
   const panel = document.getElementById('stickyPanel');
   const close = document.getElementById('stickyClose');
   const mobileOpen = document.getElementById('stickyMobileOpen');
-  function openPanel() { if (panel) { panel.hidden = false; toggle?.setAttribute('aria-expanded', 'true'); } }
+  function openPanel() { if (panel) { panel.hidden = false; toggle?.setAttribute('aria-expanded', 'true'); setTimeout(function(){ var f = document.querySelector('#stickyForm input[name="name"]'); if (f) f.focus(); }, 0); } }
   function closePanel() { if (panel) { panel.hidden = true; toggle?.setAttribute('aria-expanded', 'false'); } }
   toggle?.addEventListener('click', () => panel?.hidden ? openPanel() : closePanel());
   close?.addEventListener('click', closePanel);

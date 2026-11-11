@@ -1,0 +1,42 @@
+﻿
+строка:4 знак:50
++ ... diplomna4u\diplomna4u; & "E:\NodeJs/npx.cmd" astro check 2>&1 | Out-F ...
++                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+<--- Last few GCs --->
+
+[20340:000001F43C68F000]     2970 ms: Scavenge 83.8 (93.4) -> 78.6 (94.1) MB, pooled: 0 MB, 1.17 / 0.00 ms  (average mu
+ = 0.952, current mu = 0.645) task; 
+[20340:000001F43C68F000]     3251 ms: Scavenge 84.3 (94.8) -> 80.0 (96.4) MB, pooled: 5 MB, 250.33 / 0.01 ms  (average 
+mu = 0.952, current mu = 0.645) task; 
+[20340:000001F43C68F000]     3567 ms: Scavenge 87.1 (96.4) -> 81.7 (105.6) MB, pooled: 0 MB, 1.07 / 0.01 ms  (average m
+u = 0.952, current mu = 0.645) allocation failure; 
+
+FATAL ERROR: Committing semi space failed. Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF7A08F0CCF 
+ 2: 00007FF7A153F697 
+ 3: 00007FF7A13400C7 
+ 4: 00007FF7A12D8AEB 
+ 5: 00007FF7A12B053E 
+ 6: 00007FF7A1342B62 
+ 7: 00007FF7A1341B17 
+ 8: 00007FF7A1352A42 
+ 9: 00007FF7A135256B 
+10: 00007FF7A27DE86D 
+11: 00007FF7A133DB90 
+12: 00007FF7A12EE542 
+13: 00007FF7A0842B5A 
+14: 00007FF7A0841340 
+15: 00007FF7A15A583B 
+16: 00007FF7A15A53AF 
+17: 00007FF7A0A0876F 
+18: 00007FF7A0881F46 
+19: 00007FF7A09517BC 
+20: 00007FF7A196DF02 
+21: 00007FF7A27E7F74 
+22: 00007FFA1542E957 
+23: 00007FFA175C427C 

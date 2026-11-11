@@ -73,6 +73,18 @@ function normalizeContact(raw) {
   return null;
 }
 __name(normalizeContact, "normalizeContact");
+function isContactLikeValue(value, contactRaw, nameRaw) {
+  const v = (value || "").trim();
+  if (!v) return false;
+  if (contactRaw && v.toLowerCase() === contactRaw.trim().toLowerCase()) return true;
+  if (v.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return true;
+  const digits = v.replace(/[^\d]/g, "");
+  if (digits.length >= 9 && digits.length <= 15) return true;
+  if (/^@?[A-Za-z][A-Za-z0-9_]{4,31}$/.test(v)) return true;
+  if (v.length >= 2 && v.length <= 80 && /^[\p{L}\s\u0027\-]+$/u.test(v)) return true;
+  return false;
+}
+__name(isContactLikeValue, "isContactLikeValue");
 function countUrls(text) {
   return (text.match(/https?:\/\/[^\s]+/gi) || []).length;
 }
@@ -94,23 +106,23 @@ function kyivTime() {
 __name(kyivTime, "kyivTime");
 function buildMessage(data, sourceLabel) {
   const lines = [];
-  lines.push(`\u{1F195} <b>\u041D\u043E\u0432\u0430 \u0437\u0430\u044F\u0432\u043A\u0430</b> \xB7 ${esc(sourceLabel)}`);
+  lines.push(`\u0440\u045F\u2020\u2022 <b>\u0420\u045C\u0420\u0455\u0420\u0406\u0420\xB0 \u0420\xB7\u0420\xB0\u0421\u040F\u0420\u0406\u0420\u0454\u0420\xB0</b> \u0412\xB7 ${esc(sourceLabel)}`);
   lines.push("");
-  if (data.name) lines.push(`\u{1F464} <b>\u0406\u043C\u02BC\u044F:</b> ${esc(String(data.name))}`);
-  if (data.contact) lines.push(`\u{1F4F2} <b>\u041A\u043E\u043D\u0442\u0430\u043A\u0442 (${esc(String(data.contactType))}):</b> ${esc(String(data.contact))}`);
-  if (data.workType) lines.push(`\u{1F393} <b>\u0422\u0438\u043F \u0440\u043E\u0431\u043E\u0442\u0438:</b> ${esc(String(data.workType))}`);
-  if (data.direction) lines.push(`\u{1F9ED} <b>\u041D\u0430\u043F\u0440\u044F\u043C:</b> ${esc(String(data.direction))}`);
-  if (data.topic) lines.push(`\u{1F4DD} <b>\u0422\u0435\u043C\u0430:</b> ${esc(String(data.topic)).slice(0, 4096)}`);
-  if (data.pages) lines.push(`\u{1F4C4} <b>\u041E\u0431\u0441\u044F\u0433:</b> ${esc(String(data.pages))} \u0441\u0442\u043E\u0440.`);
-  if (data.deadline) lines.push(`\u23F1 <b>\u0422\u0435\u0440\u043C\u0456\u043D:</b> ${esc(String(data.deadline))}`);
-  if (data.estimatedPrice) lines.push(`\u{1F4B0} <b>\u041E\u0440\u0456\u0454\u043D\u0442\u043E\u0432\u043D\u0430 \u0432\u0430\u0440\u0442\u0456\u0441\u0442\u044C:</b> ${esc(String(data.estimatedPrice))}`);
-  if (data.comment) lines.push(`\u{1F4AC} <b>\u041A\u043E\u043C\u0435\u043D\u0442\u0430\u0440:</b> ${esc(String(data.comment)).slice(0, 4096)}`);
-  if (data.pageUrl) lines.push(`\u{1F517} <b>\u0421\u0442\u043E\u0440\u0456\u043D\u043A\u0430:</b> ${esc(String(data.pageUrl))}`);
+  if (data.name) lines.push(`\u0440\u045F\u2018\xA4 <b>\u0420\u2020\u0420\u0458\u041A\u0458\u0421\u040F:</b> ${esc(String(data.name))}`);
+  if (data.contact) lines.push(`\u0440\u045F\u201C\u0406 <b>\u0420\u0459\u0420\u0455\u0420\u0405\u0421\u201A\u0420\xB0\u0420\u0454\u0421\u201A (${esc(String(data.contactType))}):</b> ${esc(String(data.contact))}`);
+  if (data.workType) lines.push(`\u0440\u045F\u040B\u201C <b>\u0420\u045E\u0420\u0451\u0420\u0457 \u0421\u0402\u0420\u0455\u0420\xB1\u0420\u0455\u0421\u201A\u0420\u0451:</b> ${esc(String(data.workType))}`);
+  if (data.direction) lines.push(`\u0440\u045F\xA7\xAD <b>\u0420\u045C\u0420\xB0\u0420\u0457\u0421\u0402\u0421\u040F\u0420\u0458:</b> ${esc(String(data.direction))}`);
+  if (data.topic) lines.push(`\u0440\u045F\u201C\u045C <b>\u0420\u045E\u0420\xB5\u0420\u0458\u0420\xB0:</b> ${esc(String(data.topic)).slice(0, 4096)}`);
+  if (data.pages) lines.push(`\u0440\u045F\u201C\u201E <b>\u0420\u045B\u0420\xB1\u0421\u0403\u0421\u040F\u0420\u0456:</b> ${esc(String(data.pages))} \u0421\u0403\u0421\u201A\u0420\u0455\u0421\u0402.`);
+  if (data.deadline) lines.push(`\u0432\u040F\xB1 <b>\u0420\u045E\u0420\xB5\u0421\u0402\u0420\u0458\u0421\u2013\u0420\u0405:</b> ${esc(String(data.deadline))}`);
+  if (data.estimatedPrice) lines.push(`\u0440\u045F\u2019\xB0 <b>\u0420\u045B\u0421\u0402\u0421\u2013\u0421\u201D\u0420\u0405\u0421\u201A\u0420\u0455\u0420\u0406\u0420\u0405\u0420\xB0 \u0420\u0406\u0420\xB0\u0421\u0402\u0421\u201A\u0421\u2013\u0421\u0403\u0421\u201A\u0421\u040A:</b> ${esc(String(data.estimatedPrice))}`);
+  if (data.comment) lines.push(`\u0440\u045F\u2019\xAC <b>\u0420\u0459\u0420\u0455\u0420\u0458\u0420\xB5\u0420\u0405\u0421\u201A\u0420\xB0\u0421\u0402:</b> ${esc(String(data.comment)).slice(0, 4096)}`);
+  if (data.pageUrl) lines.push(`\u0440\u045F\u201D\u2014 <b>\u0420\u040E\u0421\u201A\u0420\u0455\u0421\u0402\u0421\u2013\u0420\u0405\u0420\u0454\u0420\xB0:</b> ${esc(String(data.pageUrl))}`);
   if (data.utm && typeof data.utm === "object") {
     const utm = Object.entries(data.utm).filter(([, v]) => v).map(([k, v]) => `${k}=${v}`).join(", ");
-    if (utm) lines.push(`\u{1F4C8} <b>UTM:</b> ${esc(utm)}`);
+    if (utm) lines.push(`\u0440\u045F\u201C\u20AC <b>UTM:</b> ${esc(utm)}`);
   }
-  lines.push(`\u{1F552} ${kyivTime()} (\u041A\u0438\u0457\u0432)`);
+  lines.push(`\u0440\u045F\u2022\u2019 ${kyivTime()} (\u0420\u0459\u0420\u0451\u0421\u2014\u0420\u0406)`);
   let text = lines.join("\n");
   if (text.length > 4096) text = text.slice(0, 4093) + "...";
   return text;
@@ -190,11 +202,11 @@ async function verifyTurnstile(env, token, ip) {
 }
 __name(verifyTurnstile, "verifyTurnstile");
 var SOURCE_LABELS = {
-  contact: "\u0424\u043E\u0440\u043C\u0430 \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456",
-  "quick-order": "\u041A\u0430\u043B\u044C\u043A\u0443\u043B\u044F\u0442\u043E\u0440",
-  "sticky-contact": "\u041B\u0438\u043F\u043A\u0430 \u0444\u043E\u0440\u043C\u0430",
-  "sticky-widget": "\u0412\u0456\u0434\u0436\u0435\u0442 \xAB\u0417\u0432\u2019\u044F\u0437\u043E\u043A \u0437 \u043D\u0430\u043C\u0438\xBB",
-  "lead": "\u0424\u043E\u0440\u043C\u0430"
+  contact: "\u0420\xA4\u0420\u0455\u0421\u0402\u0420\u0458\u0420\xB0 \u0420\u0405\u0420\xB0 \u0421\u0403\u0421\u201A\u0420\u0455\u0421\u0402\u0421\u2013\u0420\u0405\u0421\u2020\u0421\u2013",
+  "quick-order": "\u0420\u0459\u0420\xB0\u0420\xBB\u0421\u040A\u0420\u0454\u0421\u0453\u0420\xBB\u0421\u040F\u0421\u201A\u0420\u0455\u0421\u0402",
+  "sticky-contact": "\u0420\u203A\u0420\u0451\u0420\u0457\u0420\u0454\u0420\xB0 \u0421\u201E\u0420\u0455\u0421\u0402\u0420\u0458\u0420\xB0",
+  "sticky-widget": "\u0420\u2019\u0421\u2013\u0420\u0491\u0420\xB6\u0420\xB5\u0421\u201A \u0412\xAB\u0420\u2014\u0420\u0406\u0432\u0402\u2122\u0421\u040F\u0420\xB7\u0420\u0455\u0420\u0454 \u0420\xB7 \u0420\u0405\u0420\xB0\u0420\u0458\u0420\u0451\u0412\xBB",
+  "lead": "\u0420\xA4\u0420\u0455\u0421\u0402\u0420\u0458\u0420\xB0"
 };
 async function handlePost(context) {
   const { request, env } = context;
@@ -224,25 +236,44 @@ async function handlePost(context) {
   try {
     data = JSON.parse(bodyText || "{}");
   } catch {
-    return json({ ok: false, code: "validation", fields: { contact: "\u041D\u0435\u0432\u0456\u0440\u043D\u0438\u0439 \u0444\u043E\u0440\u043C\u0430\u0442 \u0434\u0430\u043D\u0438\u0445" } }, 400);
+    return json({ ok: false, code: "validation", fields: { contact: "\u0420\u045C\u0420\xB5\u0420\u0406\u0421\u2013\u0421\u0402\u0420\u0405\u0420\u0451\u0420\u2116 \u0421\u201E\u0420\u0455\u0421\u0402\u0420\u0458\u0420\xB0\u0421\u201A \u0420\u0491\u0420\xB0\u0420\u0405\u0420\u0451\u0421\u2026" } }, 400);
   }
   if (typeof data !== "object" || data === null) {
     return json({ ok: false, code: "validation", fields: {} }, 400);
   }
-  const honey = cleanString(data.website, 200);
-  if (honey) {
-    console.log("lead_drop", JSON.stringify({ reason: "honeypot", source: cleanString(data.source, 40), contact: cleanString(data.contact, 254), startedAt: data.formStartedAt, time: (/* @__PURE__ */ new Date()).toISOString() }));
-    return json({ ok: true }, 200);
-  }
+  const earlySource = cleanString(data.source, 40) || "lead";
+  const earlyContactRaw = cleanString(data.contact, 254);
+  const earlyNameRaw = cleanString(data.name, 80);
   const started = Number(data.formStartedAt);
+  const earlyAge = Number.isFinite(started) ? Date.now() - started : null;
+  const timeAdequate = earlyAge === null || earlyAge >= 2500 && earlyAge <= 24 * 60 * 60 * 1e3;
+  const newTrap = cleanString(data.hp_trap_x7, 200);
+  let suspiciousHoneypot = false;
+  const hasHoneypotValue = !!newTrap;
+  if (newTrap) {
+    const autofillLike = isContactLikeValue(newTrap, earlyContactRaw);
+    const normalSignals = !!normalizeContact(earlyContactRaw) && data.consent === true && timeAdequate;
+    if (autofillLike || normalSignals) {
+      suspiciousHoneypot = true;
+    } else {
+      console.log("lead_drop", JSON.stringify({ source: earlySource, reason: "honeypot", contactType: normalizeContact(earlyContactRaw)?.type || "unknown", hasHoneypotValue, time: (/* @__PURE__ */ new Date()).toISOString() }));
+      return json({ ok: true }, 200);
+    }
+  }
+  const legacyTrap = cleanString(data.website, 200);
+  if (legacyTrap && !isContactLikeValue(legacyTrap, earlyContactRaw)) {
+    suspiciousHoneypot = true;
+  }
   if (started && Number.isFinite(started)) {
     const age = Date.now() - started;
     if (age < 2500) {
-      console.log("lead_drop", JSON.stringify({ reason: "time_trap_fast", source: cleanString(data.source, 40), contact: cleanString(data.contact, 254), ageMs: age, thresholdMs: 2500, time: (/* @__PURE__ */ new Date()).toISOString() }));
-      return json({ ok: true }, 200);
+      if (!(suspiciousHoneypot && normalizeContact(earlyContactRaw) && data.consent === true)) {
+        console.log("lead_drop", JSON.stringify({ reason: "time_trap_fast", source: earlySource, contact: earlyContactRaw, ageMs: age, thresholdMs: 2500, time: (/* @__PURE__ */ new Date()).toISOString() }));
+        return json({ ok: true }, 200);
+      }
     }
     if (age > 24 * 60 * 60 * 1e3) {
-      console.log("lead_drop", JSON.stringify({ reason: "time_trap_stale", source: cleanString(data.source, 40), contact: cleanString(data.contact, 254), ageMs: age, thresholdMs: 864e5, time: (/* @__PURE__ */ new Date()).toISOString() }));
+      console.log("lead_drop", JSON.stringify({ reason: "time_trap_stale", source: earlySource, contact: earlyContactRaw, ageMs: age, thresholdMs: 864e5, time: (/* @__PURE__ */ new Date()).toISOString() }));
       return json({ ok: false, code: "validation", fields: {} }, 400);
     }
   }
@@ -250,7 +281,7 @@ async function handlePost(context) {
   const turnstileToken = cleanString(data["cf-turnstile-response"], 2048);
   const turnstileOk = await verifyTurnstile(rawEnv, turnstileToken, ip);
   if (!turnstileOk) {
-    console.log("lead_drop", JSON.stringify({ reason: "turnstile_failed", source, ip, time: (/* @__PURE__ */ new Date()).toISOString() }));
+    console.log("lead_drop", JSON.stringify({ reason: "turnstile_failed", source: earlySource, ip, time: (/* @__PURE__ */ new Date()).toISOString() }));
     return json({ ok: false, code: "spam", fields: {} }, 400);
   }
   const source = cleanString(data.source, 40) || "lead";
@@ -273,9 +304,9 @@ async function handlePost(context) {
   if (!utm.utm_source) utm.utm_source = cleanString(utmRaw.source, 80);
   const contact = normalizeContact(rawContact);
   const fields = {};
-  if (name.length < 2) fields.name = "\u0412\u043A\u0430\u0436\u0438 \u0456\u043C\u02BC\u044F";
-  if (!contact) fields.contact = "\u0412\u043A\u0430\u0436\u0438 Telegram, \u0442\u0435\u043B\u0435\u0444\u043E\u043D \u0430\u0431\u043E email";
-  if (data.consent !== true) fields.consent = "\u041F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0438 \u0437\u0433\u043E\u0434\u0443 \u043D\u0430 \u043E\u0431\u0440\u043E\u0431\u043A\u0443 \u0434\u0430\u043D\u0438\u0445";
+  if (name.length < 2) fields.name = "\u0420\u2019\u0420\u0454\u0420\xB0\u0420\xB6\u0420\u0451 \u0421\u2013\u0420\u0458\u041A\u0458\u0421\u040F";
+  if (!contact) fields.contact = "\u0420\u2019\u0420\u0454\u0420\xB0\u0420\xB6\u0420\u0451 Telegram, \u0421\u201A\u0420\xB5\u0420\xBB\u0420\xB5\u0421\u201E\u0420\u0455\u0420\u0405 \u0420\xB0\u0420\xB1\u0420\u0455 email";
+  if (data.consent !== true) fields.consent = "\u0420\u045F\u0421\u2013\u0420\u0491\u0421\u201A\u0420\u0406\u0420\xB5\u0421\u0402\u0420\u0491\u0420\u0451 \u0420\xB7\u0420\u0456\u0420\u0455\u0420\u0491\u0421\u0453 \u0420\u0405\u0420\xB0 \u0420\u0455\u0420\xB1\u0421\u0402\u0420\u0455\u0420\xB1\u0420\u0454\u0421\u0453 \u0420\u0491\u0420\xB0\u0420\u0405\u0420\u0451\u0421\u2026";
   if (Object.keys(fields).length > 0) {
     console.log("lead_drop", JSON.stringify({ reason: "validation_failed", source, fields, time: (/* @__PURE__ */ new Date()).toISOString() }));
     return json({ ok: false, code: "validation", fields }, 400);
@@ -287,7 +318,7 @@ async function handlePost(context) {
     return json({ ok: true }, 200);
   }
   const consent = data.consent === true;
-  const sourceLabel = SOURCE_LABELS[source] || "\u0424\u043E\u0440\u043C\u0430";
+  const sourceLabel = SOURCE_LABELS[source] || "\u0420\xA4\u0420\u0455\u0421\u0402\u0420\u0458\u0420\xB0";
   const payload = {
     name,
     contact: contact.value,
@@ -302,16 +333,16 @@ async function handlePost(context) {
     pageUrl,
     utm
   };
-  const text = buildMessage(payload, sourceLabel);
+  const text = (suspiciousHoneypot ? "\u26A0\uFE0F \u043C\u043E\u0436\u043B\u0438\u0432\u0438\u0439 \u0441\u043F\u0430\u043C\n" : "") + buildMessage(payload, sourceLabel);
   const keyboard = contact.type === "telegram" ? {
-    inline_keyboard: [[{ text: "\u0412\u0456\u0434\u043F\u043E\u0432\u0456\u0441\u0442\u0438 \u0432 Telegram", url: `https://t.me/${contact.value.replace(/^@/, "")}` }]]
+    inline_keyboard: [[{ text: "\u0420\u2019\u0421\u2013\u0420\u0491\u0420\u0457\u0420\u0455\u0420\u0406\u0421\u2013\u0421\u0403\u0421\u201A\u0420\u0451 \u0420\u0406 Telegram", url: `https://t.me/${contact.value.replace(/^@/, "")}` }]]
   } : void 0;
   if (rawEnv.DRY_RUN === "1") {
     return json({ ok: true, dryRun: true }, 200);
   }
   const result = await attemptSend(rawEnv, text, keyboard);
   if (result.ok) {
-    console.log("lead_accepted", JSON.stringify({ source, contactType: contact.type, contact, time: (/* @__PURE__ */ new Date()).toISOString() }));
+    console.log("lead_accepted", JSON.stringify({ source, contactType: contact.type, contact, spam: suspiciousHoneypot, time: (/* @__PURE__ */ new Date()).toISOString() }));
     return json({ ok: true }, 200);
   }
   console.error("telegram_error", result.status, result.description);
@@ -863,7 +894,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-VsylJt/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-4nfbTv/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -895,7 +926,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-VsylJt/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-4nfbTv/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

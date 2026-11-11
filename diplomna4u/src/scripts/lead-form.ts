@@ -1,4 +1,4 @@
-type ContactResult = { type: string; value: string } | null;
+﻿type ContactResult = { type: string; value: string } | null;
 
 function clean(v: unknown): string {
   if (typeof v !== 'string') return '';
@@ -134,7 +134,8 @@ function collectPayload(form: HTMLFormElement): { ok: boolean; payload?: Record<
     comment,
     pageUrl: location.pathname,
     utm: collectUtm(),
-    formStartedAt: Number(form.querySelector<HTMLInputElement>('input[name="formStartedAt"]')?.value || Date.now()),
+    formStartedAt: (form.querySelector<HTMLInputElement>('input[name="formStartedAt"]')?.value || '').trim() ? Number(form.querySelector<HTMLInputElement>('input[name="formStartedAt"]')!.value) : undefined,
+    hp_trap_x7: form.querySelector<HTMLInputElement>('input[name="hp_trap_x7"]')?.value || form.querySelector<HTMLInputElement>('input[name="hp"]')?.value || '',
     website: form.querySelector<HTMLInputElement>('input[name="website"]')?.value || '',
     consent,
   };
@@ -142,13 +143,13 @@ function collectPayload(form: HTMLFormElement): { ok: boolean; payload?: Record<
   let firstInvalid = '';
   let ok = true;
   if (nameField.length < 2) {
-    setError(form, 'name', 'Вкажи імʼя');
+    setError(form, 'name', 'Р’РєР°Р¶Рё С–РјКјСЏ');
     ok = false;
     if (!firstInvalid) firstInvalid = 'name';
   }
   const contactRes = validateContact(contactRaw);
   if (!contactRes) {
-    setError(form, 'contact', 'Вкажи Telegram, телефон або email');
+    setError(form, 'contact', 'Р’РєР°Р¶Рё Telegram, С‚РµР»РµС„РѕРЅ Р°Р±Рѕ email');
     ok = false;
     if (!firstInvalid) firstInvalid = 'contact';
   } else {
@@ -158,13 +159,13 @@ function collectPayload(form: HTMLFormElement): { ok: boolean; payload?: Record<
   const hasWorkTypeField = !!form.querySelector('select[name="work_type"], select[name="workType"], [data-qo-worktype]');
   const resolvedWorkType = String(payload.workType || '');
   if (hasWorkTypeField && !resolvedWorkType.trim()) {
-    setError(form, 'work_type', 'Оберіть тип роботи');
+    setError(form, 'work_type', 'РћР±РµСЂС–С‚СЊ С‚РёРї СЂРѕР±РѕС‚Рё');
     ok = false;
     if (!firstInvalid) firstInvalid = 'work_type';
   }
 
   if (!consent) {
-    setError(form, 'consent', 'Підтверди згоду на обробку даних');
+    setError(form, 'consent', 'РџС–РґС‚РІРµСЂРґРё Р·РіРѕРґСѓ РЅР° РѕР±СЂРѕР±РєСѓ РґР°РЅРёС…');
     ok = false;
     if (!firstInvalid) firstInvalid = 'consent';
   }
@@ -260,13 +261,13 @@ function syncConsent(form: HTMLFormElement) {
   }
   if (hint) {
     if (!checked) {
-      hint.textContent = 'Постав галочку згоди, щоб надіслати заявку.';
+      hint.textContent = 'РџРѕСЃС‚Р°РІ РіР°Р»РѕС‡РєСѓ Р·РіРѕРґРё, С‰РѕР± РЅР°РґС–СЃР»Р°С‚Рё Р·Р°СЏРІРєСѓ.';
       hint.style.display = '';
     } else if (cd) {
       const sec = cooldownRemainingSec();
       hint.textContent = sec > 0
-        ? `Повторно можна надіслати через ${sec} с.`
-        : 'Зачекай перед наступною заявкою.';
+        ? `РџРѕРІС‚РѕСЂРЅРѕ РјРѕР¶РЅР° РЅР°РґС–СЃР»Р°С‚Рё С‡РµСЂРµР· ${sec} СЃ.`
+        : 'Р—Р°С‡РµРєР°Р№ РїРµСЂРµРґ РЅР°СЃС‚СѓРїРЅРѕСЋ Р·Р°СЏРІРєРѕСЋ.';
       hint.style.display = '';
     } else {
       hint.style.display = 'none';
@@ -296,12 +297,12 @@ async function submitForm(form: HTMLFormElement) {
 
   if (btn) {
     if (!btn.dataset.originalLabel) {
-      btn.dataset.originalLabel = btn.textContent?.trim() || btn.dataset.label || 'Відправити заявку';
+      btn.dataset.originalLabel = btn.textContent?.trim() || btn.dataset.label || 'Р’С–РґРїСЂР°РІРёС‚Рё Р·Р°СЏРІРєСѓ';
     }
     btn.disabled = true;
     btn.setAttribute('aria-disabled', 'true');
     btn.setAttribute('aria-busy', 'true');
-    btn.textContent = 'Надсилаємо…';
+    btn.textContent = 'РќР°РґСЃРёР»Р°С”РјРѕвЂ¦';
   }
   status.textContent = '';
 
@@ -317,14 +318,14 @@ async function submitForm(form: HTMLFormElement) {
     clearTimeout(timer);
     const json = await res.json().catch(() => ({}));
     if (res.status === 429) {
-      status.textContent = 'Забагато спроб, спробуйте пізніше';
+      status.textContent = 'Р—Р°Р±Р°РіР°С‚Рѕ СЃРїСЂРѕР±, СЃРїСЂРѕР±СѓР№С‚Рµ РїС–Р·РЅС–С€Рµ';
       setCooldown(parseRetryAfter(res));
     } else if (res.ok && json.ok) {
-      status.textContent = 'Дякуємо! Ми зв’яжемося з тобою найближчим часом.';
+      status.textContent = 'Р”СЏРєСѓС”РјРѕ! РњРё Р·РІвЂ™СЏР¶РµРјРѕСЃСЏ Р· С‚РѕР±РѕСЋ РЅР°Р№Р±Р»РёР¶С‡РёРј С‡Р°СЃРѕРј.';
       setCooldown();
       form.reset();
       const ts = form.querySelector<HTMLInputElement>('input[name="formStartedAt"]');
-      if (ts) ts.value = String(Date.now());
+      if (ts) ts.value = '';
       const consentHint = form.querySelector<HTMLElement>('[data-consent-hint]');
       if (consentHint) consentHint.style.display = '';
       if ((form as any).dataset.redirect === 'thanks') {
@@ -338,19 +339,19 @@ async function submitForm(form: HTMLFormElement) {
         }
       }
       if (res.status >= 500) {
-        status.textContent = 'Не вдалося надіслати заявку. Спробуй ще раз або напиши нам у Telegram.';
+        status.textContent = 'РќРµ РІРґР°Р»РѕСЃСЏ РЅР°РґС–СЃР»Р°С‚Рё Р·Р°СЏРІРєСѓ. РЎРїСЂРѕР±СѓР№ С‰Рµ СЂР°Р· Р°Р±Рѕ РЅР°РїРёС€Рё РЅР°Рј Сѓ Telegram.';
       } else {
-        status.textContent = 'Перевір заповнення полів.';
+        status.textContent = 'РџРµСЂРµРІС–СЂ Р·Р°РїРѕРІРЅРµРЅРЅСЏ РїРѕР»С–РІ.';
       }
     }
   } catch {
     clearTimeout(timer);
-    status.textContent = 'Не вдалося надіслати заявку. Спробуй ще раз або напиши нам у Telegram.';
+    status.textContent = 'РќРµ РІРґР°Р»РѕСЃСЏ РЅР°РґС–СЃР»Р°С‚Рё Р·Р°СЏРІРєСѓ. РЎРїСЂРѕР±СѓР№ С‰Рµ СЂР°Р· Р°Р±Рѕ РЅР°РїРёС€Рё РЅР°Рј Сѓ Telegram.';
   } finally {
     if (btn) {
       btn.disabled = false;
       btn.removeAttribute('aria-busy');
-      const restore = btn.dataset.originalLabel || btn.dataset.label || 'Відправити заявку';
+      const restore = btn.dataset.originalLabel || btn.dataset.label || 'Р’С–РґРїСЂР°РІРёС‚Рё Р·Р°СЏРІРєСѓ';
       btn.textContent = restore;
     }
     syncAllForms();
@@ -358,14 +359,20 @@ async function submitForm(form: HTMLFormElement) {
   }
 }
 
+function markFormStarted(form: HTMLFormElement) {
+  const ts = form.querySelector<HTMLInputElement>('input[name="formStartedAt"]');
+  if (ts && !ts.value) ts.value = String(Date.now());
+}
+
 function initForm(form: HTMLFormElement) {
   if (form.dataset.leadBound === '1') return;
   form.dataset.leadBound = '1';
   boundForms.push(form);
 
-  const hp = document.createElement('input');
+  const hp = form.querySelector<HTMLInputElement>('input[name="hp_trap_x7"], input[name="website"], input[name="hp"]') || document.createElement('input');
+  if (!hp.parentNode) form.appendChild(hp);
   hp.type = 'text';
-  hp.name = 'website';
+  hp.name = 'hp_trap_x7';
   hp.tabIndex = -1;
   hp.autocomplete = 'off';
   hp.setAttribute('aria-hidden', 'true');
@@ -374,13 +381,21 @@ function initForm(form: HTMLFormElement) {
   hp.style.width = '1px';
   hp.style.height = '1px';
   hp.style.overflow = 'hidden';
-  form.appendChild(hp);
 
-  const ts = document.createElement('input');
-  ts.type = 'hidden';
-  ts.name = 'formStartedAt';
-  ts.value = String(Date.now());
-  form.appendChild(ts);
+  // Set formStartedAt on first focus in any field.
+  const fieldEls = Array.from(form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input:not([type="hidden"]), select, textarea'));
+  for (const el of fieldEls) {
+    el.addEventListener('focus', () => markFormStarted(form), { once: true });
+  }
+
+  let ts = form.querySelector<HTMLInputElement>('input[name="formStartedAt"]');
+  if (!ts) {
+    ts = document.createElement('input');
+    ts.type = 'hidden';
+    ts.name = 'formStartedAt';
+    form.appendChild(ts);
+  }
+  if (!ts.value) ts.value = '';
 
   syncConsent(form);
   const consent = form.querySelector<HTMLInputElement>('input[name="consent"], input[name="qo_consent"], [data-qo-consent]');

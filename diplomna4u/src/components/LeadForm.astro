@@ -1,4 +1,4 @@
----
+﻿---
 interface Props {
   variant?: 'full' | 'compact' | 'sticky' | 'page';
   source?: string;
@@ -17,25 +17,25 @@ import { site } from '@/data/site';
   <input type="hidden" name="calc_payload" value={calcPayload} />
 
   <div class="hp-field" aria-hidden="true">
-    <label>Залиште порожнім <input type="text" name="hp" tabindex="-1" autocomplete="off" /></label>
+    <label>Р—Р°Р»РёС€С‚Рµ РїРѕСЂРѕР¶РЅС–Рј <input type="text" name="hp_trap_x7" tabindex="-1" autocomplete="off" aria-hidden="true" /></label>
   </div>
 
   <div class="field">
-    <label>Імʼя *</label>
-    <input type="text" name="name" required minlength="2" placeholder="Наприклад, Олена" />
+    <label>Р†РјКјСЏ *</label>
+    <input type="text" name="name" required minlength="2" placeholder="РќР°РїСЂРёРєР»Р°Рґ, РћР»РµРЅР°" />
     <span class="field-error" data-err="name"></span>
   </div>
 
   <div class="field">
-    <label>Telegram, телефон або email *</label>
-    <input type="text" name="contact" required placeholder="@username, +380 50 123 45 67 або name@email.com" />
+    <label>Telegram, С‚РµР»РµС„РѕРЅ Р°Р±Рѕ email *</label>
+    <input type="text" name="contact" required placeholder="@username, +380 50 123 45 67 Р°Р±Рѕ name@email.com" />
     <span class="field-error" data-err="contact"></span>
   </div>
 
   <div class="field">
-    <label>Який тип роботи цікавить?</label>
+    <label>РЇРєРёР№ С‚РёРї СЂРѕР±РѕС‚Рё С†С–РєР°РІРёС‚СЊ?</label>
     <select name="work_type" required>
-      <option value="" disabled selected>Оберіть тип роботи</option>
+      <option value="" disabled selected>РћР±РµСЂС–С‚СЊ С‚РёРї СЂРѕР±РѕС‚Рё</option>
       {nav.services.map(s => <option value={s.label} selected={workTypeDefault === s.label}>{s.label}</option>)}
     </select>
     <span class="field-error" data-err="work_type"></span>
@@ -43,21 +43,21 @@ import { site } from '@/data/site';
 
   {variant !== 'compact' && (
     <div class="field">
-      <label>Коментар</label>
-      <textarea name="comment" rows="3" placeholder="Наприклад: тема, спеціальність, університет, термін здачі. Методичку можна надіслати в Telegram"></textarea>
+      <label>РљРѕРјРµРЅС‚Р°СЂ</label>
+      <textarea name="comment" rows="3" placeholder="РќР°РїСЂРёРєР»Р°Рґ: С‚РµРјР°, СЃРїРµС†С–Р°Р»СЊРЅС–СЃС‚СЊ, СѓРЅС–РІРµСЂСЃРёС‚РµС‚, С‚РµСЂРјС–РЅ Р·РґР°С‡С–. РњРµС‚РѕРґРёС‡РєСѓ РјРѕР¶РЅР° РЅР°РґС–СЃР»Р°С‚Рё РІ Telegram"></textarea>
     </div>
   )}
 
   <label class="consent">
     <input type="checkbox" name="consent" required />
-    Погоджуюсь з обробкою персональних даних і <a href="/polityka-konfidentsiinosti/" target="_blank" rel="noopener">політикою конфіденційності</a>.
+    РџРѕРіРѕРґР¶СѓСЋСЃСЊ Р· РѕР±СЂРѕР±РєРѕСЋ РїРµСЂСЃРѕРЅР°Р»СЊРЅРёС… РґР°РЅРёС… С– <a href="/polityka-konfidentsiinosti/" target="_blank" rel="noopener">РїРѕР»С–С‚РёРєРѕСЋ РєРѕРЅС„С–РґРµРЅС†С–Р№РЅРѕСЃС‚С–</a>.
   </label>
-  <p class="consent-hint" data-consent-hint aria-live="polite">Постав галочку згоди, щоб надіслати заявку.</p>
+  <p class="consent-hint" data-consent-hint aria-live="polite">РџРѕСЃС‚Р°РІ РіР°Р»РѕС‡РєСѓ Р·РіРѕРґРё, С‰РѕР± РЅР°РґС–СЃР»Р°С‚Рё Р·Р°СЏРІРєСѓ.</p>
   <span class="field-error" data-err="consent"></span>
 
   <div class="form-actions">
-    <button type="submit" class="btn submit-btn">Відправити заявку</button>
-    {variant === 'compact' && site.telegram && <a href={site.telegram.url} target="_blank" rel="noopener noreferrer" class="btn btn--ghost">Написати в Telegram</a>}
+    <button type="submit" class="btn submit-btn">Р’С–РґРїСЂР°РІРёС‚Рё Р·Р°СЏРІРєСѓ</button>
+    {variant === 'compact' && site.telegram && <a href={site.telegram.url} target="_blank" rel="noopener noreferrer" class="btn btn--ghost">РќР°РїРёСЃР°С‚Рё РІ Telegram</a>}
   </div>
   <p class="form-status" aria-live="polite"></p>
 </form>
