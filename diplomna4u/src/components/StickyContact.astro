@@ -109,24 +109,27 @@ const telegram = site.telegram;
   @media (max-width: 600px) {
     .sticky-contact { left: 0; right: 0; bottom: 0; }
     .sticky-btn { display: none; }
-    .sticky-mobile-bar {
-      display: flex; gap: 12px;
-      background: transparent; padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-      border: none; box-shadow: none;
-    }
-    .sticky-mobile-bar a, .sticky-mobile-bar button {
-      flex: 1 1 0; min-height: 48px; padding: 0.625rem 0.75rem;
-      border-radius: var(--r-btn); font-size: 1rem; font-weight: 600;
-      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-      text-decoration: none; border: none;
-      box-shadow: 0 4px 14px rgba(42,21,19,.18);
-    }
-    .sticky-mobile-bar .sticky-mobile-telegram {
-      background: #229ED9; color: #fff;
-    }
-    .sticky-mobile-bar button {
-      background: var(--red); color: #fff;
-    }
+  .sticky-mobile-bar {
+    display: flex; gap: 12px;
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -8px 24px -12px rgba(42,21,19,.18);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+  .sticky-mobile-bar a, .sticky-mobile-bar button {
+    flex: 1 1 0; min-height: 48px; padding: 0.5rem 0.75rem;
+    border-radius: var(--r-btn); font-size: 0.9375rem; font-weight: 600;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(42,21,19,.18);
+  }
+  .sticky-mobile-bar .sticky-mobile-telegram {
+    background: var(--card); color: var(--red); border: 1.5px solid var(--red);
+  }
+  .sticky-mobile-bar button {
+    background: var(--red); color: var(--vanilla); border: none;
+  }
     .sticky-panel { bottom: calc(64px + env(safe-area-inset-bottom)); right: 8px; left: 8px; width: auto; }
   }
   @media (prefers-reduced-motion: no-preference) {

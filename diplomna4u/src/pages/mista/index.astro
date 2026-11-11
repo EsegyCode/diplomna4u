@@ -2,24 +2,100 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Section from '@/components/Section.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import LinkCardGrid from '@/components/LinkCardGrid.astro';
+import { site } from '@/data/site';
 import { cities } from '@/data/cities';
+
 const ready = cities.filter(c => c.localContentReady);
+const cityItems = ready.map(c => ({
+  title: c.name,
+  subtitle: `Дипломна робота ${c.inCity}`,
+  href: `/${c.slug}/`,
+  ariaLabel: `Дипломна робота ${c.inCity}: докладніше`,
+}));
+const telegramUrl = site.telegram?.url ?? '/#quick-order';
+const telegramLabel = site.telegram?.label ?? 'Написати в Telegram';
 ---
 <BaseLayout title="Де ми працюємо — дипломні й курсові по всій Україні" description="Diplomna 4 U працює дистанційно по всій Україні. Обери своє місто — подивись університети, ціни й умови замовлення дипломної чи курсової.">
   <Section theme="bg">
-    <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Міста'}]} />
-    <h1>Де ми працюємо</h1>
-    <p>Працюємо дистанційно по всій Україні: заявка, договір, оплата й передача роботи — онлайн. Обери своє місто, щоб побачити університети й умови.</p>
-    {ready.length === 0 ? (
-      <p class="text-muted">Сторінки міст ще готуються. Поки що ми працюємо з усіма містами України — напиши нам у Telegram або залиш заявку.</p>
-    ) : (
-      <ul class="city-list">
-        {ready.map(c => <li><a href={`/${c.slug}/`}>{c.name}</a> — Дипломна робота {c.inCity} · <a href={`/${c.slug}/`}>Докладніше →</a></li>)}
-      </ul>
-    )}
-    <p style="margin-top:1rem">Не бачиш свого міста? Ми працюємо дистанційно, тож це не завада. <a href="/#quick-order">Залиш заявку</a> — і ми підкажемо, як усе відбуватиметься.</p>
+    <div class="intro">
+      <Breadcrumbs items={[{ label: 'Головна', href: '/' }, { label: 'Де ми працюємо' }]} />
+      <h1 class="page-h1">Де ми працюємо</h1>
+      <span class="accent-line" aria-hidden="true"></span>
+      <p class="lead">Працюємо дистанційно по всій Україні: заявка, договір, оплата й передача роботи — онлайн. Обери своє місто, щоб побачити університети й умови.</p>
+    </div>
+  </Section>
+  <Section theme="surface">
+    <div class="cities-section">
+      <h2 class="section-title">Міста, з якими ми працюємо</h2>
+      <LinkCardGrid items={cityItems} />
+    </div>
+  </Section>
+  <Section theme="bg">
+    <div class="cta-card">
+      <h2 class="cta-title">Не бачиш свого міста?</h2>
+      <p class="cta-text">Ми працюємо дистанційно, тож це не завада. Залиш заявку — і ми підкажемо, як усе відбуватиметься.</p>
+      <div class="cta-actions">
+        <a href="/#quick-order" class="btn cta-primary">Залишити заявку</a>
+        <a href={telegramUrl} target="_blank" rel="noopener noreferrer" class="btn cta-outline">{telegramLabel}</a>
+      </div>
+    </div>
   </Section>
 </BaseLayout>
 <style>
-  .city-list { list-style: disc; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .intro { max-width: 100%; }
+  .page-h1 {
+    font-family: var(--font-heading); font-weight: 700;
+    font-size: clamp(2.25rem, 6.5vw, 3.5rem);
+    line-height: 1.1; color: var(--ink);
+    margin-bottom: clamp(16px, 2.5vw, 24px);
+  }
+  .accent-line {
+    display: block; width: 56px; height: 3px;
+    background: var(--red); border-radius: 999px;
+    margin-top: 14px; margin-bottom: 20px;
+  }
+  .lead {
+    font-family: var(--font-body); font-weight: 400;
+    font-size: clamp(1.125rem, 2.4vw, 1.25rem);
+    line-height: 1.65; color: var(--ink);
+    max-width: 62ch; margin: 0;
+  }
+  .section-title {
+    font-family: var(--font-heading); font-weight: 700;
+    font-size: clamp(1.375rem, 3vw, 1.75rem);
+    line-height: 1.2; color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .cities-section { max-width: 1200px; margin: 0 auto; }
+  .cta-card {
+    max-width: 880px; margin: 0 auto;
+    background: var(--red); color: var(--vanilla);
+    border-radius: 24px; padding: clamp(24px, 4vw, 40px);
+    text-align: left;
+  }
+  .cta-title {
+    font-family: var(--font-heading); font-weight: 600;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    line-height: 1.15; color: var(--vanilla); margin-bottom: 12px;
+  }
+  .cta-text {
+    font-family: var(--font-body); font-size: 1.0625rem;
+    line-height: 1.65; color: var(--vanilla); opacity: 0.9; margin-bottom: 20px; max-width: 62ch;
+  }
+  .cta-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .cta-primary {
+    background: var(--vanilla); color: var(--red); border: 2px solid var(--vanilla);
+    min-height: 48px; padding: 0.7rem 1.5rem; font-weight: 600;
+  }
+  .cta-primary:hover { background: transparent; color: var(--vanilla); }
+  .cta-outline {
+    background: transparent; color: var(--vanilla); border: 1.5px solid var(--vanilla);
+    min-height: 48px; padding: 0.7rem 1.5rem; font-weight: 600;
+  }
+  .cta-outline:hover { background: var(--vanilla); color: var(--red); }
+  @media (max-width: 480px) {
+    .cta-actions { flex-direction: column; }
+    .cta-primary, .cta-outline { width: 100%; justify-content: center; }
+  }
 </style>
