@@ -324,6 +324,8 @@ async function submitForm(form: HTMLFormElement) {
       status.textContent = 'Дякуємо! Ми зв’яжемося з тобою найближчим часом.';
       setCooldown();
       form.reset();
+      const gtag = (window as { gtag?: (...args: unknown[]) => void }).gtag;
+      if (typeof gtag === 'function') gtag('event', 'generate_lead', { form_name: String(payload.source || '') });
       const ts = form.querySelector<HTMLInputElement>('input[name="formStartedAt"]');
       if (ts) ts.value = '';
       const consentHint = form.querySelector<HTMLElement>('[data-consent-hint]');
