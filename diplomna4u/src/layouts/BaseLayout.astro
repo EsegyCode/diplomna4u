@@ -32,6 +32,7 @@ const {
   lang = 'uk',
 } = Astro.props;
 
+const googleSiteVerification = (import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION || '').trim();
 const canonicalUrl = Astro.props.canonical ?? new URL(Astro.url.pathname, site.domain).href;
 
 const ogSlug = Astro.url.pathname === '/' ? 'index' : Astro.url.pathname.replace(/^\/+|\/+$/g, '').replace(/\//g, '-');
@@ -47,6 +48,15 @@ const orgSchema = {
   url: site.domain,
   email: site.email,
   logo: new URL('/logo.png', site.domain).href,
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer support',
+    url: site.telegram?.url,
+    email: site.email,
+    availableLanguage: 'uk',
+  },
+  openingHours: 'Mo-Su 09:00-21:00',
+  areaServed: { '@type': 'Country', name: 'Україна' },
 };
 
 const websiteSchema = {
@@ -64,11 +74,10 @@ const allJsonLd = [orgSchema, websiteSchema, ...jsonLd];
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {googleSiteVerification && <meta name="google-site-verification" content={googleSiteVerification} />}
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="alternate" hreflang={lang} href={canonicalUrl} />
-    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     <meta name="theme-color" content="#6B0F1F" />
     <meta property="og:title" content={title} />

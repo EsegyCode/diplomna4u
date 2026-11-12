@@ -2,8 +2,9 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Section from '@/components/Section.astro';
 import LegalPage from '@/components/LegalPage.astro';
+import { legalMeta } from '@/data/legal';
 ---
-<BaseLayout title="Публічна оферта (договір) | Diplomna 4 U" description="Умови надання послуг Diplomna 4 U: порядок замовлення й оплати 50/50, терміни, правки, конфіденційність і відповідальність сторін.">
+<BaseLayout title="Публічна оферта (договір) | Diplomna 4 U" description="Умови надання послуг Diplomna 4 U: порядок замовлення й оплати 50/50, терміни, правки, конфіденційність і відповідальність сторін." noindex={legalMeta.legalNoindex}>
   <Section theme="bg">
     <LegalPage title="Публічна оферта">
       <h2>ДОГОВІР ПРО НАДАННЯ КОНСУЛЬТАЦІЙНИХ ТА ІНФОРМАЦІЙНИХ ПОСЛУГ</h2>

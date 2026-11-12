@@ -2,15 +2,28 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ServicePage from '@/components/ServicePage.astro';
 import { services } from '@/data/services';
+import { site } from '@/data/site';
 
 export function getStaticPaths() {
   return services.map(s => ({ params: { service: s.slug }, props: { service: s } }));
 }
 const { service } = Astro.props;
 const jsonLd = [
-  { '@context':'https://schema.org', '@type':'Service', name: service.label, description: service.shortDesc },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.label,
+    description: service.shortDesc,
+    provider: { '@type': 'Organization', name: site.brandUk, url: site.domain },
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'UAH',
+      price: service.minPrice,
+      url: new URL(`/poslugy/${service.slug}/`, site.domain).href,
+    },
+  },
 ];
 ---
-<BaseLayout title={`${service.label} | Diplomna 4 U`} description={service.shortDesc} jsonLd={jsonLd}>
+<BaseLayout title={`${service.label} на замовлення: від ${service.minPrice.toLocaleString('uk-UA')} грн | Diplomna 4 U`} description={service.shortDesc} jsonLd={jsonLd}>
   <ServicePage service={service} />
 </BaseLayout>

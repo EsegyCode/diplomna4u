@@ -8,7 +8,7 @@ import BlogList from '@/components/BlogList.astro';
 
 const posts = (await getCollection('blog')).filter((p:any) => !p.data.draft).sort((a:any,b:any) => +new Date(b.data.date) - +new Date(a.data.date));
 ---
-<BaseLayout title="Блог | Diplomna 4 U" description="Корисні матеріали для студентів.">
+<BaseLayout title="Блог | Diplomna 4 U" description="Корисні матеріали для студентів." noindex={posts.length === 0}>
   <Section theme="bg">
     <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Блог'}]} />
     <h1>Блог</h1>

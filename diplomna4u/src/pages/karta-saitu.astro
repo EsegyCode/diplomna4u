@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Section from '@/components/Section.astro';
 import { cities } from '@/data/cities';
-const servicesLinks = ['poslugy','tsiny','vidhuky','blog','pro-nas','mista','faq','kontakty'];
+import { footerGroups } from '@/data/navigation';
 const ready = cities.filter(c => c.localContentReady);
 ---
 <BaseLayout title="Карта сайту | Diplomna 4 U" description="HTML карта сайту.">
@@ -10,7 +10,13 @@ const ready = cities.filter(c => c.localContentReady);
     <h1>Карта сайту</h1>
     <ul class="sitemap-list">
       <li><a href="/">Головна</a></li>
-      {servicesLinks.map(s => <li><a href={`/${s}/`}>{s}</a></li>)}
+      {footerGroups.map(group => (
+        <>
+          <li><strong>{group.title}</strong></li>
+          {group.links.map(l => <li><a href={l.href}>{l.label}</a></li>)}
+        </>
+      ))}
+      <li><strong>Міста</strong></li>
       {ready.map(c => <li><a href={`/${c.slug}/`}>{c.name}</a></li>)}
     </ul>
     <p><a href="/sitemap-index.xml">sitemap.xml →</a></p>

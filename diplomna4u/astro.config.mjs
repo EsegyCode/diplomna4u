@@ -91,9 +91,16 @@ for (const s of allCitySlugs) if (!CITY_READY_SLUGS.has(s)) CITY_NOT_READY.add(s
 
 const NOINDEX_PATHS = new Set([
   '/dialkuye/',
-  '/polityka-konfidentsiinosti/',
 ]);
 for (const s of CITY_NOT_READY) NOINDEX_PATHS.add(`/${s}/`);
+
+const legalText = readFileSync(join(PROJECT_ROOT, 'src/data/legal.ts'), 'utf-8');
+const legalMatch = legalText.match(/legalNoindex:\s*(true|false)/);
+const legalNoindex = legalMatch ? legalMatch[1] === 'true' : true;
+if (legalNoindex) {
+  NOINDEX_PATHS.add('/polityka-konfidentsiinosti/');
+  NOINDEX_PATHS.add('/publichna-oferta/');
+}
 
 const STATIC_SOURCE_FILES = {
   '/': ['src/pages/index.astro'],

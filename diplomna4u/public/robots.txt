@@ -42,4 +42,4 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-Sitemap: http://localhost:4321/sitemap-index.xml
+Sitemap: https://diplomna4u.cx.ua/sitemap-index.xml
