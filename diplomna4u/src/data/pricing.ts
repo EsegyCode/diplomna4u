@@ -128,7 +128,7 @@ export const pricing = {
       ratePerPage: null,
       includedPages: null,
       minDays: null,
-      note: 'Лише в калькуляторі, окремої сторінки немає',
+      note: 'З графічними елементами й оформленням',
     },
   ] as WorkTypePricing[],
 

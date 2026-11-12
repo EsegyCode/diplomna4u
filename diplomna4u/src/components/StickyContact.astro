@@ -41,7 +41,7 @@ const telegram = site.telegram;
       </div>
       <label class="consent">
         <input type="checkbox" name="consent" required />
-        Погоджуюсь з <a href="/polityka-konfidentsiinosti/" target="_blank" rel="noopener">політикою конфіденційності</a>.
+        <span>Погоджуюсь з <a href="/polityka-konfidentsiinosti/" target="_blank" rel="noopener">політикою конфіденційності</a>.</span>
       </label>
       <p class="consent-hint" data-consent-hint aria-live="polite">Постав галочку згоди, щоб надіслати заявку.</p>
       <span class="field-error" data-err="consent"></span>
@@ -111,7 +111,9 @@ const telegram = site.telegram;
   .mini-form input, .mini-form select { padding: 0.6rem 0.8rem; border: 1px solid var(--sage); border-radius: var(--r-input); background: var(--field-bg); color: var(--ink); font-size: 1rem; }
   .mini-form .field-error { color: var(--error); font-size: 0.8rem; min-height: 1em; }
   .hp { display: none !important; }
-  .consent { font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem; color: var(--ink); }
+  .consent { font-size: 0.8rem; display: flex; align-items: flex-start; gap: 8px; color: var(--ink); }
+  .consent input[type="checkbox"] { flex: 0 0 auto; width: 16px; height: 16px; margin: 2px 0 0; }
+  .consent span { min-width: 0; }
   .consent-hint { font-size: 0.8rem; color: var(--muted); min-height: 1.2em; }
   .form-status { font-size: 0.85rem; color: var(--deep); min-height: 1.2em; }
   .mini-form button[type="submit"][disabled], .mini-form button[type="submit"][aria-disabled="true"] {
