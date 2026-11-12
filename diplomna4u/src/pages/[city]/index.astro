@@ -19,7 +19,7 @@ export function getStaticPaths() {
 }
 const { city } = Astro.props as { city: (typeof cities)[number] };
 const noindex = !city.localContentReady;
-const title = fill('Дипломна робота {inCity} — від {price} грн | {brand}', city);
+const title = fill('Дипломна робота {inCity}: від {price} грн | {brand}', city);
 const description = `Допомога з дипломною, курсовою та статтею ${city.inCity}. Університети міста, спеціальності, калькулятор ціни онлайн.`;
 const faqItems = city.localFaq.length ? city.localFaq : faqGeneral.slice(0, 4);
 const hasSpecialties = city.universities.some(u => u.specialties?.length);
@@ -52,7 +52,7 @@ function spec(key: string) { return pricing.specialties.find(s => s.key === key)
     <h1>Замовити дипломну роботу {city.inCity}</h1>
     <p class="city-lead-line">{city.region}. Допомога з дипломними, курсовими та статтями.</p>
     {city.intro && <p class="city-intro">{city.intro}</p>}
-    <p class="city-intro">Працюємо за договором: заявка, узгодження вимог кафедри, передплата 50% і здача готової роботи. Сертифікат антиплагіату до кожної роботи, безкоштовні правки протягом місяця, мінімальний термін дипломної — від 3 днів.</p>
+    <p class="city-intro">Працюємо за договором: заявка, узгодження вимог кафедри, передплата 50% і здача готової роботи. Сертифікат антиплагіату до кожної роботи, безкоштовні правки протягом місяця, мінімальний термін дипломної: від 3 днів.</p>
     {city.localFacts.length > 0 && (
       <ul class="city-facts">
         {city.localFacts.map(f => <li>{f}</li>)}
