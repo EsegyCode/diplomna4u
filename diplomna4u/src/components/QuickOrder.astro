@@ -6,14 +6,16 @@ interface Props {
   defaultWork?: string;
   dark?: boolean;
   showPriceBadge?: boolean;
+  headingLevel?: 'h2' | 'h3';
 }
-const { defaultWork = '', dark = false, showPriceBadge = true } = Astro.props;
+const { defaultWork = '', dark = false, showPriceBadge = true, headingLevel = 'h2' } = Astro.props;
+const uid = 'qo-' + Math.random().toString(36).slice(2, 10);
 
 const pricingJson = JSON.stringify(pricing);
 ---
 <div class={`quick-order card card--light${dark ? ' quick-order--dark' : ''}`} id="quick-order">
   {showPriceBadge && <div class="qo-badge">Ціна від {pricing.workTypes.find(w=>w.slug==='dyplomna-robota')?.minPrice.toLocaleString('uk-UA')} грн</div>}
-  <h3 class="qo-title">Уточнимо деталі й безкоштовно проконсультуємо</h3>
+  {headingLevel === 'h3' ? <h3 class="qo-title">Уточнимо деталі й безкоштовно проконсультуємо</h3> : <h2 class="qo-title">Уточнимо деталі й безкоштовно проконсультуємо</h2>}
 
   <form class="qo-form" data-qo>
     <input type="hidden" name="calc_payload" value="" />
@@ -23,8 +25,8 @@ const pricingJson = JSON.stringify(pricing);
     <div class="qo-step qo-step-1">
       <div class="qo-row">
       <div class="field">
-        <label>Тип роботи *</label>
-          <select name="workType" data-work required>
+        <label for={`${uid}-work`}>Тип роботи *</label>
+          <select name="workType" data-work required id={`${uid}-work`}>
             {pricing.workTypes.map(w => (
               <option value={w.slug} selected={defaultWork === w.slug || (defaultWork==='' && w.slug==='dyplomna-robota')}>{w.label}</option>
             ))}
@@ -32,22 +34,22 @@ const pricingJson = JSON.stringify(pricing);
           <span class="field-error" data-err="work_type"></span>
         </div>
   <div class="field">
-    <label>Спеціальність</label>
-    <select name="specialty" data-specialty data-specialty-select>
+    <label for={`${uid}-specialty`}>Спеціальність</label>
+    <select name="specialty" data-specialty data-specialty-select id={`${uid}-specialty`}>
       {pricing.specialties.map(s => <option value={s.key} selected={s.key === 'H1'}>{s.label}</option>)}
     </select>
   </div>
       </div>
       <div class="field">
-<label>Тема роботи (необов’язково)</label>
-<input type="text" name="topic" placeholder="Напр., Вплив добрив на врожайність пшениці" />
+<label for={`${uid}-topic`}>Тема роботи (необов’язково)</label>
+<input type="text" name="topic" id={`${uid}-topic`} placeholder="Напр., Вплив добрив на врожайність пшениці" />
       </div>
       <div class="field qo-pages" data-pages>
         <div class="pages-head">
-          <label>Обсяг роботи</label>
+          <label for={`${uid}-pages`}>Обсяг роботи</label>
           <div class="pages-value" data-pages-value>60&nbsp;стор.</div>
         </div>
-        <input type="range" name="pages" data-pages-range min="40" max="90" step="5" value="60" />
+        <input type="range" name="pages" id={`${uid}-pages`} data-pages-range min="40" max="90" step="5" value="60" aria-valuetext="60 сторінок" aria-valuemin="40" aria-valuemax="90" aria-valuenow="60" />
         <div class="range-labels">
           <span>40</span>
           <span>90</span>
@@ -78,16 +80,16 @@ const pricingJson = JSON.stringify(pricing);
     <div class="qo-step qo-step-2" hidden>
       <input type="hidden" name="contact_type" data-contact-type value="" />
       <div class="field">
-        <label>Ім’я *</label>
-        <input type="text" name="qo_name" data-qo-name required placeholder="Наприклад, Олена" />
+        <label for={`${uid}-qo-name`}>Ім’я *</label>
+        <input type="text" name="qo_name" id={`${uid}-qo-name`} data-qo-name required placeholder="Наприклад, Олена" />
       </div>
       <div class="field">
-        <label>Telegram @username, телефон або email *</label>
-        <input type="text" name="qo_contact" data-qo-contact required placeholder="@username, +380 50 123 45 67 або name@email.com" />
+        <label for={`${uid}-qo-contact`}>Telegram @username, телефон або email *</label>
+        <input type="text" name="qo_contact" id={`${uid}-qo-contact`} data-qo-contact required placeholder="@username, +380 50 123 45 67 або name@email.com" />
       </div>
       <div class="field">
-        <label>Коментар (необов'язково)</label>
-        <textarea name="qo_comment" rows="3" placeholder="Наприклад: тема, спеціальність, університет, термін здачі. Методичку можна надіслати в Telegram"></textarea>
+        <label for={`${uid}-qo-comment`}>Коментар (необов'язково)</label>
+        <textarea name="qo_comment" id={`${uid}-qo-comment`} rows="3" placeholder="Наприклад: тема, спеціальність, університет, термін здачі. Методичку можна надіслати в Telegram"></textarea>
       </div>
       <label class="consent">
         <input type="checkbox" name="consent" class="consent-check" data-qo-consent required />
@@ -170,6 +172,7 @@ const pricingJson = JSON.stringify(pricing);
       if (!pagesRange || !pagesValue) return;
       const v = parseInt(pagesRange.value, 10) || 60;
       pagesValue.textContent = v === 0 ? '—' : v + ' стор.';
+      if (pagesRange) pagesRange.setAttribute('aria-valuetext', v === 0 ? 'не вказано' : v + ' сторінок');
     }
     function updateSliderFill() {
       if (!pagesRange) return;

@@ -9,6 +9,7 @@ interface Props {
 const { variant = 'full', source = 'site', city = '', calcPayload = '', workTypeDefault = '' } = Astro.props;
 import { nav } from '@/data/site';
 import { site } from '@/data/site';
+const uid = 'lf-' + Math.random().toString(36).slice(2, 10);
 ---
 <form class={`lead-form lead-form--${variant}`} data-lead-form novalidate>
   <input type="hidden" name="source" value={source} />
@@ -21,20 +22,20 @@ import { site } from '@/data/site';
   </div>
 
   <div class="field">
-    <label>Імʼя *</label>
-    <input type="text" name="name" required minlength="2" placeholder="Наприклад, Олена" />
+    <label for={`${uid}-name`}>Імʼя *</label>
+    <input type="text" id={`${uid}-name`} name="name" required minlength="2" placeholder="Наприклад, Олена" />
     <span class="field-error" data-err="name"></span>
   </div>
 
   <div class="field">
-    <label>Telegram, телефон або email *</label>
-    <input type="text" name="contact" required placeholder="@username, +380 50 123 45 67 або name@email.com" />
+    <label for={`${uid}-contact`}>Telegram, телефон або email *</label>
+    <input type="text" id={`${uid}-contact`} name="contact" required placeholder="@username, +380 50 123 45 67 або name@email.com" />
     <span class="field-error" data-err="contact"></span>
   </div>
 
   <div class="field">
-    <label>Який тип роботи цікавить?</label>
-    <select name="work_type" required>
+    <label for={`${uid}-work-type`}>Який тип роботи цікавить?</label>
+    <select name="work_type" required id={`${uid}-work-type`}>
       <option value="" disabled selected>Оберіть тип роботи</option>
       {nav.services.map(s => <option value={s.label} selected={workTypeDefault === s.label}>{s.label}</option>)}
     </select>
@@ -43,8 +44,8 @@ import { site } from '@/data/site';
 
   {variant !== 'compact' && (
     <div class="field">
-      <label>Коментар</label>
-      <textarea name="comment" rows="3" placeholder="Наприклад: тема, спеціальність, університет, термін здачі. Методичку можна надіслати в Telegram"></textarea>
+      <label for={`${uid}-comment`}>Коментар</label>
+      <textarea name="comment" id={`${uid}-comment`} rows="3" placeholder="Наприклад: тема, спеціальність, університет, термін здачі. Методичку можна надіслати в Telegram"></textarea>
     </div>
   )}
 
@@ -85,19 +86,21 @@ import { site } from '@/data/site';
   .consent { display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem; text-align: left; line-height: 1.5; color: var(--s-fg, var(--ink)); }
   .consent input[type="checkbox"] { flex-shrink: 0; width: 22px; height: 22px; margin-top: 2px; accent-color: var(--accent); background: #fff; border: 1px solid #fff; border-radius: 6px; }
   .consent input[type="checkbox"]:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-  .consent a { color: #fff; text-decoration: underline; }
+  .consent a { color: var(--accent); text-decoration: underline; }
   .form-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
   .form-actions .btn { min-height: 52px; padding: 0 28px; border-radius: var(--r-btn); font-weight: 600; font-size: 1rem; background: var(--red-light); color: #fff; border: 1px solid rgba(255,255,255,.35); }
   .form-actions .btn:hover { background: var(--red-light-hover); transform: translateY(-1px); }
   .form-actions .btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
   .form-actions .btn[disabled], .form-actions .btn[aria-disabled="true"] { background: color-mix(in srgb, var(--red-light) 70%, var(--red)); color: #fff; cursor: not-allowed; }
-  .consent-hint { margin: 8px 0 0; font-size: 0.875rem; color: rgba(255,255,255,.85); min-height: 1.2em; }
+  .consent-hint { margin: 8px 0 0; font-size: 0.875rem; color: var(--s-fg, var(--ink)); min-height: 1.2em; }
   .field { font-size: 1rem; }
   .field label { font-size: 0.9375rem; font-weight: 500; }
   .field input, .field select, .field textarea { font-size: 1rem; min-height: 52px; border-radius: 14px; }
   .field textarea { min-height: 112px; }
   .section[data-theme="deep"] .form-actions .btn { background: var(--vanilla); color: var(--deep); border-color: var(--vanilla); }
   .section[data-theme="deep"] .form-actions .btn[disabled], .section[data-theme="deep"] .form-actions .btn[aria-disabled="true"] { opacity: 0.6; }
+  .section[data-theme="deep"] .lead-form .consent a { color: var(--vanilla); }
+  .section[data-theme="deep"] .lead-form .consent-hint { color: var(--vanilla); }
   @media (max-width: 480px) { .form-actions { flex-direction: column; } .form-actions .btn { width: 100%; } }
   .lead-form .form-status { min-height: 1.2em; color: var(--deep); font-size: 0.9rem; }
   .lead-form--sticky { }

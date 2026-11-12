@@ -6,7 +6,7 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="container footer-grid">
     <div class="footer-brand">
-      <a href="/" class="footer-logo-link" aria-label={site.brandUk}>
+      <a href="/" class="footer-logo-link" aria-label={site.brand}>
         <span class="footer-logo-pill">
           <img src="/logo.webp" alt={site.brandUk} width="60" height="60" loading="lazy" />
         </span>
@@ -24,7 +24,7 @@ const year = new Date().getFullYear();
 
     {footerGroups.map((group) => (
       <div class="footer-col">
-        <h4>{group.title}</h4>
+        <h2 class="footer-col-title">{group.title}</h2>
         <ul>
           {group.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
         </ul>
@@ -108,14 +108,14 @@ const year = new Date().getFullYear();
   .footer-btn--solid:hover { background: transparent; color: var(--qo-fg); }
   .footer-btn--outline { background: transparent; color: var(--qo-fg); border: 2px solid var(--qo-fg); }
   .footer-btn--outline:hover { background: var(--qo-fg); color: var(--bloodstone); }
-  .footer-col h4 {
+  .footer-col .footer-col-title {
     margin-bottom: 0.9rem;
     font-size: 1.15rem;
     font-weight: 700;
     color: var(--qo-fg);
     position: relative;
   }
-  .footer-col h4::after { content: ''; display: block; width: 2rem; height: 2px; background: var(--sage); margin-top: 0.4rem; }
+  .footer-col .footer-col-title::after { content: ''; display: block; width: 2rem; height: 2px; background: var(--sage); margin-top: 0.4rem; }
   .footer-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.35rem; }
   .footer-col a {
     color: var(--qo-fg);

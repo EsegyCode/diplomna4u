@@ -10,7 +10,7 @@ const { universities } = Astro.props;
     <div class="uni-grid">
       {universities.map(u => (
         <article class="uni-card">
-          <h4>{u.shortName || u.short || u.name}</h4>
+          <h3>{u.shortName || u.short || u.name}</h3>
           <p class="uni-full">{u.fullName || u.name}</p>
           {u.address && <p class="uni-address">{u.address}</p>}
         </article>
@@ -21,7 +21,7 @@ const { universities } = Astro.props;
 <style>
   .uni-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
   .uni-card { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--border); border-radius: var(--r-card); padding: 1.25rem; min-height: 100%; }
-  .uni-card h4 { font-family: var(--font-heading); font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 700; margin: 0 0 0.4rem; }
+  .uni-card h3 { font-family: var(--font-heading); font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 700; margin: 0 0 0.4rem; }
   .uni-full { color: var(--ink); font-size: 1rem; line-height: 1.4; margin: 0; }
   .uni-address { margin-top: auto; padding-top: 0.75rem; font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
 </style>
