@@ -34,7 +34,6 @@ const {
 } = Astro.props;
 
 const googleSiteVerification = (import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION || '').trim();
-const gaId = (import.meta.env.PUBLIC_GA_MEASUREMENT_ID || '').trim();
 const canonicalUrl = Astro.props.canonical ?? new URL(Astro.url.pathname, site.domain).href;
 
 const OG_VERSION = '3';
@@ -128,38 +127,12 @@ const allJsonLd = [orgSchema, websiteSchema, ...jsonLd];
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <JsonLd items={allJsonLd} />
     <slot name="head" />
-    {gaId && (
-      <>
-        <script is:inline define:vars={{ gaId }}>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){window.dataLayer.push(arguments);}
-          window.gtag = window.gtag || gtag;
-          gtag('consent', 'default', {
-            analytics_storage: 'denied',
-            ad_storage: 'denied',
-            ad_user_data: 'denied',
-            ad_personalization: 'denied',
-          });
-          gtag('js', new Date());
-          window.__gaMeasurementId = gaId;
-          window.__loadGA = function () {
-            if (window.__gaLoaded) return;
-            window.__gaLoaded = true;
-            var s = document.createElement('script');
-            s.async = true;
-            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gaId);
-            document.head.appendChild(s);
-            gtag('config', gaId, { send_page_view: true });
-          };
-          document.addEventListener('click', function (e) {
-            var a = e.target && e.target.closest ? e.target.closest('a[href*="t.me/"]') : null;
-            if (a && typeof window.gtag === 'function') {
-              window.gtag('event', 'click_telegram', { link_url: a.href });
-            }
-          });
-        </script>
-      </>
-    )}
+    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-MR7BMVQ7"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Перейти до основного вмісту</a>
