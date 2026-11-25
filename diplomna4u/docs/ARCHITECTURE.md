@@ -47,7 +47,7 @@ flowchart LR
 - `LeadForm.astro`: name, contact, work type, comment, consent.
 - `QuickOrder.astro` step 2: qo_name, qo_contact, qo_comment, consent.
 - `StickyContact.astro`: name, phone, work type, consent.
-- All forms post through `FormData`; current implementation is mock or `api/lead` (see site code).
+- All forms post through `FormData` or JSON to `POST /api/lead`; the Cloudflare Pages Function validates input and sends Telegram notifications.
 
 ## Scripts
 - `scripts/generate-icons.mjs`

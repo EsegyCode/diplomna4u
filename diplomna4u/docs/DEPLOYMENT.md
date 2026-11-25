@@ -19,6 +19,6 @@
 4. Перевірити налаштування ботів Cloudflare (дозволити перелічені в `robots.txt`).
 
 ## Заявки → Telegram (наступний етап)
-НЕ РЕАЛІЗОВАНО. Заплановано Cloudflare Pages Function, яка приймає POST форми, валідує поля та надсилає повідомлення в Telegram-групу через Bot API. Секрети `TELEGRAM_BOT_TOKEN` і `TELEGRAM_CHAT_ID` зберігаються як зашифровані змінні середовища. Базовий захист: honeypot-поле й обмеження частоти. Поля форми сьогодні: ім'я, контакт (Telegram/телефон/email), тип роботи, коментар, згода з обробкою даних.
-## ������� /api/lead\n̳��������������: unctions/api/lead.ts. ��������: �������� ����, honeypot, time trap, Turnstile (�����������), ���� Telegram sendMessage. ����?����� �������: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (��� Secret, Production � Preview). ��������� ����� TURNSTILE_SECRET_KEY �������.
-## ĳ���������: 401 - ������������ �����; 400 chat not found - ������������ chat id; ���������� ����� chat id �� -100...
+РЕАЛІЗОВАНО: `functions/api/lead.ts` приймає POST форми, валідує поля, перевіряє Origin/Referer, honeypot і time trap, виконує необов'язкову Turnstile-перевірку та надсилає повідомлення в Telegram. Секрети `TELEGRAM_BOT_TOKEN` і `TELEGRAM_CHAT_ID` задаються через Cloudflare Pages; додатково підтримуються `TURNSTILE_SECRET_KEY`, `PUBLIC_SITE_URL` і `DRY_RUN`. Поля форми: `name`, `contact`, `workType`, `comment`, `consent` та калькуляторні поля.
+## ������� /api/lead\n̳��������������: unctions/api/lead.ts. ��������: �������� ����, honeypot, time trap, Turnstile (�����������), ���� Telegram sendMessage. ����?����� �������: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (��� Secret, Production � Preview). ��������� ����� TURNSTILE_SECRET_KEY �������.
+## ĳ���������: 401 - ������������ �����; 400 chat not found - ������������ chat id; ���������� ����� chat id �� -100...
