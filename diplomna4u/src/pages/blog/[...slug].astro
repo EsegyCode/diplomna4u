@@ -7,6 +7,7 @@ import WaveDivider from '@/components/WaveDivider.astro';
 import BlogCard from '@/components/BlogCard.astro';
 import { getCollection, render } from 'astro:content';
 import { articleSchema, breadcrumbSchema } from '@/lib/seo';
+import { site } from '@/data/site';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -16,7 +17,7 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 const related = (await getCollection('blog')).filter(p => !p.data.draft && p.id !== post.id).slice(0,3);
 ---
-<BaseLayout title={`${post.data.title} | Diplomna 4 U`} description={post.data.description} jsonLd={[articleSchema({ headline: post.data.title, description: post.data.description, url: new URL(`/blog/${post.id}/`, 'https://diplomna4u.cx.ua').href, datePublished: post.data.date.toISOString(), ...(post.data.updated ? { dateModified: post.data.updated.toISOString() } : {}), ...(post.data.cover ? { image: new URL(post.data.cover, 'https://diplomna4u.cx.ua').href } : {}) }), breadcrumbSchema([{label:'Головна',href:'/'},{label:'Блог',href:'/blog/'},{label:post.data.title,href:`/blog/${post.id}/`}], 'https://diplomna4u.cx.ua')]}>
+<BaseLayout title={`${post.data.title} | Diplomna 4 U`} description={post.data.description} ogType="article" ogImage={post.data.cover || undefined} jsonLd={[articleSchema({ headline: post.data.title, description: post.data.description, url: new URL(`/blog/${post.id}/`, site.domain).href, datePublished: post.data.date.toISOString(), ...(post.data.updated ? { dateModified: post.data.updated.toISOString() } : {}), ...(post.data.cover ? { image: new URL(post.data.cover, site.domain).href } : {}) }), breadcrumbSchema([{label:'Головна',href:'/'},{label:'Блог',href:'/blog/'},{label:post.data.title,href:`/blog/${post.id}/`}], site.domain)]}>
   <Section theme="bg">
     <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Блог', href:'/blog/'}, {label: post.data.title}]} />
     <article>

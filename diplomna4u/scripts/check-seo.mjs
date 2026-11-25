@@ -100,7 +100,7 @@ for (const file of htmlFiles) {
   const ogMatch = content.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i);
   if (ogMatch) {
     const ogUrl = ogMatch[1];
-    const ogPath = ogUrl.replace(/^https?:\/\/[^/]+/, '').replace(/^\//, '');
+    const ogPath = ogUrl.replace(/^https?:\/\/[^/]+/, '').split('?')[0].replace(/^\//, '');
     if (ogPath && !existsSync(join(DIST, ogPath))) {
       error(`OG image not found: ${ogPath} (referenced in ${file})`);
     }

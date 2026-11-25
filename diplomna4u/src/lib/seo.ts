@@ -1,3 +1,5 @@
+import { site } from '@/data/site';
+
 export function articleSchema(options: {
   headline: string;
   description?: string;
@@ -15,11 +17,11 @@ export function articleSchema(options: {
     datePublished: options.datePublished,
     dateModified: options.dateModified || options.datePublished,
     image: options.image,
-    author: { '@type': 'Organization', name: 'Diplomna 4 U' },
+    author: { '@type': 'Organization', name: site.brand },
     publisher: {
       '@type': 'Organization',
-      name: 'Diplomna 4 U',
-      logo: { '@type': 'ImageObject', url: new URL('/logo.webp', 'https://diplomna4u.cx.ua').href },
+      name: site.brand,
+      logo: { '@type': 'ImageObject', url: new URL('/logo.webp', site.domain).href },
     },
     inLanguage: 'uk',
   };

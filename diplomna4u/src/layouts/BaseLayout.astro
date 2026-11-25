@@ -37,10 +37,29 @@ const googleSiteVerification = (import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION 
 const gaId = (import.meta.env.PUBLIC_GA_MEASUREMENT_ID || '').trim();
 const canonicalUrl = Astro.props.canonical ?? new URL(Astro.url.pathname, site.domain).href;
 
-const ogSlug = Astro.url.pathname === '/' ? 'index' : Astro.url.pathname.replace(/^\/+|\/+$/g, '').replace(/\//g, '-');
+const OG_VERSION = '3';
+const ogImageMap: Record<string, string> = {
+  '/': '/og/index.png',
+  '/poslugy/': '/og/poslugy.png',
+  '/tsiny/': '/og/tsiny.png',
+  '/vidhuky/': '/og/vidhuky.png',
+  '/blog/': '/og/blog.png',
+  '/pro-nas/': '/og/pro-nas.png',
+  '/mista/': '/og/mista.png',
+  '/faq/': '/og/faq.png',
+  '/kontakty/': '/og/kontakty.png',
+  '/karta-saitu/': '/og/karta-saitu.png',
+  '/polityka-konfidentsiinosti/': '/og/polityka-konfidentsiinosti.png',
+  '/publichna-oferta/': '/og/publichna-oferta.png',
+  '/polityka-cookie/': '/og/polityka-cookie.png',
+};
+
+const normalizedPath = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/+$/, '') + '/';
+const ogSlug = normalizedPath === '/' ? 'index' : normalizedPath.replace(/^\/+|\/+$/g, '').replace(/\//g, '-');
 const defaultOgFile = path.join(process.cwd(), 'public', 'og', ogSlug + '.png');
-const ogImage = ogImageProp ?? (fs.existsSync(defaultOgFile) ? '/og/' + ogSlug + '.png' : '/og/index.png');
-const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(ogImage, site.domain).href;
+const resolvedOg = ogImageProp ?? ogImageMap[normalizedPath] ?? (fs.existsSync(defaultOgFile) ? '/og/' + ogSlug + '.png' : '/og/og-default.png');
+const versionedOg = !resolvedOg.startsWith('http') && !resolvedOg.includes('?') ? `${resolvedOg}?v=${OG_VERSION}` : resolvedOg;
+const ogImageUrl = versionedOg.startsWith('http') ? versionedOg : new URL(versionedOg, site.domain).href;
 
 const orgSchema = {
   '@context': 'https://schema.org',
