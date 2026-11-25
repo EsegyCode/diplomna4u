@@ -29,6 +29,6 @@ const jsonLd = [
   },
 ];
 ---
-<BaseLayout title={`${service.label} на замовлення: від ${service.minPrice.toLocaleString('uk-UA')} грн | Diplomna 4 U`} description={service.shortDesc} jsonLd={jsonLd}>
+<BaseLayout title={`${service.label} на замовлення: від ${service.minPrice.toLocaleString('uk-UA')} грн | Diplomna 4 U`} description={service.shortDesc.split('. ')[0] + '.'} jsonLd={jsonLd}>
   <ServicePage service={service} />
 </BaseLayout>
