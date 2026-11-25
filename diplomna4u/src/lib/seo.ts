@@ -19,7 +19,7 @@ export function articleSchema(options: {
     publisher: {
       '@type': 'Organization',
       name: 'Diplomna 4 U',
-      logo: { '@type': 'ImageObject', url: new URL('/logo.png', 'https://diplomna4u.cx.ua').href },
+      logo: { '@type': 'ImageObject', url: new URL('/logo.webp', 'https://diplomna4u.cx.ua').href },
     },
     inLanguage: 'uk',
   };

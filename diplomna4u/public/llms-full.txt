@@ -1,6 +1,6 @@
 # Дипломна 4 U — повний контент для LLM
 
-Сайт: http://localhost:4321
+Сайт: https://diplomna4u.cx.ua
 Email: diplomna4u@gmail.com
 Telegram: https://t.me/diplomna4u_bot
 

@@ -1,18 +1,29 @@
 ---
 ---
 <div id="cookieBanner" class="cookie-banner" hidden>
-  <p>Ми використовуємо cookie-файли для коректної роботи сайту і (за вашої згоди) для аналітики. Докладніше: <a href="/polityka-cookie/">політика cookie</a>.</p>
+  <p>Ми використовуємо cookie-файли для коректної роботи сайту і (за вашої згоди) для аналітики та маркетингу. Докладніше: <a href="/polityka-cookie/">політика cookie</a>.</p>
+  <div class="cookie-details" id="cookieDetails" hidden>
+    <label class="cookie-cat"><input type="checkbox" id="consentNecessary" checked disabled /> Необхідні (завжди увімкнено)</label>
+    <label class="cookie-cat"><input type="checkbox" id="consentAnalytics" /> Аналітичні</label>
+    <label class="cookie-cat"><input type="checkbox" id="consentMarketing" /> Маркетингові</label>
+  </div>
   <div class="cookie-actions">
     <button id="cookieAcceptAll" class="btn btn--sm">Прийняти все</button>
     <button id="cookieReject" class="btn btn--ghost btn--sm">Лише необхідні</button>
     <button id="cookieSettings" class="btn btn--ghost btn--sm">Налаштувати</button>
+    <button id="cookieSave" class="btn btn--sm" hidden>Зберегти вибір</button>
   </div>
 </div>
 <script>
   const KEY = 'cookie-consent';
   const banner = document.getElementById('cookieBanner');
+  const details = document.getElementById('cookieDetails');
+  const analyticsBox = document.getElementById('consentAnalytics') as HTMLInputElement | null;
+  const marketingBox = document.getElementById('consentMarketing') as HTMLInputElement | null;
+  const saveBtn = document.getElementById('cookieSave');
+
   function show() { if (banner) banner.hidden = false; }
-  function hide() { if (banner) banner.hidden = true; }
+  function hide() { if (banner) banner.hidden = true; if (details) details.hidden = true; if (saveBtn) saveBtn.hidden = true; }
   function loadConsent() {
     try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; }
   }
@@ -31,26 +42,39 @@
   }
   // @ts-ignore
   window.__openCookieBanner = () => show();
-  // Delay to avoid showing immediately
   setTimeout(() => {
     const c = loadConsent();
     if (!c) show();
-    else applyAnalyticsConsent(!!c.analytics);
+    else {
+      if (analyticsBox) analyticsBox.checked = !!c.analytics;
+      if (marketingBox) marketingBox.checked = !!c.marketing;
+      applyAnalyticsConsent(!!c.analytics);
+    }
   }, 500);
   document.getElementById('cookieAcceptAll')?.addEventListener('click', () => {
+    if (analyticsBox) analyticsBox.checked = true;
+    if (marketingBox) marketingBox.checked = true;
     saveConsent({ necessary: true, analytics: true, marketing: true });
     hide();
     applyAnalyticsConsent(true);
   });
   document.getElementById('cookieReject')?.addEventListener('click', () => {
+    if (analyticsBox) analyticsBox.checked = false;
+    if (marketingBox) marketingBox.checked = false;
     saveConsent({ necessary: true, analytics: false, marketing: false });
     hide();
     applyAnalyticsConsent(false);
   });
   document.getElementById('cookieSettings')?.addEventListener('click', () => {
-    saveConsent({ necessary: true, analytics: false, marketing: false });
+    if (details) details.hidden = !details.hidden;
+    if (saveBtn) saveBtn.hidden = !details || details.hidden;
+  });
+  saveBtn?.addEventListener('click', () => {
+    const analytics = !!analyticsBox?.checked;
+    const marketing = !!marketingBox?.checked;
+    saveConsent({ necessary: true, analytics, marketing });
     hide();
-    applyAnalyticsConsent(false);
+    applyAnalyticsConsent(analytics);
   });
 </script>
 <style>
@@ -65,5 +89,7 @@
   .cookie-banner[hidden] { display: none; }
   .cookie-banner p { max-width: 70ch; font-size: 0.9rem; }
   .cookie-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .cookie-details { display: flex; flex-direction: column; gap: 0.4rem; width: 100%; }
+  .cookie-cat { font-size: 0.9rem; display: flex; gap: 0.4rem; align-items: center; }
   @media (max-width: 600px) { .cookie-banner { padding-bottom: 70px; } }
 </style>

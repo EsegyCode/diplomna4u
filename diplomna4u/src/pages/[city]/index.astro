@@ -33,7 +33,13 @@ const usefulLinks = [
   { title: 'Інші міста', desc: 'Усі міста, де ми працюємо', href: '/mista/' },
 ];
 const jsonLd = [
-  { '@context': 'https://schema.org', '@type': 'Service', name: 'Дипломна робота', areaServed: { '@type': 'City', name: city.name } },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Дипломна робота',
+    provider: { '@type': 'Organization', name: 'Diplomna 4 U', url: 'https://diplomna4u.cx.ua' },
+    areaServed: { '@type': 'City', name: city.name },
+  },
   { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Головна', item: 'https://diplomna4u.cx.ua/' },
     { '@type': 'ListItem', position: 2, name: 'Де ми працюємо', item: 'https://diplomna4u.cx.ua/mista/' },

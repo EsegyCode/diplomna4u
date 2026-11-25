@@ -15,11 +15,16 @@ const jsonLd = [
     name: service.label,
     description: service.shortDesc,
     provider: { '@type': 'Organization', name: site.brandUk, url: site.domain },
+    areaServed: { '@type': 'Country', name: 'Україна' },
     offers: {
       '@type': 'Offer',
       priceCurrency: 'UAH',
-      price: service.minPrice,
       url: new URL(`/poslugy/${service.slug}/`, site.domain).href,
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        priceCurrency: 'UAH',
+        minPrice: service.minPrice,
+      },
     },
   },
 ];

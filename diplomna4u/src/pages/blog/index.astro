@@ -7,8 +7,17 @@ import BlogCard from '@/components/BlogCard.astro';
 import BlogList from '@/components/BlogList.astro';
 
 const posts = (await getCollection('blog')).filter((p:any) => !p.data.draft).sort((a:any,b:any) => +new Date(b.data.date) - +new Date(a.data.date));
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Блог',
+    url: 'https://diplomna4u.cx.ua/blog/',
+    description: 'Корисні матеріали для студентів.',
+  },
+];
 ---
-<BaseLayout title="Блог | Diplomna 4 U" description="Корисні матеріали для студентів." noindex={posts.length === 0}>
+<BaseLayout title="Блог | Diplomna 4 U" description="Корисні матеріали для студентів." noindex={posts.length === 0} jsonLd={jsonLd}>
   <Section theme="bg">
     <Breadcrumbs items={[{label:'Головна', href:'/'}, {label:'Блог'}]} />
     <h1>Блог</h1>

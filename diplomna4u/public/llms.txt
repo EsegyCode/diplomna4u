@@ -1,45 +1,45 @@
 # Дипломна 4 U
 
-> Дипломна робота для тебе. Консультаційні послуги з підготовки студентських і наукових робіт для студентів по всій Україні. Основний сайт: http://localhost:4321
+> Дипломна робота для тебе. Консультаційні послуги з підготовки студентських і наукових робіт для студентів по всій Україні. Основний сайт: https://diplomna4u.cx.ua
 
 ## Основні сторінки
-- [Головна сторінка](http://localhost:4321/): Головна сторінка
-- [Каталог послуг](http://localhost:4321/poslugy/): Каталог послуг
-- [Ціни та калькулятор](http://localhost:4321/tsiny/): Ціни та калькулятор
-- [Відгуки клієнтів](http://localhost:4321/vidhuky/): Відгуки клієнтів
-- [Блог](http://localhost:4321/blog/): Блог
-- [Про нас](http://localhost:4321/pro-nas/): Про нас
-- [Сторінки по містах](http://localhost:4321/mista/): Сторінки по містах
-- [FAQ](http://localhost:4321/faq/): FAQ
-- [Контакти](http://localhost:4321/kontakty/): Контакти
+- [Головна сторінка](https://diplomna4u.cx.ua/): Головна сторінка
+- [Каталог послуг](https://diplomna4u.cx.ua/poslugy/): Каталог послуг
+- [Ціни та калькулятор](https://diplomna4u.cx.ua/tsiny/): Ціни та калькулятор
+- [Відгуки клієнтів](https://diplomna4u.cx.ua/vidhuky/): Відгуки клієнтів
+- [Блог](https://diplomna4u.cx.ua/blog/): Блог
+- [Про нас](https://diplomna4u.cx.ua/pro-nas/): Про нас
+- [Сторінки по містах](https://diplomna4u.cx.ua/mista/): Сторінки по містах
+- [FAQ](https://diplomna4u.cx.ua/faq/): FAQ
+- [Контакти](https://diplomna4u.cx.ua/kontakty/): Контакти
 
 ## Послуги
-- [Дипломна робота](http://localhost:4321/poslugy/dyplomna-robota/): Дипломна робота на замовлення. Від 14800 грн.
-- [Курсова робота](http://localhost:4321/poslugy/kursova-robota/): Курсова робота на замовлення. Від 3250 грн.
-- [Стаття](http://localhost:4321/poslugy/stattia/): Наукова стаття на замовлення. Від 460 грн.
-- [Теза](http://localhost:4321/poslugy/teza/): Теза на конференцію на замовлення. Від 280 грн.
-- [Реферат](http://localhost:4321/poslugy/referat/): Реферат на замовлення. Від 960 грн.
-- [Звіт з практики](http://localhost:4321/poslugy/zvit-z-praktyky/): Звіт з практики на замовлення. Від 3200 грн.
+- [Дипломна робота](https://diplomna4u.cx.ua/poslugy/dyplomna-robota/): Дипломна робота на замовлення. Від 14800 грн.
+- [Курсова робота](https://diplomna4u.cx.ua/poslugy/kursova-robota/): Курсова робота на замовлення. Від 3250 грн.
+- [Стаття](https://diplomna4u.cx.ua/poslugy/stattia/): Наукова стаття на замовлення. Від 460 грн.
+- [Теза](https://diplomna4u.cx.ua/poslugy/teza/): Теза на конференцію на замовлення. Від 280 грн.
+- [Реферат](https://diplomna4u.cx.ua/poslugy/referat/): Реферат на замовлення. Від 960 грн.
+- [Звіт з практики](https://diplomna4u.cx.ua/poslugy/zvit-z-praktyky/): Звіт з практики на замовлення. Від 3200 грн.
 
 ## Міста
-- [Київ](http://localhost:4321/kyiv/): Допомога студентам у Києві.
-- [Суми](http://localhost:4321/sumy/): Допомога студентам у Сумах.
-- [Львів](http://localhost:4321/lviv/): Допомога студентам у Львові.
-- [Житомир](http://localhost:4321/zhytomyr/): Допомога студентам у Житомирі.
-- [Біла Церква](http://localhost:4321/bila-tserkva/): Допомога студентам у Білій Церкві.
-- [Полтава](http://localhost:4321/poltava/): Допомога студентам у Полтаві.
-- [Харків](http://localhost:4321/kharkiv/): Допомога студентам у Харкові.
-- [Дніпро](http://localhost:4321/dnipro/): Допомога студентам у Дніпрі.
-- [Вінниця](http://localhost:4321/vinnytsia/): Допомога студентам у Вінниці.
-- [Одеса](http://localhost:4321/odesa/): Допомога студентам в Одесі.
-- [Запоріжжя](http://localhost:4321/zaporizhzhia/): Допомога студентам у Запоріжжі.
-- [Чернігів](http://localhost:4321/chernihiv/): Допомога студентам у Чернігові.
-- [Черкаси](http://localhost:4321/cherkasy/): Допомога студентам у Черкасах.
+- [Київ](https://diplomna4u.cx.ua/kyiv/): Допомога студентам у Києві.
+- [Суми](https://diplomna4u.cx.ua/sumy/): Допомога студентам у Сумах.
+- [Львів](https://diplomna4u.cx.ua/lviv/): Допомога студентам у Львові.
+- [Житомир](https://diplomna4u.cx.ua/zhytomyr/): Допомога студентам у Житомирі.
+- [Біла Церква](https://diplomna4u.cx.ua/bila-tserkva/): Допомога студентам у Білій Церкві.
+- [Полтава](https://diplomna4u.cx.ua/poltava/): Допомога студентам у Полтаві.
+- [Харків](https://diplomna4u.cx.ua/kharkiv/): Допомога студентам у Харкові.
+- [Дніпро](https://diplomna4u.cx.ua/dnipro/): Допомога студентам у Дніпрі.
+- [Вінниця](https://diplomna4u.cx.ua/vinnytsia/): Допомога студентам у Вінниці.
+- [Одеса](https://diplomna4u.cx.ua/odesa/): Допомога студентам в Одесі.
+- [Запоріжжя](https://diplomna4u.cx.ua/zaporizhzhia/): Допомога студентам у Запоріжжі.
+- [Чернігів](https://diplomna4u.cx.ua/chernihiv/): Допомога студентам у Чернігові.
+- [Черкаси](https://diplomna4u.cx.ua/cherkasy/): Допомога студентам у Черкасах.
 
 ## Юридичне
-- [Політика конфіденційності](http://localhost:4321/polityka-konfidentsiinosti/): обробка персональних даних.
-- [Публічна оферта](http://localhost:4321/publichna-oferta/): умови надання послуг.
-- [Політика cookie](http://localhost:4321/polityka-cookie/): використання cookie.
+- [Політика конфіденційності](https://diplomna4u.cx.ua/polityka-konfidentsiinosti/): обробка персональних даних.
+- [Публічна оферта](https://diplomna4u.cx.ua/publichna-oferta/): умови надання послуг.
+- [Політика cookie](https://diplomna4u.cx.ua/polityka-cookie/): використання cookie.
 
 ## Документація для LLM
-- [llms-full.txt](http://localhost:4321/llms-full.txt): повний текст ключових сторінок.
+- [llms-full.txt](https://diplomna4u.cx.ua/llms-full.txt): повний текст ключових сторінок.

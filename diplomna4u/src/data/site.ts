@@ -4,8 +4,9 @@
 import { services } from './services.ts';
 
 const importMetaEnv = (typeof import.meta !== 'undefined' && import.meta.env) ? import.meta.env : {};
+const processEnv = typeof process !== 'undefined' && process.env ? process.env : {};
 const isProdBuild = Boolean(importMetaEnv.PROD);
-const envUrl = (importMetaEnv.PUBLIC_SITE_URL || '').trim().replace(/\/+$/, '');
+const envUrl = (importMetaEnv.PUBLIC_SITE_URL || processEnv.PUBLIC_SITE_URL || '').trim().replace(/\/+$/, '');
 if (isProdBuild && !envUrl) {
   throw new Error('PUBLIC_SITE_URL is required for production build');
 }
